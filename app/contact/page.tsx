@@ -91,7 +91,9 @@ export default function ContactPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name } = e.target;
     // Clear error for this field when user starts typing
     if (errors[name as keyof FormErrors]) {
@@ -128,7 +130,6 @@ export default function ContactPage() {
     }
 
     const form = e.currentTarget || formRef.current;
-
     if (!form) {
       setIsSubmitting(false);
       setSubmitStatus("error");
@@ -209,19 +210,42 @@ export default function ContactPage() {
           </Link>
 
           {/* Page Header */}
-          <div className="mb-16 md:mb-20 text-center">
-            <div className="flex items-center justify-center gap-2 mb-4 text-emerald-600">
-              <Leaf className="h-6 w-6" />
-              <span className="text-sm font-semibold uppercase tracking-wider">
+          <div className="mb-12 md:mb-16 text-center bg-emerald-600 p-8 rounded-2xl">
+            <div className="flex items-center justify-center  gap-2 mb-4">
+              <Leaf className="h-6 w-6 text-white" />
+              <span className="text-sm font-semibold text-white uppercase tracking-wider">
                 Get In Touch
               </span>
             </div>
-            <h1 className="mb-4 text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900">
-              We&apos;re Here to Help
+            <h1 className="mb-6 text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+              Contact Bubble Wrap Shop
             </h1>
-            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-              Have questions about our eco-friendly packaging? We&apos;d love to
-              hear from you.
+            <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
+              We&apos;re here to assist you in finding the best packaging
+              materials in the UK for your business. Whether you need help
+              ordering bubble wrap online UK, pricing advice from a reliable
+              wholesale bubble wrap supplier UK, or guidance on protective
+              packaging for shipping, our team is ready to help.
+            </p>
+          </div>
+
+          {/* Information Section */}
+          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-8 md:p-10 mb-12 border-2 border-emerald-100">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+              Expert Packaging Advice & Support
+            </h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Our expert team provides product advice on eco-friendly bubble
+              wrap UK, bubble wrap roll wholesale UK, and a comprehensive range
+              of packaging solutions including foam packaging, anti-static
+              bubble wrap UK, stretch film wrap, edge protection packaging,
+              fragile tape, and mailing bags wholesale UK.
+            </p>
+            <p className="text-gray-700 leading-relaxed">
+              Contact us by telephone, email, or through our online form below.
+              We&apos;re committed to providing quick and friendly service,
+              ensuring you receive the right packaging solutions with minimal
+              hassle.
             </p>
           </div>
 
@@ -229,9 +253,9 @@ export default function ContactPage() {
             {/* Contact Info Sidebar */}
             <div className="space-y-6">
               {/* Email Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-2xl border border-gray-300  transition-all duration-300 group">
+              <div className="bg-white rounded-2xl p-6 shadow-2xl border border-gray-300 transition-all duration-300 group">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-emerald-600 to-teal-600 shadow-lg group-hover:scale-110 transition-transform">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 shadow-lg group-hover:scale-110 transition-transform">
                     <Mail className="h-6 w-6 text-white" strokeWidth={2} />
                   </div>
                   <div className="flex-1">
@@ -251,7 +275,7 @@ export default function ContactPage() {
               {/* Phone Card */}
               <div className="bg-white rounded-2xl p-6 shadow-2xl border border-gray-300 transition-all duration-300 group">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-emerald-600 to-teal-600 shadow-lg group-hover:scale-110 transition-transform">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 shadow-lg group-hover:scale-110 transition-transform">
                     <Phone className="h-6 w-6 text-white" strokeWidth={2} />
                   </div>
                   <div className="flex-1">
@@ -273,9 +297,9 @@ export default function ContactPage() {
               </div>
 
               {/* Office Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-2xl border border-gray-300  transition-all duration-300 group">
+              <div className="bg-white rounded-2xl p-6 shadow-2xl border border-gray-300 transition-all duration-300 group">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-emerald-600 to-teal-600 shadow-lg group-hover:scale-110 transition-transform">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 shadow-lg group-hover:scale-110 transition-transform">
                     <MapPin className="h-6 w-6 text-white" strokeWidth={2} />
                   </div>
                   <div className="flex-1">
@@ -297,7 +321,7 @@ export default function ContactPage() {
             </div>
 
             {/* Contact Form */}
-            <div className="lg:col-span-2 ">
+            <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl p-8 md:p-10 shadow-2xl border border-gray-300">
                 <div className="flex items-center gap-2 mb-8">
                   <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
@@ -308,7 +332,7 @@ export default function ContactPage() {
                 <form
                   ref={formRef}
                   onSubmit={handleSubmit}
-                  className="space-y-6 "
+                  className="space-y-6"
                   noValidate
                 >
                   {/* General Error Message */}
@@ -321,7 +345,7 @@ export default function ContactPage() {
                     </div>
                   )}
 
-                  <div className="grid gap-6 md:grid-cols-2 ">
+                  <div className="grid gap-6 md:grid-cols-2">
                     <div className="space-y-2">
                       <Label
                         htmlFor="name"
@@ -340,9 +364,11 @@ export default function ContactPage() {
                           errors.name
                             ? "border-red-500 focus-visible:ring-red-500"
                             : "border-gray-300 focus-visible:ring-emerald-400"
-                        } bg-transparent focus-visible:ring-1! transition-all`}
+                        } bg-transparent focus-visible:ring-1 transition-all`}
                         aria-invalid={errors.name ? "true" : "false"}
-                        aria-describedby={errors.name ? "name-error" : undefined}
+                        aria-describedby={
+                          errors.name ? "name-error" : undefined
+                        }
                       />
                       {errors.name && (
                         <p
@@ -374,9 +400,11 @@ export default function ContactPage() {
                           errors.email
                             ? "border-red-500 focus-visible:ring-red-500"
                             : "border-gray-300 focus-visible:ring-emerald-400"
-                        } bg-transparent focus-visible:ring-1! transition-all`}
+                        } bg-transparent focus-visible:ring-1 transition-all`}
                         aria-invalid={errors.email ? "true" : "false"}
-                        aria-describedby={errors.email ? "email-error" : undefined}
+                        aria-describedby={
+                          errors.email ? "email-error" : undefined
+                        }
                       />
                       {errors.email && (
                         <p
@@ -405,7 +433,7 @@ export default function ContactPage() {
                         type="text"
                         placeholder="Your company"
                         onChange={handleInputChange}
-                        className="h-11 border border-gray-300 focus:border-border-300 bg-transparent focus-visible:ring-emerald-400! focus-visible:ring-1! transition-all"
+                        className="h-11 border border-gray-300 bg-transparent focus-visible:ring-emerald-400 focus-visible:ring-1 transition-all"
                       />
                     </div>
 
@@ -426,9 +454,11 @@ export default function ContactPage() {
                           errors.phone
                             ? "border-red-500 focus-visible:ring-red-500"
                             : "border-gray-300 focus-visible:ring-emerald-400"
-                        } bg-transparent focus-visible:ring-1! transition-all`}
+                        } bg-transparent focus-visible:ring-1 transition-all`}
                         aria-invalid={errors.phone ? "true" : "false"}
-                        aria-describedby={errors.phone ? "phone-error" : undefined}
+                        aria-describedby={
+                          errors.phone ? "phone-error" : undefined
+                        }
                       />
                       {errors.phone && (
                         <p
@@ -461,9 +491,11 @@ export default function ContactPage() {
                         errors.subject
                           ? "border-red-500 focus-visible:ring-red-500"
                           : "border-gray-300 focus-visible:ring-emerald-400"
-                      } bg-transparent focus-visible:ring-1! transition-all`}
+                      } bg-transparent focus-visible:ring-1 transition-all`}
                       aria-invalid={errors.subject ? "true" : "false"}
-                      aria-describedby={errors.subject ? "subject-error" : undefined}
+                      aria-describedby={
+                        errors.subject ? "subject-error" : undefined
+                      }
                     />
                     {errors.subject && (
                       <p
@@ -495,9 +527,11 @@ export default function ContactPage() {
                         errors.message
                           ? "border-red-500 focus-visible:ring-red-500"
                           : "border-gray-300 focus-visible:ring-emerald-400"
-                      } bg-transparent focus-visible:ring-1! transition-all`}
+                      } bg-transparent focus-visible:ring-1 transition-all`}
                       aria-invalid={errors.message ? "true" : "false"}
-                      aria-describedby={errors.message ? "message-error" : undefined}
+                      aria-describedby={
+                        errors.message ? "message-error" : undefined
+                      }
                     />
                     {errors.message && (
                       <p
@@ -525,7 +559,7 @@ export default function ContactPage() {
                     type="submit"
                     size="lg"
                     disabled={isSubmitting}
-                    className="h-12 w-full md:w-auto bg-linear-to-r from-emerald-600 to-teal-600 px-8 text-base font-semibold text-white hover:shadow-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="h-12 w-full md:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 px-8 text-base font-semibold text-white hover:shadow-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       "Sending..."

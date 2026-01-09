@@ -3,13 +3,13 @@ import type { Metadata } from "next";
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
 
 export const metadata: Metadata = {
-  title: "Contact Us - Premium Packaging Supplies | Bubble Wrap Shop",
+  title: "Contact Bubble Wrap Shop: Packaging Supplies UK Support.",
   description:
     "Get in touch with Bubble Wrap Shop. Contact us for packaging supplies, bulk orders, wholesale pricing, or any questions. We're here to help with all your packaging needs.",
   openGraph: {
     title: "Contact Us - Premium Packaging Supplies | Bubble Wrap Shop",
     description:
-      "Get in touch with Bubble Wrap Shop. Contact us for packaging supplies, bulk orders, wholesale pricing, or any questions.",
+      "Get in touch with Bubble Wrap Shop for help with packaging supplies UK. Ask about buying bubble wrap online UK, wholesale bubble wrap and shipping protection.",
     url: `${siteUrl}/contact`,
   },
   alternates: {
