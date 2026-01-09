@@ -48,7 +48,7 @@ export function  aFooter() {
               <li>
                 <Link
                   href="/products"
-                  className="text-sm text-gray-300 transition-colors hover:text-emerald-400 flex items-center gap-2 group"
+                  className="text-sm text-white transition-colors hover:text-emerald-400 flex items-center gap-2 group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-emerald-400 transition-all duration-300"></span>
                   All Products
@@ -57,7 +57,7 @@ export function  aFooter() {
               <li>
                 <Link
                   href="/categories"
-                  className="text-sm text-gray-300 transition-colors hover:text-emerald-400 flex items-center gap-2 group"
+                  className="text-sm text-white transition-colors hover:text-emerald-400 flex items-center gap-2 group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-emerald-400 transition-all duration-300"></span>
                   Categories
@@ -66,7 +66,7 @@ export function  aFooter() {
               {/* <li>
                 <Link
                   href="/products/featured"
-                  className="text-sm text-gray-300 transition-colors hover:text-emerald-400 flex items-center gap-2 group"
+                  className="text-sm text-white transition-colors hover:text-emerald-400 flex items-center gap-2 group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-emerald-400 transition-all duration-300"></span>
                   Featured Products
@@ -75,7 +75,7 @@ export function  aFooter() {
               <li>
                 <Link
                   href="/products/new-arrivals"
-                  className="text-sm text-gray-300 transition-colors hover:text-emerald-400 flex items-center gap-2 group"
+                  className="text-sm text-white transition-colors hover:text-emerald-400 flex items-center gap-2 group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-emerald-400 transition-all duration-300"></span>
                   New Arrivals
@@ -94,7 +94,7 @@ export function  aFooter() {
               <li>
                 <Link
                   href="/faq"
-                  className="text-sm text-gray-300 transition-colors hover:text-emerald-400 flex items-center gap-2 group"
+                  className="text-sm text-white transition-colors hover:text-emerald-400 flex items-center gap-2 group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-emerald-400 transition-all duration-300"></span>
                   FAQ
@@ -103,7 +103,7 @@ export function  aFooter() {
               {/* <li>
                 <Link
                   href="/delivery"
-                  className="text-sm text-gray-300 transition-colors hover:text-emerald-400 flex items-center gap-2 group"
+                  className="text-sm text-white transition-colors hover:text-emerald-400 flex items-center gap-2 group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-emerald-400 transition-all duration-300"></span>
                   Delivery Information
@@ -112,7 +112,7 @@ export function  aFooter() {
               <li>
                 <Link
                   href="/refund-policy"
-                  className="text-sm text-gray-300 transition-colors hover:text-emerald-400 flex items-center gap-2 group"
+                  className="text-sm text-white transition-colors hover:text-emerald-400 flex items-center gap-2 group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-emerald-400 transition-all duration-300"></span>
                   Refund Policy
@@ -121,7 +121,7 @@ export function  aFooter() {
               <li>
                 <Link
                   href="/contact"
-                  className="text-sm text-gray-300 transition-colors hover:text-emerald-400 flex items-center gap-2 group"
+                  className="text-sm text-white transition-colors hover:text-emerald-400 flex items-center gap-2 group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-emerald-400 transition-all duration-300"></span>
                   Contact Us
@@ -140,7 +140,7 @@ export function  aFooter() {
               <li>
                 <Link
                   href="/about"
-                  className="text-sm text-gray-300 transition-colors hover:text-emerald-400 flex items-center gap-2 group"
+                  className="text-sm text-white transition-colors hover:text-emerald-400 flex items-center gap-2 group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-emerald-400 transition-all duration-300"></span>
                   About Us
@@ -149,7 +149,7 @@ export function  aFooter() {
               <li>
                 <Link
                   href="/sustainability"
-                  className="text-sm text-gray-300 transition-colors hover:text-emerald-400 flex items-center gap-2 group"
+                  className="text-sm text-white transition-colors hover:text-emerald-400 flex items-center gap-2 group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-emerald-400 transition-all duration-300"></span>
                   Sustainability
@@ -158,7 +158,7 @@ export function  aFooter() {
               <li>
                 <Link
                   href="/privacy"
-                  className="text-sm text-gray-300 transition-colors hover:text-emerald-400 flex items-center gap-2 group"
+                  className="text-sm text-white transition-colors hover:text-emerald-400 flex items-center gap-2 group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-emerald-400 transition-all duration-300"></span>
                   Privacy Policy
@@ -167,7 +167,7 @@ export function  aFooter() {
               <li>
                 <Link
                   href="/terms"
-                  className="text-sm text-gray-300 transition-colors hover:text-emerald-400 flex items-center gap-2 group"
+                  className="text-sm text-white transition-colors hover:text-emerald-400 flex items-center gap-2 group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-emerald-400 transition-all duration-300"></span>
                   Terms & Conditions
@@ -186,7 +186,7 @@ export function  aFooter() {
               <li>
                 <a
                   href="tel:+441254916167"
-                  className="flex items-start gap-3 text-sm text-gray-300 transition-colors hover:text-emerald-400 group"
+                  className="flex items-start gap-3 text-sm text-white transition-colors hover:text-emerald-400 group"
                 >
                   <div className="p-2 rounded-lg bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors">
                     <Phone
@@ -200,7 +200,7 @@ export function  aFooter() {
               <li>
                 <a
                   href="mailto:sales@bubblewrapshop.co.uk"
-                  className="flex items-start gap-3 text-sm text-gray-300 transition-colors hover:text-emerald-400 group"
+                  className="flex items-start gap-3 text-sm text-white transition-colors hover:text-emerald-400 group"
                 >
                   <div className="p-2 rounded-lg bg-emerald-500/10 group-hover:bg-teal-500/20 transition-colors">
                     <Mail
@@ -212,7 +212,7 @@ export function  aFooter() {
                 </a>
               </li>
               <li>
-                <div className="flex items-start gap-3 text-sm text-gray-300 group">
+                <div className="flex items-start gap-3 text-sm text-white group">
                   <div className="p-2 rounded-lg bg-emerald-500/10">
                     <MapPin
                       className="h-4 w-4 text-emerald-400"
@@ -235,26 +235,26 @@ export function  aFooter() {
         {/* Bottom Bar */}
         <div className="mt-16 border-t border-emerald-800/50 pt-8">
           <div className="flex flex-col items-center justify-between gap-4 text-center md:flex-row md:text-left">
-            <p className="text-sm text-gray-300">
+            <p className="text-sm text-white">
               © {new Date().getFullYear()} Bubble wrap shop (Blackburn) Limited. All
               rights reserved.
             </p>
             <div className="flex gap-6 text-sm">
               <Link
                 href="/privacy"
-                className="text-gray-300 transition-colors hover:text-emerald-400"
+                className="text-white transition-colors hover:text-emerald-400"
               >
                 Privacy
               </Link>
               <Link
                 href="/terms"
-                className="text-gray-300 transition-colors hover:text-emerald-400"
+                className="text-white transition-colors hover:text-emerald-400"
               >
                 Terms
               </Link>
               <Link
                 href="/sustainability"
-                className="text-gray-300 transition-colors hover:text-emerald-400"
+                className="text-white transition-colors hover:text-emerald-400"
               >
                 Sustainability
               </Link>

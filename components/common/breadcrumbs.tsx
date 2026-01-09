@@ -67,6 +67,7 @@ export function Breadcrumbs({ items, variant = "default" }: BreadcrumbsProps) {
   return (
     <nav className="mb-6 flex items-center gap-2 text-sm" aria-label="Breadcrumb">
       <Link
+        aria-label="Home"
         href="/"
         className={`flex items-center ${textColor} transition-colors ${hoverColor}`}
       >
