@@ -13,9 +13,21 @@ import { Button } from "@/components/ui/button";
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
 
 export const metadata: Metadata = {
-  title: "FAQ - Frequently Asked Questions | Bubble Wrap Shop",
+  title: "Packaging Supplies UK FAQs: Bubble Wrap Wholesale",
   description:
-    "Find answers to common questions about our packaging supplies, shipping, returns, bulk orders, and more. Get help with your packaging needs at Bubble Wrap Shop.",
+    "Find answers about packaging supplies UK, buying bubble wrap online UK, wholesale bubble wrap rolls, shipping, and bulk pricing at Bubble Wrap Shop.",
+    keywords:[
+      "Packaging supplies UK",
+      "Buy bubble wrap online UK",
+      "Wholesale bubble wrap supplier UK",
+      "Bubble wrap rolls wholesale UK",
+      "Anti-static bubble wrap UK",
+      "Foam packaging rolls UK",
+      "Stretch film wrap UK",
+      "Edge protection packaging UK",
+      "Mailing bags wholesale UK"
+    ],
+
   openGraph: {
     title: "FAQ - Frequently Asked Questions | Bubble Wrap Shop",
     description:
@@ -34,22 +46,22 @@ const faqData = [
       {
         question: "What are your shipping options?",
         answer:
-          "We offer standard shipping (3-5 business days) and express shipping (1-2 business days). Orders over £100 qualify for free standard shipping. Express shipping is available for an additional fee.",
+          "Our speedy and dependable delivery throughout the UK covers any packaging supplies UK, on which companies depend on. The majority of orders are shipped fast, and many products can be delivered within a day, such as bubble wrap, boxes and mailing bags. At checkout, delivery time and price are clearly shown to be able to make plans.",
       },
       {
         question: "Do you ship internationally?",
         answer:
-          "Currently, we ship within the United States and Canada. International shipping options are being evaluated for future expansion.",
+          "We are currently concentrating on serving customers in the UK, where we are able to deliver fast and consistent services to customers. This will enable us to be a reliable wholesale bubble wrap supplier UK on which companies can rely.",
       },
       {
         question: "Can I track my order?",
         answer:
-          "Yes! Once your order ships, you'll receive a tracking number via email. You can also track your order status in your account dashboard.",
+          "Yes. After your order has been shipped out, you will get tracking information in the form of an email, which can be used to track your shipment in real time, warehouse to your doorstep.",
       },
       {
         question: "What is your return policy?",
         answer:
-          "We accept returns within 30 days of purchase for unopened items in original packaging. Custom printed products are non-returnable. Please contact our support team to initiate a return.",
+          "In case you have any problems with your order, our customer service is on call. The returns are processed justly and effectively according to the UK consumer and business buying regulations. We would appreciate being of help to you immediately.",
       },
     ],
   },
@@ -59,17 +71,17 @@ const faqData = [
       {
         question: "How does bulk pricing work?",
         answer:
-          "Our automatic bulk pricing applies discounts based on quantity ordered. As you increase quantity, the price per unit decreases. You can see pricing tiers on each product page, and the discount is automatically applied at checkout.",
+          "We have automatic bulk pricing on most products, and UK clients make frequent orders for bubble wrap rolls. The larger the purchase, the better the unit price- no account establishments is necessary.",
       },
       {
         question: "Are there volume discounts for large orders?",
         answer:
-          "Yes! For orders over 500 units, we offer additional volume discounts. Please contact our sales team for a custom quote on large orders.",
+          "Yes. Companies that purchase large quantities of packaging to protect their goods, such as postal bags, foam roll wraps, or stretch wrappers, can use wholesale pricing. We also provide customized pricing when applied to the ongoing requirements.",
       },
       {
         question: "Do you offer business accounts?",
         answer:
-          "We automatically handle both B2B and B2C pricing. Bulk discounts apply automatically based on quantity—no separate business account needed. Larger orders automatically receive better pricing.",
+          "Absolutely. Our B2B accounts are best suited to companies that regularly buy bubble wrap online in the UK or require regular access to wholesale prices, priority stock, and fast ordering.",
       },
     ],
   },
@@ -79,22 +91,22 @@ const faqData = [
       {
         question: "What materials do you use?",
         answer:
-          "We use high-quality corrugated cardboard, eco-friendly bubble wrap, recycled materials, and FSC-certified products. All our packaging meets industry standards for protection and durability.",
+          "We provide durable, quality materials that are used in shipping and storage in the real world. We have an assortment of bubble wrap, anti-static bubble wrap UK, foam packaging rolls UK, stretch film and edge protection packaging, which are all chosen on the basis of their performance and dependability.",
       },
       {
         question: "Do you offer eco-friendly options?",
         answer:
-          "Yes! We have a dedicated eco-friendly product line featuring recyclable materials, biodegradable options, and compostable packaging. Look for the eco-friendly badge on product pages.",
+          "Yes. We care about sustainability. Our ability to reduce the environmental footprint of businesses helps us to sell recyclable and environmentally friendly bubble wrap UK and environmentally friendly packaging material to businesses.",
       },
       {
         question: "Can products be customized?",
         answer:
-          "Yes, we offer custom printing on boxes and mailers. Custom orders typically take 2-3 weeks to produce. Contact our support team for custom quote requests.",
+          "Products can be packaged in various formats, thicknesses and sizes based on availability. Our team will be glad to recommend in case you are particularly in need.",
       },
       {
         question: "What sizes are available?",
         answer:
-          "We offer a wide range of sizes across all product categories. Each product page shows available size variants. If you need a specific size not listed, please contact us.",
+          "Our sizes in all of our lineups of packaging are broad, such as small and industrial-sized rolls and bags. This ensures that it is easy to find the correct solution in case of shipping of individual or loads of pallets.",
       },
     ],
   },
@@ -104,22 +116,22 @@ const faqData = [
       {
         question: "Do I need to create an account to order?",
         answer:
-          "No! You can check out as a guest. However, creating an account allows you to track orders, save addresses, and download invoices for easier reordering.",
+          "No. It is possible to make an order as a visitor. But when you have created an account, it will be quicker to reorder and will enable you to monitor what you have bought before.",
       },
       {
         question: "How can I contact customer support?",
         answer:
-          "You can reach us via email at support@volle.com, phone at 1-800-BUBBLE-WRAP, or through our contact form. Our support team is available Monday-Friday, 9 AM - 6 PM EST.",
+          "Our support team may be contacted by phone, email or by the support Contact Form on our site. You can reach out to us on product selection, order and product enquiry with or without hesitation.",
       },
       {
         question: "Can I cancel or modify my order?",
         answer:
-          "Orders can be modified or cancelled within 2 hours of placement. After that, orders enter the fulfillment process and cannot be changed. Please contact support immediately if you need to cancel.",
+          "If you have not received your order yet, we will help you. Contact us to make changes as early as possible.",
       },
       {
         question: "How do I download an invoice?",
         answer:
-          "Registered users can download invoices from their account dashboard under Order History. Guest orders receive invoices via email.",
+          "You can view invoices in your account dashboard or request them using our support team in case of necessity.",
       },
     ],
   },
@@ -199,7 +211,7 @@ export default function FAQPage() {
             ))}
           </div>
 
-          <section className="relative border-t bg-linear-to-br from-emerald-600  to-teal-600 py-20 md:py-28 lg:py-32 overflow-hidden">
+          <section className="relative rounded-xl mt-10 border-t bg-linear-to-br from-emerald-600  to-teal-600 py-20 md:py-28 lg:py-32 overflow-hidden">
             <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px]">
               <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
                 {/* Heading */}
@@ -210,7 +222,7 @@ export default function FAQPage() {
 
                 {/* Description */}
                 <p className="mb-10 text-base md:text-lg lg:text-xl text-white/80 max-w-2xl leading-relaxed lg:mb-12">
-                  Our support team is here to help
+                  We are easy to reach, and in case you need additional information on our products or services, just Contact Us. Our customer care team is at your service and ready to assist you in locating the appropriate packaging supplies UK companies rely on day in day out.
                 </p>
 
                 {/* CTA Button */}

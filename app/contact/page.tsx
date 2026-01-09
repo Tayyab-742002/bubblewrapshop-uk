@@ -221,11 +221,7 @@ export default function ContactPage() {
               Contact Bubble Wrap Shop
             </h1>
             <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-              We&apos;re here to assist you in finding the best packaging
-              materials in the UK for your business. Whether you need help
-              ordering bubble wrap online UK, pricing advice from a reliable
-              wholesale bubble wrap supplier UK, or guidance on protective
-              packaging for shipping, our team is ready to help.
+              We have come to assist you in finding the best packaging materials in the UK for your business, Bubble Wrap Shop. You need to know how to order bubble wrap online UK, need some pricing advice about a reliable wholesale bubble wrap supplier UK, or simply need some help picking out some protective packaging to ship your UK goods?
             </p>
           </div>
 
@@ -235,11 +231,7 @@ export default function ContactPage() {
               Expert Packaging Advice & Support
             </h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              Our expert team provides product advice on eco-friendly bubble
-              wrap UK, bubble wrap roll wholesale UK, and a comprehensive range
-              of packaging solutions including foam packaging, anti-static
-              bubble wrap UK, stretch film wrap, edge protection packaging,
-              fragile tape, and mailing bags wholesale UK.
+              Our staff are on hand to help you. Expert product advice services are provided for eco-friendly bubble wrap UK, bubble wrap roll wholesale UK, and a plethora of packaging options (e.g., foam packaging, anti-static bubble wrap UK, stretch film wrap, edge protection packaging, fragile tape, and mailing bags wholesale UK). Contact us by telephone, by email, or through our online form. We are determined to provide you with quick and friendly service and ensure that you receive the packaging you want with minimal trouble. 
             </p>
             <p className="text-gray-700 leading-relaxed">
               Contact us by telephone, email, or through our online form below.
