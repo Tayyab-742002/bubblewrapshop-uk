@@ -14,7 +14,8 @@ import {
 // For development, use `npm run dev` which has hot reloading
 export const revalidate = false;
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+// Hardcoded to ensure consistency across all pages
+const siteUrl = "https://bubblewrapshop.co.uk";
 
 /**
  * Homepage Metadata
@@ -22,8 +23,7 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk
  * Targeting both B2C and B2B customers
  */
 export const metadata: Metadata = {
-  title:
-    "Packaging Supplies UK: Bubble Wrap, Boxes & Eco Packaging",
+  title: "Packaging Supplies UK: Bubble Wrap, Boxes & Eco Packaging",
   description:
     "Create your bubble-wrapped purchase in the U.K. through a reputable wholesale bubble wrap distributor. Bubble wrap UK, packaging mailing bags wholesale UK.",
   keywords: [
@@ -43,19 +43,26 @@ export const metadata: Metadata = {
     "Bubble wrap UK",
   ],
   openGraph: {
-    title:
-      "Packaging Supplies UK | Bubble Wrap, Boxes & Wholesale | Bubble Wrap Shop",
+    title: "Packaging Supplies UK | Bubble Wrap & Boxes | Bubble Wrap Shop",
     description:
-      "UK's leading supplier of packaging supplies. Buy bubble wrap, cardboard boxes, and protective packaging. Wholesale pricing available. Next day delivery across the UK.",
+      "UK's leading supplier of packaging supplies. Buy bubble wrap, cardboard boxes, and protective packaging. Wholesale pricing. Next day delivery.",
     url: siteUrl,
-    siteName: "Bubble Wrap Shop - Premium Packaging Supplies UK",
+    siteName: "Bubble Wrap Shop",
+    images: [
+      {
+        url: `${siteUrl}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "Bubble Wrap Shop - Packaging Supplies UK",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title:
-      "Packaging Supplies UK | Bubble Wrap, Boxes & Wholesale | Bubble Wrap Shop",
+    title: "Packaging Supplies UK | Bubble Wrap & Boxes | Bubble Wrap Shop",
     description:
       "UK's leading supplier of packaging supplies. Wholesale pricing. Next day delivery across the UK.",
+    images: [`${siteUrl}/og-image.jpg`],
   },
   alternates: {
     canonical: siteUrl,
@@ -63,7 +70,6 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-
   // Organization Structured Data (JSON-LD) for SEO
   const organizationStructuredData = {
     "@context": "https://schema.org",
@@ -124,13 +130,7 @@ export default function Home() {
     },
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-      ],
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
       opens: "09:00",
       closes: "17:00",
     },
