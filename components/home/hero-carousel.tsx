@@ -52,18 +52,6 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
     return () => clearInterval(interval);
   }, [isAutoPlaying, nextSlide, banners]);
 
-  const handleSearch = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const trimmedQuery = searchQuery.trim();
-      if (trimmedQuery) {
-        router.push(`/products?search=${encodeURIComponent(trimmedQuery)}`);
-      } else {
-        router.push("/products");
-      }
-    },
-    [searchQuery, router]
-  );
 
   // If no banners, return empty state (after all hooks)
   if (!banners || banners.length === 0) {
@@ -199,91 +187,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
         </div>
       </div>
 
-      {/* Search & Info Section */}
-      <div className="relative z-10 mx-auto max-w-6xl px-3 sm:px-4 md:px-6 lg:px-8 py-8 sm:py-10 md:py-12 lg:py-16 xl:py-20">
-        {/* Heading */}
-        <div className="relative text-center mb-12 sm:mb-16 md:mb-20 px-4">
-          <h1
-            className="font-extrabold tracking-tight text-gray-900 leading-tight
-                 text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6"
-          >
-            BUBBLE WRAP,{" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-500 to-teal-600">
-              BOXES & MORE
-            </span>
-          </h1>
-
-          <div className="space-y-6 max-w-4xl mx-auto">
-            {/* <p
-              className="text-gray-600 font-light leading-relaxed
-                  text-base sm:text-lg md:text-xl lg:text-2xl"
-            >
-              Order bubble wrap in the UK via a reputable bubble wrap supplier
-              in the UK with high-quality packaging and at affordable costs. Our
-              offering includes eco-friendly bubble wrap UK, cardboard boxes,
-              mailing bags wholesale UK, tapes, and shipping protection
-              packaging UK, all trusted by businesses in the UK.
-            </p> */}
-
-            <p
-              className="text-gray-600 font-light leading-relaxed
-                  text-base sm:text-lg md:text-xl lg:text-2xl"
-            >
-              You need a large volume of bubble wrap to dispatch, or you are
-              just trying to find a cheap supplier of bubble wrap UK without
-              compromising on quality, then we have you covered. Our packaging
-              is tailored to provide security to the goods when they are stored,
-              handled, or in transit.
-            </p>
-
-            <p
-              className="text-gray-700 font-medium
-                  text-base sm:text-lg md:text-xl lg:text-2xl"
-            >
-              When customers buy online, they enjoy{" "}
-              <span className="text-emerald-600 font-semibold">
-                next-day delivery, automatic bulk pricing, and wholesale rates.
-              </span>
-            </p>
-          </div>
-        </div>
-
-        {/* Search Bar - Improved Mobile UI */}
-        <div className="max-w-3xl mx-auto mb-10 sm:mb-12 md:mb-14 lg:mb-16 px-4 sm:px-0">
-          <form onSubmit={handleSearch}>
-            <div className="relative group">
-              {/* Glow Effect */}
-              <div className="absolute -inset-1 bg-linear-to-r from-emerald-600 to-teal-600 rounded-2xl blur-lg opacity-20 group-hover:opacity-30 transition-opacity" />
-
-              {/* Search Container */}
-              <div className="relative bg-white rounded-2xl shadow-xl border-2 border-emerald-100 hover:border-emerald-300 transition-colors overflow-hidden">
-                {/* Input Wrapper */}
-                <div className="flex items-center gap-3 px-4 sm:px-6">
-                  {/* Search Icon */}
-                  <Search className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600 shrink-0" />
-
-                  {/* Input Field */}
-                  <input
-                    type="search"
-                    placeholder="Search for products..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="flex-1 py-4 sm:py-5 text-base sm:text-lg text-gray-900 placeholder:text-gray-400 focus:outline-none bg-transparent min-w-0"
-                  />
-
-                  {/* Search Button */}
-                  <button
-                    type="submit"
-                    className="shrink-0 px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl active:shadow-md transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 min-h-[44px] touch-manipulation"
-                  >
-                    Search
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+      
     </div>
   );
 }

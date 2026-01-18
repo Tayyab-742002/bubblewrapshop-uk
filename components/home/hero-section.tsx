@@ -12,7 +12,7 @@ export default async function HeroSection() {
       <HeroCarousel banners={banners} />
 
       {/* Features Grid - Responsive stacking */}
-      <div className="relative z-10 mx-auto max-w-6xl px-3 sm:px-4 md:px-6 lg:px-8 pb-8 sm:pb-10 md:pb-12 lg:pb-16 xl:pb-20">
+      {/* <div className="relative z-10 mx-auto max-w-6xl px-3 sm:px-4 md:px-6 lg:px-8 pb-8 sm:pb-10 md:pb-12 lg:pb-16 xl:pb-20">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
           <div className="group relative bg-white rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-7 lg:p-8 shadow-md sm:shadow-lg hover:shadow-xl md:hover:shadow-2xl transition-all duration-300 border border-gray-300">
             <div className="relative">
@@ -56,7 +56,7 @@ export default async function HeroSection() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
