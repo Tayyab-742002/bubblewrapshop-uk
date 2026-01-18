@@ -1,7 +1,7 @@
 "use client";
 import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Search,
   User,
@@ -13,6 +13,7 @@ import {
   Settings,
   MapPin,
   ShieldCheck,
+  ChevronDown,
 } from "lucide-react";
 import { MiniCart } from "@/components/cart/mini-cart";
 import { useCartStore } from "@/lib/stores/cart-store";
@@ -53,11 +54,18 @@ const MOCK_CATEGORIES: Category[] = [
 
 export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [mounted, setMounted] = useState(false);
+
+  // Helper to check if a nav link is active
+  const isActiveLink = (href: string) => {
+    if (href === "/products") return pathname?.startsWith("/products");
+    return pathname === href;
+  };
 
   const { getItemCount } = useCartStore();
   const { user, isAuthenticated, signOut, loading: authLoading } = useAuth();
@@ -139,31 +147,32 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 onMouseLeave={handleMegaMenuLeave}
                 className="relative"
               >
-                <button className="px-4 py-2 text-sm font-normal text-white cursor-pointer hover:bg-white/10 rounded-lg transition-all duration-300">
+                <button className={`px-4 py-2 text-sm font-normal text-white cursor-pointer hover:bg-white/10 rounded-lg transition-all duration-300 flex items-center gap-1 ${isActiveLink("/products") ? "bg-white/15" : ""}`}>
                   Products
+                  <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isMegaMenuOpen ? "rotate-180" : ""}`} />
                 </button>
               </div>
               <Link
                 href="/sustainability"
-                className="px-4 py-2 text-sm font-normal cursor-pointer text-white hover:bg-white/10 rounded-lg transition-all duration-300"
+                className={`px-4 py-2 text-sm font-normal cursor-pointer text-white hover:bg-white/10 rounded-lg transition-all duration-300 ${isActiveLink("/sustainability") ? "bg-white/15" : ""}`}
               >
                 Sustainability
               </Link>
               <Link
                 href="/b2b-request"
-                className="px-4 py-2 text-sm font-normal cursor-pointer text-white hover:bg-white/10 rounded-lg transition-all duration-300"
+                className={`px-4 py-2 text-sm font-normal cursor-pointer text-white hover:bg-white/10 rounded-lg transition-all duration-300 ${isActiveLink("/b2b-request") ? "bg-white/15" : ""}`}
               >
                 B2B Request
               </Link>
               <Link
                 href="/about"
-                className="px-4 py-2 text-sm font-normal cursor-pointer text-white hover:bg-white/10 rounded-lg transition-all duration-300"
+                className={`px-4 py-2 text-sm font-normal cursor-pointer text-white hover:bg-white/10 rounded-lg transition-all duration-300 ${isActiveLink("/about") ? "bg-white/15" : ""}`}
               >
                 About
               </Link>
               <Link
                 href="/contact"
-                className="px-4 py-2 text-sm font-normal cursor-pointer text-white hover:bg-white/10 rounded-lg transition-all duration-300"
+                className={`px-4 py-2 text-sm font-normal cursor-pointer text-white hover:bg-white/10 rounded-lg transition-all duration-300 ${isActiveLink("/contact") ? "bg-white/15" : ""}`}
               >
                 Contact
               </Link>
@@ -183,7 +192,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search..."
-                    className="w-48 rounded-lg border-2 border-white/20 bg-white/95 py-1.5 pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-500 focus:w-64 focus:border-white focus:outline-none focus:ring-0 transition-all duration-300"
+                    className="w-56 rounded-lg border-2 border-white/20 bg-white/95 py-1.5 pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-white focus:outline-none focus:ring-0 transition-all duration-300"
                   />
                 </div>
               </form>
@@ -271,7 +280,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                     strokeWidth={2}
                   />
                   {mounted && cartItemCount > 0 && (
-                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-r from-orange-600 to-red-600 text-[10px] font-bold text-white shadow-lg animate-pulse">
+                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-r from-orange-600 to-red-600 text-[10px] font-bold text-white shadow-lg">
                       {cartItemCount > 9 ? "9+" : cartItemCount}
                     </span>
                   )}
@@ -304,7 +313,17 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
             <div className="container mx-auto px-6">
               <div className="flex py-6">
                 {/* Category Tabs */}
-                <div className="w-48 border-r border-emerald-100 pr-6">
+                <div className="w-52 border-r border-emerald-100 pr-6">
+                  {/* View All Products Link */}
+                  <Link
+                    href="/products"
+                    onClick={handleMegaMenuLeave}
+                    className="w-full flex items-center gap-2 px-3 py-2 mb-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-50 rounded-lg transition-all duration-300"
+                  >
+                    <Package className="h-4 w-4" />
+                    View All Products
+                  </Link>
+                  <div className="border-t border-emerald-100 my-2" />
                   {categories.map((category) => (
                     <button
                       key={category.id}
@@ -320,18 +339,19 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                   ))}
                 </div>
 
-                {/* Category Description and CTA - PERFORMANCE: Removed product grid to reduce bundle */}
+                {/* Category Description and CTA */}
                 <div className="flex-1 px-6">
-                  {activeCategory && (
-                    <div className="py-8">
-                      {activeCategory.description && (
-                        <p className="text-sm text-gray-600 mb-6 leading-relaxed max-w-2xl">
-                          {activeCategory.description}
-                        </p>
-                      )}
+                  {activeCategory ? (
+                    <div className="py-6">
+                      <h3 className="text-lg font-bold text-gray-900 mb-2">
+                        {activeCategory.name}
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-4 leading-relaxed max-w-2xl line-clamp-3">
+                        {activeCategory.description || `Explore our ${activeCategory.name.toLowerCase()} collection for quality packaging solutions.`}
+                      </p>
                       <Link
                         href={`/products?category=${activeCategory.slug}`}
-                        className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold cursor-pointer text-white bg-linear-to-r from-emerald-600 to-teal-600 rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-105"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold cursor-pointer text-white bg-linear-to-r from-emerald-600 to-teal-600 rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-105"
                         onClick={handleMegaMenuLeave}
                       >
                         Browse {activeCategory.name}
@@ -349,6 +369,11 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                           />
                         </svg>
                       </Link>
+
+                                          </div>
+                  ) : (
+                    <div className="py-6">
+                      <p className="text-sm text-gray-500">Hover over a category to see details</p>
                     </div>
                   )}
                 </div>
@@ -402,15 +427,23 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
               </div>
 
               <form onSubmit={handleSearch} className="mb-6">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-600" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search products..."
-                    className="w-full rounded-lg border-2 border-emerald-200 py-2 pl-10 pr-4 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200 transition-all"
-                  />
+                <div className="relative flex gap-2">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-600" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search products..."
+                      className="w-full rounded-lg border-2 border-emerald-200 py-2 pl-10 pr-4 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200 transition-all"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-linear-to-r from-emerald-600 to-teal-600 text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all"
+                  >
+                    Search
+                  </button>
                 </div>
               </form>
 
@@ -441,18 +474,16 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
               <nav className="space-y-1">
                 <Link
                   href="/products"
-                  className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-emerald-100 transition-colors"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-100 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
+                  <Package className="h-4 w-4" />
                   All Products
                 </Link>
-                <Link
-                  href="/b2b-request"
-                  className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-emerald-100 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  B2B Request
-                </Link>
+
+                <div className="my-2 border-t border-emerald-200" />
+                <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Categories</p>
+
                 {categories.map((category) => (
                   <Link
                     key={category.id}
@@ -472,7 +503,17 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                     {category.name}
                   </Link>
                 ))}
-                <div className="my-4 border-t border-emerald-200" />
+
+                <div className="my-3 border-t border-emerald-200" />
+                <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Company</p>
+
+                <Link
+                  href="/b2b-request"
+                  className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-emerald-100 transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  B2B Request
+                </Link>
                 <Link
                   href="/sustainability"
                   className="block rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors"

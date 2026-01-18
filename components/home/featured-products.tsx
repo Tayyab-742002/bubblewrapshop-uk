@@ -10,8 +10,8 @@ export async function FeaturedProducts() {
   return (
     <section className="relative py-16 md:py-20 lg:py-24 overflow-hidden bg-linear-to-b from-white via-gray-50/30 to-white">
       {/* Decorative Background Elements */}
-      <div className="absolute top-0 left-0 w-72 h-72 bg-linear-to-br from-emerald-100/40 to-teal-100/40 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-linear-to-tl from-cyan-100/40 to-emerald-100/40 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+      <div className="absolute top-0 left-0 w-72 h-72 bg-linear-to-br from-emerald-100/40 to-emerald-100/40 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-linear-to-tl from-emerald-100/40 to-emerald-100/40 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
       
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px]">
         {/* Section Header */}
@@ -19,22 +19,18 @@ export async function FeaturedProducts() {
           <div className="max-w-2xl">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
               FEATURED
-              <span className="block bg-linear-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent mt-1">
+              <span className="block bg-linear-to-r from-emerald-600 via-emerald-600 to-emerald-600 bg-clip-text text-transparent mt-1">
                 PRODUCTS
               </span>
             </h2>
-            
-            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-              Read about our most Protective packaging for shipping UK: Bubble wraps, foam packaging roll UK, mailing bags wholesale UK, and stretch film wrap UK, which all have automatic bulk pricing.
-            </p>
           </div>
           
           <Button asChild variant="ghost" className="w-fit group p-0 h-auto hover:bg-transparent">
             <Link
               href="/products"
-              className="relative overflow-hidden flex items-center gap-2 px-6 py-3.5 text-sm font-semibold text-white bg-linear-to-r from-emerald-600 to-teal-600 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-emerald-200 hover:scale-105 active:scale-100"
+              className="relative overflow-hidden flex items-center gap-2 px-6 py-3.5 text-sm font-semibold text-white bg-linear-to-r from-emerald-600 to-emerald-600 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-emerald-200 hover:scale-105 active:scale-100"
             >
-              <span className="absolute inset-0 bg-linear-to-r from-emerald-700 to-teal-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <span className="absolute inset-0 bg-linear-to-r from-emerald-700 to-emerald-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <span className="relative">View All Products</span>
               <ArrowRight
                 className="relative h-4 w-4 transition-transform group-hover:translate-x-1"
@@ -54,7 +50,7 @@ export async function FeaturedProducts() {
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="relative mb-6">
-              <div className="w-24 h-24 rounded-2xl bg-linear-to-br from-emerald-100 to-teal-100 flex items-center justify-center shadow-lg">
+              <div className="w-24 h-24 rounded-2xl bg-linear-to-br from-emerald-100 to-emerald-100 flex items-center justify-center shadow-lg">
                 <svg
                   className="w-12 h-12 text-emerald-600"
                   fill="none"
@@ -69,7 +65,7 @@ export async function FeaturedProducts() {
                   />
                 </svg>
               </div>
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-linear-to-br from-cyan-400 to-teal-400 rounded-full animate-pulse" />
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-linear-to-br from-emerald-400 to-emerald-400 rounded-full animate-pulse" />
             </div>
             
             <h3 className="text-xl font-bold text-gray-900 mb-2">
