@@ -221,36 +221,36 @@ export async function getAllCategories() {
   });
 }
 
-export async function getCategoriesWithFeaturedProducts() {
-  return safeQuery(async () => {
-    const fetchData = unstable_cache(
-      async () => {
-        return await client.fetch<Array<SanityCategory & { featuredProducts?: SanityProduct[] }>>(
-          CATEGORIES_WITH_FEATURED_PRODUCTS_QUERY
-        );
-      },
-      ['categories-featured'],
-      {
-        tags: ['categories:all', 'homepage'],
-      }
-    );
-    const data = await fetchData();
-    if (!data) return null;
+// export async function getCategoriesWithFeaturedProducts() {
+//   return safeQuery(async () => {
+//     const fetchData = unstable_cache(
+//       async () => {
+//         return await client.fetch<Array<SanityCategory & { featuredProducts?: SanityProduct[] }>>(
+//           CATEGORIES_WITH_FEATURED_PRODUCTS_QUERY
+//         );
+//       },
+//       ['categories-featured'],
+//       {
+//         tags: ['categories:all', 'homepage'],
+//       }
+//     );
+//     const data = await fetchData();
+//     if (!data) return null;
 
-    return data.map((item) => ({
-      ...transformSanityCategory(item),
-      products: item.featuredProducts
-        ?.map((p) => transformSanityProduct(p))
-        .map((p) => ({
-          id: p.id,
-          name: p.name,
-          slug: p.slug,
-          image: p.image,
-          price: p.basePrice,
-        })),
-    }));
-  });
-}
+//     return data.map((item) => ({
+//       ...transformSanityCategory(item),
+//       products: item.featuredProducts
+//         ?.map((p) => transformSanityProduct(p))
+//         .map((p) => ({
+//           id: p.id,
+//           name: p.name,
+//           slug: p.slug,
+//           image: p.image,
+//           price: p.basePrice,
+//         })),
+//     }));
+//   });
+// }
 
 export async function getCategoryBySlug(slug: string) {
   return safeQuery(async () => {
@@ -268,13 +268,13 @@ export async function getCategoryBySlug(slug: string) {
   });
 }
 
-export async function getProductCountByCategory(categoryId: string) {
-  return safeQuery(async () => {
-    return await client.fetch<number>(PRODUCT_COUNT_BY_CATEGORY_QUERY, {
-      categoryId,
-    });
-  });
-}
+// export async function getProductCountByCategory(categoryId: string) {
+//   return safeQuery(async () => {
+//     return await client.fetch<number>(PRODUCT_COUNT_BY_CATEGORY_QUERY, {
+//       categoryId,
+//     });
+//   });
+// }
 
 // Banners
 export async function getAllBanners() {
@@ -311,46 +311,46 @@ export async function getActiveAnnouncement() {
 }
 
 // Homepage data
-export async function getHomepageData() {
-  return safeQuery(async () => {
-    const fetchData = unstable_cache(
-      async () => {
-        return await client.fetch<{
-          categories: SanityCategory[];
-          featuredProducts: SanityProduct[];
-          newArrivals: SanityProduct[];
-        }>(HOMEPAGE_DATA_QUERY);
-      },
-      ['homepage-data'],
-      {
-        tags: ['homepage', 'categories:all', 'products:featured', 'products:new'],
-      }
-    );
-    const data = await fetchData();
+// export async function getHomepageData() {
+//   return safeQuery(async () => {
+//     const fetchData = unstable_cache(
+//       async () => {
+//         return await client.fetch<{
+//           categories: SanityCategory[];
+//           featuredProducts: SanityProduct[];
+//           newArrivals: SanityProduct[];
+//         }>(HOMEPAGE_DATA_QUERY);
+//       },
+//       ['homepage-data'],
+//       {
+//         tags: ['homepage', 'categories:all', 'products:featured', 'products:new'],
+//       }
+//     );
+//     const data = await fetchData();
 
-    const typed = data as {
-      categories: SanityCategory[];
-      featuredProducts: SanityProduct[];
-      newArrivals: SanityProduct[];
-    };
-    return {
-      categories: typed.categories.map(transformSanityCategory),
-      featuredProducts: typed.featuredProducts.map(transformSanityProduct),
-      newArrivals: typed.newArrivals.map(transformSanityProduct),
-    };
-  });
-}
+//     const typed = data as {
+//       categories: SanityCategory[];
+//       featuredProducts: SanityProduct[];
+//       newArrivals: SanityProduct[];
+//     };
+//     return {
+//       categories: typed.categories.map(transformSanityCategory),
+//       featuredProducts: typed.featuredProducts.map(transformSanityProduct),
+//       newArrivals: typed.newArrivals.map(transformSanityProduct),
+//     };
+//   });
+// }
 
 // Utility functions
-export async function testConnection() {
-  try {
-    const result = await client.fetch('*[_type == "product"][0]._id');
-    return !!result;
-  } catch (error) {
-    console.error("Sanity connection test failed:", error);
-    return false;
-  }
-}
+// export async function testConnection() {
+//   try {
+//     const result = await client.fetch('*[_type == "product"][0]._id');
+//     return !!result;
+//   } catch (error) {
+//     console.error("Sanity connection test failed:", error);
+//     return false;
+//   }
+// }
 
 export async function getProductSlugs() {
   return safeQuery(async () => {
@@ -364,14 +364,14 @@ export async function getProductSlugs() {
   });
 }
 
-export async function getCategorySlugs() {
-  return safeQuery(async () => {
-    const slugs = await client.fetch<Array<{ slug?: { current?: string } }>>(
-      '*[_type == "category" && isActive == true]{ slug }'
-    );
-    // Filter out any null/undefined slug values
-    return slugs
-      .filter((item) => item?.slug?.current)
-      .map((item) => item.slug!.current);
-  });
-}
+// export async function getCategorySlugs() {
+//   return safeQuery(async () => {
+//     const slugs = await client.fetch<Array<{ slug?: { current?: string } }>>(
+//       '*[_type == "category" && isActive == true]{ slug }'
+//     );
+//     // Filter out any null/undefined slug values
+//     return slugs
+//       .filter((item) => item?.slug?.current)
+//       .map((item) => item.slug!.current);
+//   });
+// }

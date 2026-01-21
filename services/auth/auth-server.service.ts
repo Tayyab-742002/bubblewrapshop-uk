@@ -77,16 +77,3 @@ export async function getCurrentUserServer(): Promise<AuthResult> {
     };
   }
 }
-
-/**
- * Check if user is authenticated (server-side)
- * Returns true if user is logged in
- */
-export async function isAuthenticatedServer(): Promise<boolean> {
-  try {
-    const result = await getCurrentUserServer();
-    return result.success;
-  } catch {
-    return false;
-  }
-}

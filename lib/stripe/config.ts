@@ -41,7 +41,7 @@ export const stripe = new Proxy({} as Stripe, {
  * Get the base URL for the application
  * Used for success/cancel redirect URLs
  */
-export function getBaseUrl(): string {
+function getBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_APP_URL) {
     return process.env.NEXT_PUBLIC_APP_URL;
   }

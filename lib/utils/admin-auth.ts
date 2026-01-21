@@ -47,7 +47,7 @@ export async function isAdmin(userId: string): Promise<boolean> {
  * Get admin user with full details
  * Returns user with role information if they are an admin
  */
-export async function getAdminUser(userId: string): Promise<AdminUser | null> {
+async function getAdminUser(userId: string): Promise<AdminUser | null> {
   try {
     if (!userId) {
       return null
@@ -89,27 +89,6 @@ export async function getAdminUser(userId: string): Promise<AdminUser | null> {
     }
   } catch (error) {
     console.error('Error in getAdminUser:', error)
-    return null
-  }
-}
-
-/**
- * Get current admin user from session
- * Convenience function for server components
- */
-export async function getCurrentAdminUser(): Promise<AdminUser | null> {
-  try {
-    const supabase = await createServerSupabaseClient()
-    
-    const { data: { user }, error } = await supabase.auth.getUser()
-    
-    if (error || !user) {
-      return null
-    }
-
-    return await getAdminUser(user.id)
-  } catch (error) {
-    console.error('Error in getCurrentAdminUser:', error)
     return null
   }
 }

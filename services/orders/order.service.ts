@@ -298,64 +298,8 @@ export async function getUserOrders(userId: string): Promise<Order[]> {
   }
 }
 
-/**
- * Update order status
- * Updates order status in Supabase
- * Uses service role client for server-side access
- */
-export async function updateOrderStatus(
-  orderId: string,
-  status: Order["status"]
-): Promise<void> {
-  try {
-    // Use service role client for admin operations
-    const supabase = createServiceRoleClient();
 
-    const { error } = await supabase
-      .from("orders")
-      .update({
-        status,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", orderId);
 
-    if (error) {
-      console.error("Error updating order status:", error);
-      throw error;
-    }
-  } catch (error) {
-    console.error("Failed to update order status:", error);
-    throw error;
-  }
-}
-
-/**
- * Get order status
- * Returns the current status of an order
- * Uses service role client for server-side access
- */
-export async function getOrderStatus(orderId: string): Promise<string | null> {
-  try {
-    // Use service role client for reliable access
-    const supabase = createServiceRoleClient();
-
-    const { data, error } = await supabase
-      .from("orders")
-      .select("status")
-      .eq("id", orderId)
-      .maybeSingle();
-
-    if (error) {
-      console.error("Error fetching order status:", error);
-      return null;
-    }
-
-    return data?.status || null;
-  } catch (error) {
-    console.error("Failed to fetch order status:", error);
-    return null;
-  }
-}
 
 /**
  * Get order by Stripe session ID (uses service role for webhook access)

@@ -58,19 +58,3 @@ export function StatsCard({
   );
 }
 
-export function StatsCardSkeleton() {
-  return (
-    <div className="overflow-hidden rounded-xl sm:rounded-2xl border border-gray-300 bg-white p-4 sm:p-5 md:p-6 shadow-lg">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 space-y-2 sm:space-y-3">
-          {/* Title skeleton */}
-          <div className="h-3 sm:h-4 w-20 sm:w-24 bg-emerald-100 rounded animate-pulse" />
-          {/* Value skeleton */}
-          <div className="h-7 sm:h-8 md:h-9 w-24 sm:w-28 md:w-32 bg-emerald-100 rounded animate-pulse" />
-        </div>
-        {/* Icon skeleton */}
-        <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg sm:rounded-xl bg-emerald-100 animate-pulse" />
-      </div>
-    </div>
-  );
-}

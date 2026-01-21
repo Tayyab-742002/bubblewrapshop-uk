@@ -68,10 +68,5 @@ export function getShippingPrice(id: string): number {
   return option?.price || 0
 }
 
-/**
- * Format shipping option for display
- */
-export function formatShippingOption(option: ShippingOption): string {
-  return `${option.name} - £${option.price.toFixed(2)}`
-}
+
 

@@ -50,29 +50,3 @@ export function DoughnutSkeleton() {
   );
 }
 
-export function CardSkeleton() {
-  return (
-    <div className="rounded-xl border border-gray-300 bg-white p-6 shadow-lg">
-      <div className="space-y-4 animate-pulse">
-        {/* Title */}
-        <div className="h-6 w-32 rounded-lg bg-emerald-300" />
-        {/* Content */}
-        <div className="h-24 rounded-lg bg-emerald-300" />
-      </div>
-    </div>
-  );
-}
-
-export function StatsCardSkeleton() {
-  return (
-    <div className="rounded-2xl border border-gray-300 bg-white p-8 shadow-lg animate-pulse">
-      <div className="flex items-start justify-between">
-        <div className="flex-1 space-y-4">
-          <div className="h-4 w-24 rounded-lg bg-emerald-300" />
-          <div className="h-10 w-32 rounded-lg bg-emerald-300" />
-        </div>
-        <div className="h-12 w-12 rounded-xl bg-emerald-300" />
-      </div>
-    </div>
-  );
-}

@@ -32,24 +32,7 @@ export async function getProducts(): Promise<Product[]> {
   }
 }
 
-/**
- * Fetch products by category
- * Returns products filtered by category ID (for internal use)
- */
-export async function getProductsByCategory(
-  categoryId: string
-): Promise<Product[]> {
-  try {
-    const products = await getSanityProductsByCategory(categoryId);
-    return products || [];
-  } catch (error) {
-    console.error(
-      `Error fetching products for category ${categoryId}:`,
-      error
-    );
-    return [];
-  }
-}
+
 
 /**
  * Fetch products by category slug
@@ -112,27 +95,7 @@ export async function searchProducts(query: string): Promise<Product[]> {
   }
 }
 
-/**
- * Sort products
- * Returns products sorted by the specified criteria
- */
-export async function getSortedProducts(
-  sortBy:
-    | "newest"
-    | "oldest"
-    | "price-low"
-    | "price-high"
-    | "name-asc"
-    | "name-desc"
-): Promise<Product[]> {
-  try {
-    const products = await getSanityFilteredProducts({}, sortBy);
-    return products || [];
-  } catch (error) {
-    console.error(`Error sorting products by ${sortBy}:`, error);
-    return [];
-  }
-}
+
 
 /**
  * Fetch a single product by slug
@@ -151,22 +114,6 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   }
 }
 
-/**
- * Fetch products by IDs
- * Returns multiple products by their IDs
- */
-export async function getProductsByIds(ids: string[]): Promise<Product[]> {
-  try {
-    if (!ids || ids.length === 0) {
-      return [];
-    }
-    const products = await getSanityProductsByIds(ids);
-    return products || [];
-  } catch (error) {
-    console.error(`Error fetching products by IDs:`, error);
-    return [];
-  }
-}
 
 /**
  * Fetch featured products

@@ -296,7 +296,7 @@ export async function createCheckoutSession(params: {
 /**
  * Retrieve checkout session by ID
  */
-export async function getCheckoutSession(
+async function getCheckoutSession(
   sessionId: string
 ): Promise<Stripe.Checkout.Session> {
   try {
@@ -311,24 +311,4 @@ export async function getCheckoutSession(
   }
 }
 
-/**
- * Verify checkout session payment status
- */
-export async function verifyPaymentStatus(sessionId: string): Promise<{
-  paid: boolean;
-  paymentStatus: string;
-  session: Stripe.Checkout.Session;
-}> {
-  try {
-    const session = await getCheckoutSession(sessionId);
 
-    return {
-      paid: session.payment_status === "paid",
-      paymentStatus: session.payment_status,
-      session,
-    };
-  } catch (error) {
-    console.error("Error verifying payment status:", error);
-    throw error;
-  }
-}

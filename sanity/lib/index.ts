@@ -7,10 +7,6 @@
  * - Import them directly from "@/sanity/lib/live" in Server Components only
  * - This prevents client components from accidentally importing live.ts
  */
-
-// Client and configuration
-export { client } from "./client";
-export { urlFor, imagePresets, getResponsiveImageUrls } from "./image";
 // DO NOT export sanityFetch or SanityLive here - importing them evaluates live.ts
 // which calls defineLive at module level and will break in client components
 // Import sanityFetch directly from "@/sanity/lib/live" in Server Components
@@ -27,26 +23,7 @@ export {
   getProductsByIds,
   searchProducts,
   getFilteredProducts,
-  getAllCategories,
-  getCategoriesWithFeaturedProducts,
   getCategoryBySlug,
-  getProductCountByCategory,
-  getAllBanners,
-  getActiveAnnouncement,
-  getHomepageData,
-  testConnection,
-  getProductSlugs,
-  getCategorySlugs,
+  getAllCategories,
 } from "./api";
 
-// Helper functions
-export {
-  transformSanityProduct,
-  transformSanityCategory,
-  transformSanityBanner,
-  transformSanityAnnouncement,
-  getImageUrl,
-  buildFilterString,
-  buildOrderString,
-  safeQuery,
-} from "./helpers";

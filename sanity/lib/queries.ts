@@ -4,7 +4,7 @@
  */
 
 // Base product query with all fields
-export const PRODUCT_QUERY = `
+const PRODUCT_QUERY = `
   _id,
   _type,
   name,
@@ -81,7 +81,7 @@ export const PRODUCT_QUERY = `
 `;
 
 // Simplified product query for listings
-export const PRODUCT_LISTING_QUERY = `
+const PRODUCT_LISTING_QUERY = `
   _id,
   _type,
   name,
@@ -134,7 +134,7 @@ export const PRODUCT_LISTING_QUERY = `
 `;
 
 // Category query
-export const CATEGORY_QUERY = `
+const CATEGORY_QUERY = `
   _id,
   _type,
   name,
@@ -232,7 +232,7 @@ export const CATEGORY_BY_SLUG_QUERY = `*[_type == "category" && slug.current == 
 export const PRODUCT_COUNT_BY_CATEGORY_QUERY = `*[_type == "product" && isActive == true && category._ref == $categoryId] | length`;
 
 // Banner query
-export const BANNER_QUERY = `
+const BANNER_QUERY = `
   _id,
   _type,
   title,
@@ -281,7 +281,7 @@ export const ALL_BANNERS_QUERY = `*[_type == "banner" && isActive == true] | ord
 }`;
 
 // Announcement query
-export const ANNOUNCEMENT_QUERY = `
+const ANNOUNCEMENT_QUERY = `
   _id,
   _type,
   message,

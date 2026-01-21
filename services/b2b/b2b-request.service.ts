@@ -133,37 +133,6 @@ export async function getAllB2BRequests(): Promise<AdminB2BRequest[]> {
 }
 
 /**
- * Get B2B request by ID (Admin only)
- */
-export async function getB2BRequestById(
-  id: string
-): Promise<AdminB2BRequest | null> {
-  const supabase = createServiceRoleClient();
-
-  const { data, error } = await supabase
-    .from("b2b_requests")
-    .select(
-      `
-      *,
-      reviewed_by_user:users!b2b_requests_reviewed_by_fkey (
-        id,
-        email,
-        full_name
-      )
-    `
-    )
-    .eq("id", id)
-    .single();
-
-  if (error || !data) {
-    console.error("Error fetching B2B request:", error);
-    return null;
-  }
-
-  return mapAdminB2BRequestFromDB(data);
-}
-
-/**
  * Update B2B request status (Admin only)
  */
 export async function updateB2BRequestStatus(

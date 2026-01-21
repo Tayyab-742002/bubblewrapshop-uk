@@ -314,21 +314,6 @@ export function transformSanityAnnouncement(
   };
 }
 
-// Helper function to get optimized image URL
-export function getImageUrl(
-  source: SanityImageSource | null | undefined,
-  width?: number,
-  height?: number
-) {
-  if (!source) return "";
-
-  let builder = urlFor(source);
-
-  if (width) builder = builder.width(width);
-  if (height) builder = builder.height(height);
-
-  return builder.url();
-}
 
 // Helper function to build filter string for GROQ
 export function buildFilterString(filters: {

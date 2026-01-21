@@ -270,70 +270,7 @@ export async function sendContactFormEmail(data: {
   }
 }
 
-/**
- * Send order shipped notification
- *
- * @param order - The order object
- * @param customerEmail - Customer's email
- * @param trackingNumber - Shipping tracking number
- * @returns Promise with email send result
- */
-export async function sendOrderShippedEmail(
-  order: Order,
-  customerEmail: string,
-  trackingNumber: string
-): Promise<{ success: boolean; messageId?: string; error?: string }> {
-  try {
-    // Check if Resend is configured
-    if (!isResendConfigured()) {
-      console.warn("Resend is not configured. Skipping email send.");
-      return {
-        success: false,
-        error: "Resend not configured",
-      };
-    }
 
-    const resend = getResendClient();
-
-    // For now, send a simple HTML email
-    // TODO: Create a dedicated OrderShippedEmail template
-    const emailHtml = `
-      <h1>Your Order Has Shipped!</h1>
-      <p>Hi there,</p>
-      <p>Great news! Your order <strong>#${order.orderNumber}</strong> has shipped.</p>
-      <p><strong>Tracking Number:</strong> ${trackingNumber}</p>
-      <p>You can track your package using the tracking number above.</p>
-      <p>Thank you for your order!</p>
-      <p>- Bubble wrap shop (Blackburn) Limited Team</p>
-    `;
-
-    const result = await resend.emails.send({
-      from: EMAIL_CONFIG.from.orders,
-      to: getEmailRecipient(customerEmail),
-      subject: EMAIL_CONFIG.subjects.orderShipped(order.orderNumber),
-      html: emailHtml,
-    });
-
-    if (result.error) {
-      console.error("Failed to send order shipped email:", result.error);
-      return {
-        success: false,
-        error: result.error.message,
-      };
-    }
-
-    return {
-      success: true,
-      messageId: result.data?.id,
-    };
-  } catch (error) {
-    console.error("Error sending order shipped email:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
-  }
-}
 
 /**
  * Send B2B request notification email
@@ -436,7 +373,7 @@ export async function sendB2BRequestEmail(request: {
  *
  * Sends a test email to verify Resend is properly configured
  */
-export async function sendTestEmail(
+ async function sendTestEmail(
   toEmail: string
 ): Promise<{ success: boolean; messageId?: string; error?: string }> {
   try {

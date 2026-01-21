@@ -183,22 +183,3 @@ export async function setDefaultSavedAddress(
   }
 }
 
-export async function getDefaultSavedAddress(
-  userId: string
-): Promise<SavedAddress | null> {
-  const supabase = createClient() as SupabaseClient;
-
-  const { data, error } = await supabase
-    .from("saved_addresses")
-    .select("*")
-    .eq("user_id", userId)
-    .eq("is_default", true)
-    .maybeSingle();
-
-  if (error) {
-    console.error("Error fetching default saved address:", error);
-    throw error;
-  }
-
-  return (data as unknown as SavedAddress) || null;
-}
