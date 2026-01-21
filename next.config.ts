@@ -44,7 +44,6 @@ const nextConfig: NextConfig = {
     // Optimize imports for large packages - tree-shakes unused exports
     optimizePackageImports: [
       "lucide-react",
-      "@radix-ui/react-icons",
       "date-fns",
       "@sanity/icons",
     ],

@@ -425,29 +425,5 @@ export function useAuth(): AuthContextType {
   return context;
 }
 
-/**
- * Hook to check if user is authenticated
- * Returns true if user is logged in
- */
-export function useIsAuthenticated(): boolean {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated;
-}
 
-/**
- * Hook to get current user
- * Returns the current user or null
- */
-export function useUser(): AuthUser | null {
-  const { user } = useAuth();
-  return user;
-}
 
-/**
- * Hook to check if auth is loading
- * Returns true if authentication state is being determined
- */
-export function useAuthLoading(): boolean {
-  const { loading } = useAuth();
-  return loading;
-}

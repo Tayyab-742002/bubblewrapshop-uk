@@ -50,11 +50,3 @@ export {
   buildOrderString,
   safeQuery,
 } from "./helpers";
-
-// Types
-export type {
-  SanityProduct,
-  SanityCategory,
-  SanityBanner,
-  SanityAnnouncement,
-} from "./helpers";

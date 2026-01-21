@@ -596,5 +596,3 @@ export const OrderConfirmationEmail: React.FC<
     </html>
   );
 };
-
-export default OrderConfirmationEmail;

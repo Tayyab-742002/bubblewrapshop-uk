@@ -30,6 +30,4 @@ export function createServiceRoleClient() {
   })
 }
 
-// Export types
-export type ServiceRoleClient = ReturnType<typeof createServiceRoleClient>
 

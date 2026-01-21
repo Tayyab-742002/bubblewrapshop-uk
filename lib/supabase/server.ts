@@ -44,7 +44,3 @@ export async function createServerSupabaseClient() {
   });
 }
 
-// Export types for use in other files
-export type ServerSupabaseClient = Awaited<
-  ReturnType<typeof createServerSupabaseClient>
->;

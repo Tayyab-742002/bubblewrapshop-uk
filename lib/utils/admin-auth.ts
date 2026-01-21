@@ -7,7 +7,7 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import type { User } from '@supabase/supabase-js'
 
-export type AdminUser = User & {
+type AdminUser = User & {
   role: 'admin' | 'customer'
 }
 

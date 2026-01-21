@@ -444,4 +444,3 @@ export const ContactFormEmail: React.FC<Readonly<ContactFormEmailProps>> = ({
   );
 };
 
-export default ContactFormEmail;

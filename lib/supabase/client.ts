@@ -347,7 +347,3 @@ export function createServiceRoleClient() {
 
   return createBrowserClient<Database>(supabaseUrl, serviceRoleKey);
 }
-
-// Export types for use in other files
-export type SupabaseClient = ReturnType<typeof createClient>;
-export type ServiceRoleClient = ReturnType<typeof createServiceRoleClient>;
