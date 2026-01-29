@@ -1,20 +1,20 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { Play, X } from "lucide-react";
+import { X } from "lucide-react";
 
 const galleryItems = [
     {
         id: 1,
         type: "image" as const,
-        src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80",
+        src: "https://pub-20f982007aa54df4849bcd969b89a1bf.r2.dev/BubbleWrapShop/BUBBLEWRAP-ASSETS/WhatsApp%20Image%202026-01-23%20at%2011.56.01%20PM.jpeg",
         alt: "Warehouse facility",
         title: "Modern Warehouse",
     },
     {
         id: 2,
         type: "video" as const,
-        src: "/videos/warehouse-tour.mp4", // Placeholder path
+        src: "https://pub-20f982007aa54df4849bcd969b89a1bf.r2.dev/BubbleWrapShop/BUBBLEWRAP-ASSETS/WhatsApp%20Video%202026-01-23%20at%2011.56.20%20PM.mp4", // Placeholder path
         thumbnail: "https://images.unsplash.com/photo-1553413077-190dd305871c?w=800&q=80",
         alt: "Warehouse tour video",
         title: "Facility Tour",
@@ -22,21 +22,35 @@ const galleryItems = [
     {
         id: 3,
         type: "image" as const,
-        src: "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?w=800&q=80",
+        src: "https://pub-20f982007aa54df4849bcd969b89a1bf.r2.dev/BubbleWrapShop/BUBBLEWRAP-ASSETS/WhatsApp%20Image%202026-01-23%20at%2011.56.03%20PM%20(1).jpeg",
         alt: "Product inventory",
         title: "Product Range",
     },
     {
         id: 4,
         type: "image" as const,
-        src: "https://images.unsplash.com/photo-1494412519320-aa613dfb7738?w=800&q=80",
+        src: "https://pub-20f982007aa54df4849bcd969b89a1bf.r2.dev/BubbleWrapShop/BUBBLEWRAP-ASSETS/WhatsApp%20Image%202026-01-23%20at%2011.56.03%20PM.jpeg",
         alt: "Shipping operations",
         title: "Fast Dispatch",
     },
     {
         id: 5,
         type: "image" as const,
-        src: "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=800&q=80",
+        src: "https://pub-20f982007aa54df4849bcd969b89a1bf.r2.dev/BubbleWrapShop/BUBBLEWRAP-ASSETS/WhatsApp%20Image%202026-01-23%20at%2011.56.05%20PM%20(1).jpeg",
+        alt: "Packaging materials",
+        title: "Quality Materials",
+    },
+    {
+        id: 6,
+        type: "image" as const,
+        src: "https://pub-20f982007aa54df4849bcd969b89a1bf.r2.dev/BubbleWrapShop/BUBBLEWRAP-ASSETS/WhatsApp%20Image%202026-01-23%20at%2011.56.07%20PM%20(3).jpeg",
+        alt: "Packaging materials",
+        title: "Quality Materials",
+    },
+    {
+        id: 7,
+        type: "image" as const,
+        src: "https://pub-20f982007aa54df4849bcd969b89a1bf.r2.dev/BubbleWrapShop/BUBBLEWRAP-ASSETS/WhatsApp%20Image%202026-01-23%20at%2011.56.06%20PM.jpeg",
         alt: "Packaging materials",
         title: "Quality Materials",
     },
@@ -66,27 +80,39 @@ export function GalleryShowcase() {
                             key={item.id}
                             onClick={() => setSelectedItem(item)}
                             className={`
-                group relative overflow-hidden rounded-xl bg-secondary/50 
+                group relative overflow-hidden rounded-xl bg-secondary/50
                 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
                 ${index === 1 ? 'md:col-span-2 md:row-span-2' : 'aspect-square'}
               `}
                         >
-                            <Image
-                                src={item.type === 'video' ? item.thumbnail! : item.src}
-                                alt={item.alt}
-                                fill
-                                className="object-cover transition-transform duration-500 group-hover:scale-110"
-                                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                            />
+                            {item.type === 'video' ? (
+                                <video
+                                    src={item.src}
+                                    autoPlay
+                                    muted
+                                    loop
+                                    playsInline
+                                    className="absolute inset-0 w-full h-full object-cover"
+                                    poster={item.thumbnail}
+                                />
+                            ) : (
+                                <Image
+                                    src={item.src}
+                                    alt={item.alt}
+                                    fill
+                                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                                />
+                            )}
 
                             {/* Overlay */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                            {/* Play Icon for Videos */}
+                            {/* Click to expand indicator for videos */}
                             {item.type === 'video' && (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center transition-all duration-300 group-hover:bg-white/30 group-hover:scale-110">
-                                        <Play className="w-5 h-5 md:w-7 md:h-7 text-white fill-white" />
+                                <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <div className="px-2 py-1 rounded-md bg-black/50 backdrop-blur-sm text-white text-xs font-medium">
+                                        Click to expand
                                     </div>
                                 </div>
                             )}

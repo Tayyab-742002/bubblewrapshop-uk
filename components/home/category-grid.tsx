@@ -25,7 +25,7 @@ export async function CategoryGrid() {
                 categories.map((category: Category) => (
                   <Link
                     key={category.id}
-                    href={`/products?category=${category.slug}`}
+                    href={`/categories/${category.slug}`}
                     className="group flex items-center gap-2.5 bg-white/10 hover:bg-white text-white hover:text-teal-700 px-1.5 pl-1.5 pr-4 py-1.5 rounded-full transition-all duration-300 ease-out border border-white/10 hover:border-white hover:shadow-lg active:scale-95"
                   >
                     {/* Tiny Thumbnail */}
@@ -55,12 +55,12 @@ export async function CategoryGrid() {
                 <div className="text-white/70 text-sm px-4">Loading categories...</div>
               )}
 
-              {/* View All Link */}
+              {/* View All Categories Link */}
               <Link
-                href="/products"
+                href="/categories"
                 className="ml-2 text-xs font-semibold text-white/80 hover:text-white uppercase tracking-wider whitespace-nowrap transition-colors"
               >
-                View All →
+                View All Categories →
               </Link>
             </div>
           </div>

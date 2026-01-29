@@ -74,7 +74,7 @@ export async function GET() {
     for (const category of categories) {
       if (!category.image) continue;
 
-      const categoryUrl = `${siteUrl}/products?category=${category.slug}`;
+      const categoryUrl = `${siteUrl}/categories/${category.slug}`;
 
       imageEntries.push({
         url: categoryUrl,

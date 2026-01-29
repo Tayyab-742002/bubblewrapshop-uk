@@ -155,7 +155,7 @@ Choosing the right packaging box requires careful consideration of size, strengt
 
 For UK businesses, working with a reliable packaging supplier that offers next-day delivery and bulk pricing can streamline your operations and reduce costs. Consider your shipping volume, product types, and budget when making your decision.
 
-Ready to find the perfect packaging boxes for your business? [Browse our range of cardboard boxes](/products?category=shipping-boxes) with automatic bulk pricing and next-day delivery across the UK.
+Ready to find the perfect packaging boxes for your business? [Browse our range of cardboard boxes](/categories/shipping-boxes) with automatic bulk pricing and next-day delivery across the UK.
     `,
   },
   "bubble-wrap-vs-foam-which-is-better": {
@@ -311,7 +311,7 @@ Both bubble wrap and foam packaging have their place in protective packaging. Fo
 
 The best approach is often a combination: use bubble wrap for wrapping items and foam for void fill or custom protection. This provides optimal protection while managing costs effectively.
 
-[Shop bubble wrap](/products?category=bubble-wrap) and [protective packaging materials](/products?category=protective-materials) with next-day delivery across the UK.
+[Shop bubble wrap](/categories/bubble-wrap) and [protective packaging materials](/categories/protective-materials) with next-day delivery across the UK.
     `,
   },
   "packaging-tips-for-fragile-items": {
@@ -477,7 +477,7 @@ Proper packaging of fragile items requires attention to detail and the right mat
 
 Remember: It's better to over-protect than to risk damage. The cost of additional packaging is minimal compared to the cost of replacing damaged items and losing customer trust.
 
-[Shop protective packaging materials](/products?category=protective-materials) with next-day delivery across the UK to protect your fragile shipments.
+[Shop protective packaging materials](/categories/protective-materials) with next-day delivery across the UK to protect your fragile shipments.
     `,
   },
   "eco-friendly-packaging-alternatives": {
@@ -1047,7 +1047,7 @@ Selecting the right cardboard box size requires careful measurement and consider
 
 Remember: The perfect box size provides adequate protection while minimizing material use and shipping costs. Investing time in proper box selection pays off in reduced damage, lower costs, and improved customer satisfaction.
 
-[Browse our range of cardboard boxes in various sizes](/products?category=shipping-boxes) with next-day delivery across the UK.
+[Browse our range of cardboard boxes in various sizes](/categories/shipping-boxes) with next-day delivery across the UK.
     `,
   },
 };

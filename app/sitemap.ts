@@ -145,7 +145,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     );
     if (categories) {
       categoryPages = categories.map((category) => ({
-        url: `${siteUrl}/products?category=${category.slug}`,
+        url: `${siteUrl}/categories/${category.slug}`,
         lastModified: category._updatedAt
           ? new Date(category._updatedAt)
           : baseDate,

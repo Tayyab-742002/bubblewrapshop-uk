@@ -159,42 +159,37 @@ export function ProductPurchaseSection({
   ]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Price Display */}
-      <div className="pb-6 border-b border-border/30">
-        <div className="flex items-baseline gap-3">
-          <span className="text-3xl font-bold text-foreground">
+      <div className="pb-5 border-b border-border">
+        <div className="flex items-baseline gap-2.5">
+          <span className="text-2xl font-semibold tracking-tight text-foreground">
             £{calculatedPricePerUnit.toFixed(2)}
           </span>
           {product.discount && Number(product.discount) > 0 && (
-            <span className="text-lg text-muted-foreground line-through">
+            <span className="text-base text-muted-foreground/70 line-through">
               £{((product.basePrice * 100) / (100 - Number(product.discount))).toFixed(2)}
             </span>
           )}
         </div>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-xs text-muted-foreground mt-1.5 tracking-wide">
           Tax included. Shipping calculated at checkout.
         </p>
       </div>
 
-      {/* Variant Selector */}
+      {/* Variant Selector - Using label prop, no duplicate h3 */}
       {product.variants && product.variants.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-foreground">
-            Size
-          </h3>
-          <VariantSelector
-            variants={product.variants}
-            label="Size"
-            onVariantChange={handleVariantChange}
-          />
-        </div>
+        <VariantSelector
+          variants={product.variants}
+          label="Size"
+          onVariantChange={handleVariantChange}
+        />
       )}
 
       {/* Quantity Options Selector */}
       {selectedVariant?.quantityOptions &&
         selectedVariant.quantityOptions.length > 0 && (
-          <div className="space-y-3" key={selectedVariant.id}>
+          <div key={selectedVariant.id}>
             <QuantityOptionsSelector
               quantityOptions={selectedVariant.quantityOptions}
               selectedQuantity={selectedQuantityOption?.quantity}
@@ -209,10 +204,10 @@ export function ProductPurchaseSection({
 
       {/* Pricing Table */}
       {product.pricingTiers && product.pricingTiers.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-foreground">
+        <div className="space-y-2">
+          <label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
             Volume Pricing
-          </h3>
+          </label>
           <PricingTable
             tiers={product.pricingTiers}
             basePrice={product.basePrice}
@@ -222,7 +217,7 @@ export function ProductPurchaseSection({
       )}
 
       {/* Quantity Selector & Price Display */}
-      <div className="space-y-4">
+      <div>
         {selectedVariant?.quantityOptions &&
           selectedVariant.quantityOptions.length > 0 ? (
           (() => {
@@ -285,24 +280,30 @@ export function ProductPurchaseSection({
       />
 
       {/* Trust Badges */}
-      <div className="grid grid-cols-3 gap-4 pt-6 border-t border-border/30">
-        <div className="flex flex-col items-center text-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-            <Truck className="w-5 h-5 text-muted-foreground" />
+      <div className="grid grid-cols-3 gap-3 pt-5 border-t border-border">
+        <div className="flex flex-col items-center text-center gap-1.5">
+          <div className="w-9 h-9 rounded-full bg-secondary/60 flex items-center justify-center">
+            <Truck className="w-4 h-4 text-muted-foreground" />
           </div>
-          <span className="text-xs text-muted-foreground font-medium">Fast Delivery</span>
+          <span className="text-[11px] text-muted-foreground font-medium leading-tight">
+            Fast Delivery
+          </span>
         </div>
-        <div className="flex flex-col items-center text-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-            <ShieldCheck className="w-5 h-5 text-muted-foreground" />
+        <div className="flex flex-col items-center text-center gap-1.5">
+          <div className="w-9 h-9 rounded-full bg-secondary/60 flex items-center justify-center">
+            <ShieldCheck className="w-4 h-4 text-muted-foreground" />
           </div>
-          <span className="text-xs text-muted-foreground font-medium">Secure Payment</span>
+          <span className="text-[11px] text-muted-foreground font-medium leading-tight">
+            Secure Payment
+          </span>
         </div>
-        <div className="flex flex-col items-center text-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-            <RotateCcw className="w-5 h-5 text-muted-foreground" />
+        <div className="flex flex-col items-center text-center gap-1.5">
+          <div className="w-9 h-9 rounded-full bg-secondary/60 flex items-center justify-center">
+            <RotateCcw className="w-4 h-4 text-muted-foreground" />
           </div>
-          <span className="text-xs text-muted-foreground font-medium">Easy Returns</span>
+          <span className="text-[11px] text-muted-foreground font-medium leading-tight">
+            Easy Returns
+          </span>
         </div>
       </div>
     </div>

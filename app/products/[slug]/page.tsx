@@ -167,7 +167,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const breadcrumbItems = [
     { label: "Products", href: "/products" },
     ...(product.category && product.categorySlug
-      ? [{ label: product.category, href: `/products?category=${product.categorySlug}` }]
+      ? [{ label: product.category, href: `/categories/${product.categorySlug}` }]
       : []),
     { label: product.name },
   ];

@@ -355,7 +355,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         {activeCategory.description || `Explore our ${activeCategory.name.toLowerCase()} collection for quality packaging solutions.`}
                       </p>
                       <Link
-                        href={`/products?category=${activeCategory.slug}`}
+                        href={`/categories/${activeCategory.slug}`}
                         className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold cursor-pointer text-white bg-linear-to-r from-emerald-600 to-teal-600 rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-105"
                         onClick={handleMegaMenuLeave}
                       >
@@ -387,7 +387,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 {activeCategory?.image && (
                   <div className="w-64 pl-6 border-l border-emerald-100">
                     <Link
-                      href={`/products?category=${activeCategory.slug}`}
+                      href={`/categories/${activeCategory.slug}`}
                       className="block group cursor-pointer border-2 border-emerald-100 hover:border-emerald-300 p-3 rounded-xl transition-all duration-300 hover:shadow-lg"
                       onClick={handleMegaMenuLeave}
                     >
@@ -492,7 +492,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 {categories.map((category) => (
                   <Link
                     key={category.id}
-                    href={`/products?category=${category.slug}`}
+                    href={`/categories/${category.slug}`}
                     className="rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors flex items-center gap-3"
                     onClick={closeMobileMenu}
                   >

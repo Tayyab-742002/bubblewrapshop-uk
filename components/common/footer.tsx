@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export function aFooter() {
+export function Footer() {
   return (
     <footer className="bg-neutral-100 text-neutral-800 border-t border-neutral-200">
 
@@ -75,7 +75,7 @@ export function aFooter() {
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-neutral-400 shrink-0" />
-                <a href="tel:+441254916167" className="hover:text-neutral-900 transition-colors">01254 916167</a>
+                <a href="tel:+447728342335" className="hover:text-neutral-900 transition-colors">07728 342335</a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-neutral-400 shrink-0" />

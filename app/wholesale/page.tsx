@@ -553,35 +553,35 @@ export default function WholesalePage() {
                 {
                   name: "Bubble Wrap",
                   description: "Protective bubble wrap in various sizes",
-                  href: "/products?category=bubble-wrap",
+                  href: "/categories/bubble-wrap",
                   image:
                     "https://images.unsplash.com/photo-1605745341112-85968b19335b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
                 },
                 {
                   name: "Cardboard Boxes",
                   description: "Shipping boxes in all standard sizes",
-                  href: "/products?category=shipping-boxes",
+                  href: "/categories/shipping-boxes",
                   image:
                     "https://images.unsplash.com/photo-1602143407151-7111542de6e8?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
                 },
                 {
                   name: "Packing Tape",
                   description: "Strong adhesive tape for sealing",
-                  href: "/products?category=packing-tape",
+                  href: "/categories/packing-tape",
                   image:
                     "https://images.unsplash.com/photo-1605745341112-85968b19335b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
                 },
                 {
                   name: "Protective Materials",
                   description: "Foam, padding, and void fill",
-                  href: "/products?category=protective-materials",
+                  href: "/categories/protective-materials",
                   image:
                     "https://images.unsplash.com/photo-1605745341112-85968b19335b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
                 },
                 {
                   name: "Mailers & Envelopes",
                   description: "Bubble mailers and padded envelopes",
-                  href: "/products?category=mailers",
+                  href: "/categories/mailers",
                   image:
                     "https://images.unsplash.com/photo-1605745341112-85968b19335b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
                 },

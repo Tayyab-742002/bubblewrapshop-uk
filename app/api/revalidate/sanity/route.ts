@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
       revalidatePath(`/products/${slug}`);
     }
     if (slug && docType === "category") {
-      revalidatePath(`/products?category=${slug}`);
+      revalidatePath(`/categories/${slug}`);
     }
 
     return NextResponse.json({

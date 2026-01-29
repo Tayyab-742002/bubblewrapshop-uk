@@ -237,7 +237,7 @@ Choosing the right packaging boxes requires understanding your product needs, sh
 
 Remember: The right box size and strength not only protects your products but also optimizes shipping costs and improves customer satisfaction.
 
-[Shop cardboard boxes in various sizes](/products?category=shipping-boxes) with automatic bulk pricing and next-day delivery across the UK.
+[Shop cardboard boxes in various sizes](/categories/shipping-boxes) with automatic bulk pricing and next-day delivery across the UK.
     `,
   },
   "bubble-wrap-guide": {
@@ -420,7 +420,7 @@ Choosing the right bubble wrap involves understanding your product protection ne
 
 Remember: Proper wrapping technique is just as important as choosing the right bubble wrap. Take time to wrap items correctly for maximum protection.
 
-[Shop bubble wrap in various sizes and types](/products?category=bubble-wrap) with next-day delivery across the UK.
+[Shop bubble wrap in various sizes and types](/categories/bubble-wrap) with next-day delivery across the UK.
     `,
   },
   "packing-tape-guide": {
@@ -617,7 +617,7 @@ Choosing the right packing tape involves understanding your box sizes, shipping 
 
 Remember: Proper tape application is essential for package security. Take time to seal boxes correctly for maximum protection.
 
-[Shop packing tape in various types and sizes](/products?category=packing-tape) with next-day delivery across the UK.
+[Shop packing tape in various types and sizes](/categories/packing-tape) with next-day delivery across the UK.
     `,
   },
   "protective-packaging-guide": {
@@ -877,7 +877,7 @@ Choosing the right protective packaging requires understanding your product need
 
 Remember: Proper protection prevents damage, reduces returns, and improves customer satisfaction. Invest in quality protective materials for long-term success.
 
-[Shop protective packaging materials](/products?category=protective-materials) with next-day delivery across the UK.
+[Shop protective packaging materials](/categories/protective-materials) with next-day delivery across the UK.
     `,
   },
 };

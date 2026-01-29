@@ -8,6 +8,7 @@ import {
   FinalCTA,
   B2BBanner,
   GalleryShowcase,
+  TrustBar,
 } from "@/components/home";
 
 // Revalidation strategy: On-demand revalidation via Sanity webhooks
@@ -24,29 +25,13 @@ const siteUrl = "https://bubblewrapshop.co.uk";
  * Targeting both B2C and B2B customers
  */
 export const metadata: Metadata = {
-  title: "Packaging Supplies UK: Bubble Wrap, Boxes & Eco Packaging",
+  title: "Bubble Wrap & Packaging Supplies UK | Next-Day from Blackburn",
   description:
-    "Create your bubble-wrapped purchase in the U.K. through a reputable wholesale bubble wrap distributor. Bubble wrap UK, packaging mailing bags wholesale UK.",
-  keywords: [
-    "Packaging supplies UK",
-    "Buy bubble wrap online UK",
-    "Wholesale bubble wrap supplier UK",
-    "Eco-friendly bubble wrap UK",
-    "Protective packaging for shipping UK",
-    "Bubble wrap rolls wholesale UK",
-    "Cheap bubble wrap UK supplier",
-    "Anti-static bubble wrap UK",
-    "Foam packaging rolls UK",
-    "Stretch film wrap UK",
-    "Edge protection packaging UK",
-    "Fragile tape UK",
-    "Mailing bags wholesale UK",
-    "Bubble wrap UK",
-  ],
+    "Family-run packaging supplier in Blackburn. Buy bubble wrap, mailing bags & boxes wholesale. Next-day delivery to Manchester, London & UK-wide. 5-star rated.",
   openGraph: {
-    title: "Packaging Supplies UK | Bubble Wrap & Boxes | Bubble Wrap Shop",
+    title: "Bubble Wrap & Packaging Supplies | Next-Day Delivery UK",
     description:
-      "UK's leading supplier of packaging supplies. Buy bubble wrap, cardboard boxes, and protective packaging. Wholesale pricing. Next day delivery.",
+      "Blackburn's trusted packaging supplier. Wholesale bubble wrap, boxes & mailing bags. Next-day delivery to Manchester, London & nationwide.",
     url: siteUrl,
     siteName: "Bubble Wrap Shop",
     images: [
@@ -54,15 +39,15 @@ export const metadata: Metadata = {
         url: `${siteUrl}/og-image.jpg`,
         width: 1200,
         height: 630,
-        alt: "Bubble Wrap Shop - Packaging Supplies UK",
+        alt: "Bubble Wrap Shop - Packaging Supplies from Blackburn, UK",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Packaging Supplies UK | Bubble Wrap & Boxes | Bubble Wrap Shop",
+    title: "Bubble Wrap & Packaging Supplies | Next-Day Delivery UK",
     description:
-      "UK's leading supplier of packaging supplies. Wholesale pricing. Next day delivery across the UK.",
+      "Blackburn's trusted packaging supplier. Wholesale bubble wrap, boxes & mailing bags. Next-day delivery UK-wide.",
     images: [`${siteUrl}/og-image.jpg`],
   },
   alternates: {
@@ -80,10 +65,10 @@ export default function Home() {
     url: siteUrl,
     logo: `${siteUrl}/logo.jpg`,
     description:
-      "Premium packaging supplies with automatic bulk pricing. Next day delivery. Eco-friendly options.",
+      "Family-run packaging supplier based in Blackburn, Lancashire. Wholesale bubble wrap, mailing bags, and boxes with next-day delivery across the UK.",
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+44-7882-851632",
+      telephone: "+44-7728-342335",
       contactType: "Customer Service",
       areaServed: "GB",
       availableLanguage: "English",
@@ -113,7 +98,7 @@ export default function Home() {
     legalName: "Bubble wrap shop (Blackburn) Limited",
     image: `${siteUrl}/logo.jpg`,
     url: siteUrl,
-    telephone: "+44-7882-851632",
+    telephone: "+44-7728-342335",
     email: "sales@bubblewrapshop.co.uk",
     priceRange: "££",
     address: {
@@ -135,12 +120,26 @@ export default function Home() {
       opens: "09:00",
       closes: "17:00",
     },
-    areaServed: {
-      "@type": "Country",
-      name: "United Kingdom",
-    },
+    areaServed: [
+      { "@type": "City", name: "Blackburn" },
+      { "@type": "City", name: "Manchester" },
+      { "@type": "City", name: "London" },
+      { "@type": "City", name: "Birmingham" },
+      { "@type": "City", name: "Leeds" },
+      { "@type": "City", name: "Liverpool" },
+      { "@type": "Country", name: "United Kingdom" },
+    ],
     description:
-      "Premium packaging supplies with automatic bulk pricing. Next day delivery across the UK. Eco-friendly options available.",
+      "Family-run packaging supplier in Blackburn, Lancashire. Wholesale bubble wrap, mailing bags, and boxes with next-day delivery to Manchester, London, and UK-wide.",
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Packaging Supplies",
+      itemListElement: [
+        { "@type": "Offer", itemOffered: { "@type": "Product", name: "Bubble Wrap Rolls" } },
+        { "@type": "Offer", itemOffered: { "@type": "Product", name: "Mailing Bags" } },
+        { "@type": "Offer", itemOffered: { "@type": "Product", name: "Cardboard Boxes" } },
+      ],
+    },
   };
 
   // Website Structured Data (JSON-LD) for SEO
@@ -183,6 +182,7 @@ export default function Home() {
 
       <B2BBanner />
       <HeroSection />
+      <TrustBar />
       <CategoryGrid />
       <FeaturedProducts />
       <GalleryShowcase />

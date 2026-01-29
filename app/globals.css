@@ -43,9 +43,9 @@
   --destructive-foreground: oklch(1 0 0);
 
   /* Borders & Inputs */
-  --border: oklch(0.90 0.02 160);
-  /* Subtle green-tinted border */
-  --input: oklch(0.90 0.02 160);
+  --border: oklch(0.82 0.02 160);
+  /* Visible green-tinted border */
+  --input: oklch(0.85 0.02 160);
   --ring: oklch(0.55 0.15 155);
   /* Primary ring color */
 
@@ -68,7 +68,7 @@
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.95 0.05 160);
   --sidebar-accent-foreground: oklch(0.40 0.10 160);
-  --sidebar-border: oklch(0.90 0.02 160);
+  --sidebar-border: oklch(0.82 0.02 160);
   --sidebar-ring: oklch(0.55 0.15 155);
 
   /* Fonts */

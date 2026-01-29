@@ -16,7 +16,7 @@ export function ProductHeader({
   const breadcrumbItems = [
     { label: "Products", href: "/products" },
     ...(category && categorySlug
-      ? [{ label: category, href: `/products?category=${categorySlug}` }]
+      ? [{ label: category, href: `/categories/${categorySlug}` }]
       : []),
     { label: productName },
   ];

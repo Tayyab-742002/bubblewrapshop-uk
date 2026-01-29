@@ -42,7 +42,7 @@ export function RelatedProducts({
         </div>
         {categorySlug && (
           <Button asChild variant="outline" className="hidden sm:flex">
-            <Link href={`/products?category=${categorySlug}`}>
+            <Link href={`/categories/${categorySlug}`}>
               View All
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
@@ -59,7 +59,7 @@ export function RelatedProducts({
       {categorySlug && (
         <div className="mt-8 text-center sm:hidden">
           <Button asChild variant="outline" className="w-full sm:w-auto">
-            <Link href={`/products?category=${categorySlug}`}>
+            <Link href={`/categories/${categorySlug}`}>
               View All {categoryName || "Products"}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

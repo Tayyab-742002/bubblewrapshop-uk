@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 
 // PERFORMANCE: Use dynamic import for the Footer to reduce initial JS payload.
 // This splits the footer into its own JS chunk.
-const Footer = dynamic(() => import("@/components/common/footer").then((mod) => mod.aFooter), {
+const Footer = dynamic(() => import("@/components/common/footer").then((mod) => mod.Footer), {
   ssr: true, // Keep it true so search engines can still crawl your footer links.
 });
 
@@ -44,7 +44,7 @@ export function WebsiteLayoutWrapper({
       <Footer />
 
       <WhatsAppButton
-        phoneNumber="+447882851632"
+        phoneNumber="+447728342335"
         message="Hi! I'm interested in your packaging products."
         position="left"
       />
