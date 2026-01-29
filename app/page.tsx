@@ -10,6 +10,7 @@ import {
   GalleryShowcase,
   TrustBar,
 } from "@/components/home";
+import { getAllCategories } from "@/sanity/lib";
 
 // Revalidation strategy: On-demand revalidation via Sanity webhooks
 // Pages will only revalidate when content changes in Sanity CMS
@@ -55,7 +56,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  // Fetch categories for the CategoryGrid
+  const categories = await getAllCategories();
   // Organization Structured Data (JSON-LD) for SEO
   const organizationStructuredData = {
     "@context": "https://schema.org",
@@ -183,7 +186,7 @@ export default function Home() {
       <B2BBanner />
       <HeroSection />
       <TrustBar />
-      <CategoryGrid />
+      <CategoryGrid categories={categories || []} />
       <FeaturedProducts />
       <GalleryShowcase />
       <SustainabilityBlock />

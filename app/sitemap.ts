@@ -104,8 +104,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    // NOTE: Location landing pages removed - create these pages first before adding to sitemap
-    // Future local SEO pages: /packaging-supplies-blackburn, /packaging-supplies-manchester, etc.
+    // Location landing pages for local SEO
+    {
+      url: `${siteUrl}/locations`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/locations/blackburn`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.8, // Higher priority - HQ location
+    },
+    {
+      url: `${siteUrl}/locations/manchester`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/locations/london`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
   ];
 
   // Fetch all products with _updatedAt from Sanity

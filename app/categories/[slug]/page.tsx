@@ -465,13 +465,23 @@ export default async function CategoryPage({
       {otherCategories.length > 0 && (
         <div className="py-16 md:py-20 bg-secondary/30 border-t border-border">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-            <div className="text-center mb-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-                Explore More Categories
-              </h2>
-              <p className="text-muted-foreground">
-                Discover our full range of packaging solutions
-              </p>
+            {/* Section Header with View All link for desktop */}
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
+              <div className="text-center md:text-left">
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+                  Explore More Categories
+                </h2>
+                <p className="text-muted-foreground">
+                  Discover our full range of packaging solutions
+                </p>
+              </div>
+              <Link
+                href="/categories"
+                className="hidden md:inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700 font-medium transition-colors shrink-0"
+              >
+                View All Categories
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -506,15 +516,15 @@ export default async function CategoryPage({
               ))}
             </div>
 
-            {/* View All Categories CTA Button */}
+            {/* View All Categories CTA Button - visible on all devices */}
             <div className="mt-10 text-center">
               <Link
                 href="/categories"
-                className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl"
+                className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-all shadow-lg hover:shadow-xl text-sm sm:text-base"
               >
-                <Package className="w-5 h-5" />
+                <Package className="w-4 h-4 sm:w-5 sm:h-5" />
                 View All Categories
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
               </Link>
             </div>
           </div>

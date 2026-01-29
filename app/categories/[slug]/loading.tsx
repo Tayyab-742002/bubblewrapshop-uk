@@ -147,9 +147,13 @@ export default function CategoryDetailLoading() {
       {/* Explore More Categories Skeleton */}
       <div className="py-16 md:py-20 bg-secondary/30 border-t border-border">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-          <div className="text-center mb-10">
-            <div className="h-8 w-56 bg-muted rounded mx-auto mb-2 animate-pulse" />
-            <div className="h-5 w-72 bg-muted/50 rounded mx-auto animate-pulse" />
+          {/* Section Header Skeleton with View All link for desktop */}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
+            <div className="text-center md:text-left">
+              <div className="h-8 w-56 bg-muted rounded mb-2 mx-auto md:mx-0 animate-pulse" />
+              <div className="h-5 w-72 bg-muted/50 rounded mx-auto md:mx-0 animate-pulse" />
+            </div>
+            <div className="hidden md:block h-5 w-36 bg-muted/50 rounded animate-pulse" />
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -161,9 +165,9 @@ export default function CategoryDetailLoading() {
             ))}
           </div>
 
-          {/* View All Categories Button Skeleton */}
+          {/* View All Categories Button Skeleton - visible on all devices */}
           <div className="mt-10 text-center">
-            <div className="h-14 w-56 bg-muted rounded-xl mx-auto animate-pulse" />
+            <div className="h-12 w-48 sm:h-14 sm:w-56 bg-muted rounded-xl mx-auto animate-pulse" />
           </div>
         </div>
       </div>
