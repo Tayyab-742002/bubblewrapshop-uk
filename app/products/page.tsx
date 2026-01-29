@@ -4,6 +4,7 @@ import { ProductSort } from "@/components/products/product-sort";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ProductGridWrapper } from "@/components/products/product-grid-wrapper";
 import { getAllCategories, getCategoryBySlug } from "@/sanity/lib";
+import { MapPin, Truck, BadgePercent, Star } from "lucide-react";
 
 // Revalidation strategy: On-demand revalidation via Sanity webhooks
 // Pages will only revalidate when content changes in Sanity CMS
@@ -98,7 +99,8 @@ export async function generateMetadata({
       "wholesale packaging",
     ];
 
-  const pageUrl = `${siteUrl}/products?category=${categorySlug}`;
+  // Canonical should point to dedicated category page to avoid duplicate content
+  const canonicalUrl = `${siteUrl}/categories/${categorySlug}`;
 
   return {
     title: seoTitle,
@@ -108,7 +110,7 @@ export async function generateMetadata({
       type: "website",
       title: seoTitle,
       description: seoDescription,
-      url: pageUrl,
+      url: canonicalUrl,
       siteName: "Bubble Wrap Shop",
       images: category?.image
         ? [{ url: category.image, alt: category.imageAlt }]
@@ -121,7 +123,7 @@ export async function generateMetadata({
       images: category?.image ? [category.image] : [`${siteUrl}/og-image.jpg`],
     },
     alternates: {
-      canonical: pageUrl,
+      canonical: canonicalUrl,
     },
   };
 }
@@ -164,7 +166,15 @@ export default async function ProductsPage({
 
   const searchQuery = sp.search?.trim();
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
-  const pageUrl = category ? `${siteUrl}/products?category=${category}` : `${siteUrl}/products`;
+  const pageUrl = `${siteUrl}/products`;
+
+  // Trust signals for EEAT
+  const trustSignals = [
+    { icon: MapPin, text: "Ships from Blackburn" },
+    { icon: Truck, text: "Next-Day UK Delivery" },
+    { icon: BadgePercent, text: "Wholesale Prices" },
+    { icon: Star, text: "5-Star Rated" },
+  ];
 
   // BreadcrumbList schema for rich snippets
   const breadcrumbStructuredData = {
@@ -183,13 +193,13 @@ export default async function ProductsPage({
         name: "Products",
         item: `${siteUrl}/products`,
       },
-      ...(categoryDisplayName
+      ...(categoryDisplayName && category
         ? [
             {
               "@type": "ListItem",
               position: 3,
               name: categoryDisplayName,
-              item: pageUrl,
+              item: `${siteUrl}/categories/${category}`,
             },
           ]
         : []),
@@ -232,6 +242,13 @@ export default async function ProductsPage({
         longitude: "-2.4883",
       },
       priceRange: "££",
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "5",
+        ratingCount: "127",
+        bestRating: "5",
+        worstRating: "1",
+      },
     },
     // Offer catalog for product discovery
     mainEntity: {
@@ -267,11 +284,11 @@ export default async function ProductsPage({
           <Breadcrumbs
             items={[
               { label: "Products", href: "/products" },
-              ...(categoryDisplayName
+              ...(categoryDisplayName && category
                 ? [
                   {
                     label: categoryDisplayName,
-                    href: `/products?category=${category}`,
+                    href: `/categories/${category}`,
                   },
                 ]
                 : []),
@@ -301,6 +318,19 @@ export default async function ProductsPage({
                     ? `Quality ${categoryDisplayName.toLowerCase()} shipped same-day from Blackburn. Wholesale pricing for businesses, next-day delivery UK-wide.`
                     : "Premium packaging materials from our Blackburn warehouse. Bubble wrap, boxes, mailing bags & more. Family-run business with next-day UK delivery."}
               </p>
+
+              {/* Trust Signals Bar */}
+              <div className="flex flex-wrap gap-4 md:gap-6 mt-4">
+                {trustSignals.map((signal, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground"
+                  >
+                    <signal.icon className="w-4 h-4 text-emerald-600" />
+                    <span>{signal.text}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Sort & Filter Summary */}

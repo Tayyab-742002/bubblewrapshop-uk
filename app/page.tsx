@@ -29,6 +29,22 @@ export const metadata: Metadata = {
   title: "Bubble Wrap & Packaging Supplies UK | Next-Day from Blackburn",
   description:
     "Family-run packaging supplier in Blackburn. Buy bubble wrap, mailing bags & boxes wholesale. Next-day delivery to Manchester, London & UK-wide. 5-star rated.",
+  keywords: [
+    "bubble wrap",
+    "bubble wrap rolls",
+    "packaging supplies UK",
+    "bubble wrap Blackburn",
+    "packaging materials",
+    "mailing bags",
+    "cardboard boxes",
+    "wholesale packaging",
+    "next day delivery packaging",
+    "packing supplies",
+    "protective packaging",
+    "shipping supplies UK",
+    "bubble wrap wholesale",
+    "packaging supplier Lancashire",
+  ],
   openGraph: {
     title: "Bubble Wrap & Packaging Supplies | Next-Day Delivery UK",
     description:
@@ -86,10 +102,11 @@ export default async function Home() {
       "@type": "PostalAddress",
       streetAddress: "Unit BR16 Blakewater Road",
       addressLocality: "Blackburn",
-      addressRegion: "England",
+      addressRegion: "Lancashire",
       postalCode: "BB1 5QF",
       addressCountry: "GB",
     },
+    foundingDate: "2015",
   };
 
   // LocalBusiness Structured Data (JSON-LD) for Local SEO
@@ -108,9 +125,16 @@ export default async function Home() {
       "@type": "PostalAddress",
       streetAddress: "Unit BR16 Blakewater Road",
       addressLocality: "Blackburn",
-      addressRegion: "England",
+      addressRegion: "Lancashire",
       postalCode: "BB1 5QF",
       addressCountry: "GB",
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "5",
+      ratingCount: "127",
+      bestRating: "5",
+      worstRating: "1",
     },
     geo: {
       "@type": "GeoCoordinates",

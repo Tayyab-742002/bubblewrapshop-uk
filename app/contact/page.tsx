@@ -218,7 +218,7 @@ export default function ContactPage() {
               </span>
             </div>
             <h1 className="mb-6 text-4xl md:text-5xl lg:text-6xl font-bold text-white">
-              Contact Bubble Wrap Shop
+              Contact Us in Blackburn
             </h1>
             <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
               We have come to assist you in finding the best packaging materials in the UK for your business, Bubble Wrap Shop. You need to know how to order bubble wrap online UK, need some pricing advice about a reliable wholesale bubble wrap supplier UK, or simply need some help picking out some protective packaging to ship your UK goods?
@@ -303,7 +303,7 @@ export default function ContactPage() {
                       <br />
                       Unit BR16 Blakewater Road
                       <br />
-                      Blackburn, England, BB1 5QF
+                      Blackburn, Lancashire, BB1 5QF
                       <br />
                       United Kingdom
                     </p>

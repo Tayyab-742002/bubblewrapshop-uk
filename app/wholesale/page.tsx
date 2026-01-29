@@ -18,111 +18,188 @@ import {
   Building2,
   Sparkles,
   Zap,
+  MapPin,
+  Star,
 } from "lucide-react";
+import { getAllCategories } from "@/sanity/lib";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
 
 export const metadata: Metadata = {
   title:
-    "Wholesale Packaging Supplies UK | Bulk Order Discounts | B2B Packaging Solutions",
+    "Wholesale Packaging Supplies UK | Bulk from Blackburn | Bubble Wrap Shop",
   description:
-    "Wholesale packaging supplies for UK businesses. Bulk pricing on bubble wrap, cardboard boxes, packing tape, and protective packaging. Save up to 40% on large orders. Next day delivery. Trusted by 500+ businesses across the UK.",
+    "Wholesale packaging supplies from our Blackburn warehouse. Bulk pricing on bubble wrap, boxes & mailing bags. Save up to 40% on large orders. Next-day UK delivery. Family-run B2B supplier since 2015.",
   keywords: [
     "wholesale packaging UK",
+    "wholesale packaging Blackburn",
     "bulk packaging supplies",
-    "B2B packaging",
+    "B2B packaging supplier UK",
     "wholesale bubble wrap",
-    "bulk cardboard boxes",
-    "corporate packaging",
+    "bulk cardboard boxes UK",
     "business packaging supplies",
-    "packaging wholesale prices",
+    "wholesale packaging Lancashire",
     "bulk order packaging",
-    "wholesale packaging supplier UK",
+    "wholesale packaging supplier",
     "B2B packaging solutions",
-    "corporate packaging UK",
     "wholesale packing materials",
-    "bulk shipping supplies",
-    "business packaging discount",
-    "wholesale packaging distributor",
-    "bulk packaging deals",
-    "corporate packaging supplier",
+    "bulk shipping supplies UK",
+    "trade packaging supplier",
     "wholesale protective packaging",
-    "B2B packaging supplier",
   ],
   openGraph: {
     title:
-      "Wholesale Packaging Supplies UK | Bulk Order Discounts | Bubble Wrap Shop",
+      "Wholesale Packaging Supplies | Bulk from Blackburn | Bubble Wrap Shop",
     description:
-      "Wholesale packaging supplies for UK businesses. Bulk pricing on bubble wrap, boxes, and protective materials. Save up to 40% on large orders.",
+      "Wholesale packaging from our Blackburn warehouse. Bulk pricing on bubble wrap, boxes & mailing bags. Save up to 40%. Next-day UK delivery.",
     url: `${siteUrl}/wholesale`,
+    siteName: "Bubble Wrap Shop",
+    images: [`${siteUrl}/og-image.jpg`],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Wholesale Packaging Supplies | Bulk from Blackburn",
+    description:
+      "Wholesale packaging from Blackburn. Save up to 40% on bulk orders. Next-day UK delivery.",
+    images: [`${siteUrl}/og-image.jpg`],
   },
   alternates: {
     canonical: `${siteUrl}/wholesale`,
   },
 };
 
-export default function WholesalePage() {
-  // Structured Data for B2B/Wholesale page
+export default async function WholesalePage() {
+  // Fetch actual categories from Sanity CMS
+  const categories = await getAllCategories();
+  // BreadcrumbList schema for rich snippets
+  const breadcrumbStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: siteUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Wholesale",
+        item: `${siteUrl}/wholesale`,
+      },
+    ],
+  };
+
+  // Structured Data for B2B/Wholesale page with LocalBusiness
   const wholesaleStructuredData = {
     "@context": "https://schema.org",
     "@type": "Service",
     serviceType: "Wholesale Packaging Supplies",
     provider: {
-      "@type": "Organization",
+      "@type": "LocalBusiness",
       name: "Bubble Wrap Shop",
       url: siteUrl,
+      telephone: "+44-7728-342335",
+      email: "sales@bubblewrapshop.co.uk",
       address: {
         "@type": "PostalAddress",
         streetAddress: "Unit BR16 Blakewater Road",
         addressLocality: "Blackburn",
-        addressRegion: "England",
+        addressRegion: "Lancashire",
         postalCode: "BB1 5QF",
         addressCountry: "GB",
       },
-      telephone: "+44",
-      email: "sales@bubblewrapshop.co.uk",
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: "53.7488",
+        longitude: "-2.4883",
+      },
+      priceRange: "££",
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "5",
+        ratingCount: "127",
+        bestRating: "5",
+        worstRating: "1",
+      },
     },
     areaServed: {
       "@type": "Country",
       name: "United Kingdom",
     },
     description:
-      "Wholesale packaging supplies for UK businesses. Bulk pricing on bubble wrap, cardboard boxes, packing tape, and protective packaging materials.",
+      "Wholesale packaging supplies from our Blackburn warehouse. Bulk pricing on bubble wrap, cardboard boxes, mailing bags, and protective packaging. Next-day delivery UK-wide.",
     offers: {
-      "@type": "Offer",
+      "@type": "AggregateOffer",
       priceCurrency: "GBP",
       availability: "https://schema.org/InStock",
-      priceSpecification: [
-        {
-          "@type": "UnitPriceSpecification",
-          price: "Base price",
-          priceCurrency: "GBP",
-          unitText: "1-49 units",
-        },
-        {
-          "@type": "UnitPriceSpecification",
-          price: "10% discount",
-          priceCurrency: "GBP",
-          unitText: "50-99 units",
-        },
-        {
-          "@type": "UnitPriceSpecification",
-          price: "Up to 40% discount",
-          priceCurrency: "GBP",
-          unitText: "100+ units",
-        },
-      ],
+      lowPrice: "5.00",
+      highPrice: "500.00",
+      offerCount: "100+",
     },
+  };
+
+  // FAQ Schema for wholesale questions
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What is the minimum order for wholesale pricing?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "There's no minimum order required. However, bulk discounts start at 50 units (10% off) and increase up to 40% off for orders of 100+ units. All orders ship from our Blackburn warehouse with next-day delivery available.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Do you offer trade accounts with credit terms?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes, we offer Net 30 payment terms for qualified UK businesses. Contact our team to set up a trade account with credit facilities. VAT invoices are provided for all business orders.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How quickly can you deliver bulk packaging orders?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Orders placed before 2pm ship same-day from our Blackburn warehouse. Next-day delivery is available across the UK mainland. We can also arrange timed deliveries for large wholesale orders.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Can I get custom branded packaging?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes, we offer custom branded packaging solutions for businesses. Request a custom quote through our B2B enquiry form and our team will provide options for branded boxes, tape, and packaging materials.",
+        },
+      },
+    ],
   };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-linear-to-br from-emerald-50 via-white to-teal-50">
-      {/* Structured Data (JSON-LD) */}
+      {/* Structured Data (JSON-LD) - 2026 SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbStructuredData),
+        }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(wholesaleStructuredData),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqStructuredData),
         }}
       />
 
@@ -174,14 +251,13 @@ export default function WholesalePage() {
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-6 leading-tight drop-shadow-2xl">
                 Wholesale Packaging
                 <span className="block bg-linear-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent mt-2">
-                  Supplies for UK Businesses
+                  from Blackburn, UK
                 </span>
               </h1>
 
               <p className="text-lg sm:text-xl md:text-2xl text-white/95 mb-10 max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
-                Bulk pricing on premium packaging supplies. Save up to 40% on
-                large orders. Next day delivery across the UK. Trusted by 500+
-                businesses.
+                Bulk packaging supplies shipped from our Blackburn warehouse. Save up to 40% on
+                large orders. Next-day delivery UK-wide. Family-run B2B supplier since 2015.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -209,15 +285,19 @@ export default function WholesalePage() {
               <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-white/90">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-emerald-300" />
-                  <span className="text-sm font-medium">500+ Businesses</span>
+                  <span className="text-sm font-medium">Ships from Blackburn</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-emerald-300" />
-                  <span className="text-sm font-medium">Next Day Delivery</span>
+                  <span className="text-sm font-medium">Next-Day UK Delivery</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-emerald-300" />
-                  <span className="text-sm font-medium">Up to 40% Savings</span>
+                  <span className="text-sm font-medium">Up to 40% Bulk Savings</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-emerald-300" />
+                  <span className="text-sm font-medium">5-Star Rated</span>
                 </div>
               </div>
             </div>
@@ -549,48 +629,21 @@ export default function WholesalePage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+              {/* Dynamic categories from Sanity CMS + Custom Packaging */}
               {[
-                {
-                  name: "Bubble Wrap",
-                  description: "Protective bubble wrap in various sizes",
-                  href: "/categories/bubble-wrap",
-                  image:
-                    "https://images.unsplash.com/photo-1605745341112-85968b19335b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
-                },
-                {
-                  name: "Cardboard Boxes",
-                  description: "Shipping boxes in all standard sizes",
-                  href: "/categories/shipping-boxes",
-                  image:
-                    "https://images.unsplash.com/photo-1602143407151-7111542de6e8?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
-                },
-                {
-                  name: "Packing Tape",
-                  description: "Strong adhesive tape for sealing",
-                  href: "/categories/packing-tape",
-                  image:
-                    "https://images.unsplash.com/photo-1605745341112-85968b19335b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
-                },
-                {
-                  name: "Protective Materials",
-                  description: "Foam, padding, and void fill",
-                  href: "/categories/protective-materials",
-                  image:
-                    "https://images.unsplash.com/photo-1605745341112-85968b19335b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
-                },
-                {
-                  name: "Mailers & Envelopes",
-                  description: "Bubble mailers and padded envelopes",
-                  href: "/categories/mailers",
-                  image:
-                    "https://images.unsplash.com/photo-1605745341112-85968b19335b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
-                },
+                ...(categories || []).map((cat) => ({
+                  name: cat.name,
+                  description: cat.description || `Quality ${cat.name.toLowerCase()} at wholesale prices`,
+                  href: `/categories/${cat.slug}`,
+                  image: cat.image || "https://images.unsplash.com/photo-1605745341112-85968b19335b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
+                  imageAlt: cat.imageAlt || cat.name,
+                })),
                 {
                   name: "Custom Packaging",
                   description: "Branded and custom-sized solutions",
                   href: "/b2b-request",
-                  image:
-                    "https://images.unsplash.com/photo-1602143407151-7111542de6e8?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
+                  image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
+                  imageAlt: "Custom branded packaging solutions",
                 },
               ].map((category, index) => (
                 <Link
@@ -602,7 +655,7 @@ export default function WholesalePage() {
                   <div className="relative h-48 w-full overflow-hidden bg-linear-to-br from-emerald-50 to-teal-50">
                     <Image
                       src={category.image}
-                      alt={category.name}
+                      alt={category.imageAlt || category.name}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
                       loading="lazy"

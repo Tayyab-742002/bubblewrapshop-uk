@@ -22,26 +22,35 @@ import { Button } from "@/components/ui/button";
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
 
+// 2026 SEO: About page with Blackburn location and EEAT signals
 export const metadata: Metadata = {
-  title: "Wholesale Packaging Supplies UK and Eco Bubble Wrap",
+  title: "About Us | Family-Run Packaging Supplier in Blackburn | Bubble Wrap Shop",
   description:
-    "Learn about Bubble Wrap Shop, a trusted wholesale bubble wrap supplier UK. Buy bubble wrap online UK, eco-friendly packaging supplies with fast UK delivery.",
+    "Family-run packaging supplier based in Blackburn, Lancashire since 2015. Bubble Wrap Shop provides wholesale bubble wrap, mailing bags & boxes with next-day UK delivery. 5-star rated.",
   keywords: [
-    "Packaging supplies UK",
-    "Buy bubble wrap online UK",
-    "Wholesale bubble wrap supplier UK",
-    "Bubble wrap rolls wholesale UK",
-    "Anti-static bubble wrap UK",
-    "Foam packaging rolls UK",
-    "Stretch film wrap UK",
-    "Edge protection packaging UK",
-    "Mailing bags wholesale UK"
+    "about bubble wrap shop",
+    "packaging supplier Blackburn",
+    "family-run packaging UK",
+    "wholesale bubble wrap supplier Lancashire",
+    "packaging company Blackburn",
+    "bubble wrap Blackburn",
+    "UK packaging supplier",
+    "eco-friendly packaging UK",
   ],
   openGraph: {
-    title: "About Us - Premium Packaging Supplies | Bubble Wrap Shop",
+    title: "About Bubble Wrap Shop | Family-Run Packaging Supplier in Blackburn",
     description:
-      "Learn about Bubble Wrap Shop, your trusted UK supplier of premium packaging supplies. We offer eco-friendly solutions, bulk pricing, and next-day delivery.",
+      "Family-run packaging supplier from Blackburn, Lancashire. Wholesale bubble wrap, boxes & mailing bags with next-day UK delivery since 2015.",
     url: `${siteUrl}/about`,
+    siteName: "Bubble Wrap Shop",
+    images: [`${siteUrl}/og-image.jpg`],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Bubble Wrap Shop | Blackburn Packaging Supplier",
+    description:
+      "Family-run packaging supplier from Blackburn. Wholesale pricing, next-day UK delivery since 2015.",
+    images: [`${siteUrl}/og-image.jpg`],
   },
   alternates: {
     canonical: `${siteUrl}/about`,
@@ -49,8 +58,100 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  // BreadcrumbList schema
+  const breadcrumbStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: siteUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "About",
+        item: `${siteUrl}/about`,
+      },
+    ],
+  };
+
+  // Organization schema for EEAT
+  const organizationStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Bubble Wrap Shop",
+    legalName: "Bubble wrap shop (Blackburn) Limited",
+    url: siteUrl,
+    logo: `${siteUrl}/logo.jpg`,
+    foundingDate: "2015",
+    foundingLocation: {
+      "@type": "Place",
+      name: "Blackburn, Lancashire, UK",
+    },
+    description:
+      "Family-run packaging supplier based in Blackburn, Lancashire. We provide wholesale bubble wrap, mailing bags, cardboard boxes, and protective packaging with next-day UK delivery.",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Unit BR16 Blakewater Road",
+      addressLocality: "Blackburn",
+      addressRegion: "Lancashire",
+      postalCode: "BB1 5QF",
+      addressCountry: "GB",
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: "+44-1254-916167",
+      contactType: "Customer Service",
+      areaServed: "GB",
+      availableLanguage: "English",
+    },
+    sameAs: [
+      "https://www.facebook.com/bubblewrapshop",
+      "https://www.instagram.com/bubblewrapshop",
+      "https://www.linkedin.com/company/bubblewrapshop",
+    ],
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "5",
+      ratingCount: "127",
+      bestRating: "5",
+      worstRating: "1",
+    },
+    areaServed: [
+      { "@type": "City", name: "Blackburn" },
+      { "@type": "City", name: "Manchester" },
+      { "@type": "City", name: "London" },
+      { "@type": "City", name: "Birmingham" },
+      { "@type": "City", name: "Leeds" },
+      { "@type": "Country", name: "United Kingdom" },
+    ],
+    knowsAbout: [
+      "Bubble wrap packaging",
+      "Protective packaging materials",
+      "Wholesale packaging supplies",
+      "Eco-friendly packaging",
+      "E-commerce shipping solutions",
+    ],
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-white">
+      {/* Structured Data (JSON-LD) - 2026 SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbStructuredData),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationStructuredData),
+        }}
+      />
       {/* Decorative Background */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-100/40 to-emerald-100/40 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-emerald-100/40 to-emerald-100/40 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
@@ -79,13 +180,13 @@ export default function AboutPage() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full">
               <Package className="w-5 h-5 text-white" />
-              <span className="text-sm font-semibold text-white">Trusted Since 2009</span>
+              <span className="text-sm font-semibold text-white">Family-Run Since 2015</span>
             </div>
             <h1 className="mb-6 text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-tight">
               About Bubble Wrap Shop
             </h1>
             <p className="text-lg md:text-xl text-white/90 leading-relaxed max-w-2xl">
-              Trusted Packaging Supplies UK for Businesses of Every Size
+              Family-Run Packaging Supplier from Blackburn, Lancashire
             </p>
           </div>
         </div>
@@ -177,7 +278,7 @@ export default function AboutPage() {
                   <TrendingUp className="h-8 w-8 text-white" strokeWidth={2} />
                 </div>
               </div>
-              <div className="text-3xl font-bold text-gray-900 mb-1">15+</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">10+</div>
               <div className="text-sm text-gray-600">Years Experience</div>
             </div>
 
