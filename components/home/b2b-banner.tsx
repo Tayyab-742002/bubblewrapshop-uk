@@ -1,92 +1,55 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, TrendingUp, Package } from "lucide-react";
-import Image from "next/image";
+import { ArrowRight, Building2, Send } from "lucide-react";
 
 export default function B2BBanner() {
   const router = useRouter();
-  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <section className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-      <div className="max-w-[1400px] mx-auto">
+    <section className="w-full px-4 sm:px-6 lg:px-8 py-2">
+      <div className="container mx-auto max-w-[1200px]">
         <div
-          className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 shadow-lg hover:shadow-xl transition-shadow duration-300"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          className="relative overflow-hidden rounded-lg border border-white/20 bg-red-600/95 backdrop-blur-xl shadow-md transition-all duration-300 hover:shadow-red-500/25 group"
         >
-          <div className="relative flex flex-col md:flex-row items-center justify-between gap-4 p-5 sm:p-6 md:px-8 md:py-6">
-            {/* Left Side */}
-            <div className="flex items-center gap-4 md:gap-5 flex-1 w-full md:w-auto">
-              {/* Icon */}
-              <div className="shrink-0 relative">
-                <div
-                  className={`absolute inset-0 bg-white/30 rounded-full animate-ping ${isHovered ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
-                />
-                <Image
-                  src="https://pub-20f982007aa54df4849bcd969b89a1bf.r2.dev/gift.jpg"
-                  alt="B2B Wholesale Packaging"
-                  width={74}
-                  height={74}
-                  className="rounded-full w-14 h-14 sm:w-16 sm:h-16 md:w-[74px] md:h-[74px] object-cover"
-                  sizes="74px"
-                  loading="lazy"
-                />
+          {/* Glassmorphism Shine Effect */}
+          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-b from-white/10 to-transparent rotate-12 blur-2xl" />
+
+          <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 p-3 sm:px-6">
+            {/* Left Content */}
+            <div className="flex items-center gap-3 w-full sm:w-auto text-center sm:text-left justify-center sm:justify-start">
+              <div className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-white/20 text-white shadow-inner backdrop-blur-sm shrink-0 border border-white/10">
+                <Building2 className="w-4 h-4" />
               </div>
 
-              {/* Text Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                  <span className="text-white/90 font-semibold text-xs uppercase tracking-wider">
-                    B2B Solutions
-                  </span>
-                  <div className="h-1 w-1 bg-white/50 rounded-full hidden sm:block" />
-                  <span className="text-white/70 text-xs">Wholesale Pricing</span>
-                </div>
-
-                <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 leading-tight">
-                  Need Bulk Packaging?
+              <div>
+                <h2 className="text-sm font-bold tracking-tight text-white flex items-center justify-center sm:justify-start gap-2">
+                  <span className="sm:hidden text-white"><Building2 className="w-4 h-4" /></span>
+                  Partner with Bubble Wrap Shop
                 </h2>
-
-                <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm">
-                  <div className="flex items-center gap-1.5">
-                    <TrendingUp className="w-4 h-4 text-purple-200 shrink-0" />
-                    <span className="text-white/90">
-                      Save up to <span className="font-bold text-white">40%</span> on bulk
-                    </span>
-                  </div>
-                  <div className="hidden sm:flex items-center gap-1.5 text-white/80">
-                    <Package className="w-4 h-4 text-purple-200 shrink-0" />
-                    <span>500+ Trusted Businesses</span>
-                  </div>
-                </div>
+                <p className="text-red-50 text-[10px] sm:text-xs font-medium">
+                  Businesses save up to <span className="text-white font-bold underline decoration-white/30 underline-offset-2">40% on packaging</span>.
+                </p>
               </div>
             </div>
 
-            {/* Right Side - CTA Buttons */}
-            <div className="shrink-0 w-full md:w-auto">
-              <div className="flex flex-col sm:flex-row gap-2">
-                <button
-                  onClick={() => router.push("/wholesale")}
-                  className="group bg-white hover:bg-gray-50 active:bg-gray-100 font-semibold cursor-pointer w-full md:w-auto px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg flex items-center justify-center gap-2"
-                >
-                  <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent text-sm sm:text-base">
-                    Learn More
-                  </span>
-                  <ArrowRight className="w-4 h-4 text-indigo-600 group-hover:translate-x-0.5 transition-transform" />
-                </button>
-                <button
-                  onClick={() => router.push("/b2b-request")}
-                  className="group bg-white/20 hover:bg-white/30 active:bg-white/40 text-white font-semibold cursor-pointer w-full md:w-auto px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-white/30 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
-                >
-                  <span className="text-sm sm:text-base">Get Quote</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                </button>
-              </div>
-              <p className="text-center text-white/70 text-xs mt-2">
-                Min. order: <span className="font-semibold text-white">£500</span>
-              </p>
+            {/* Right Actions */}
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-end">
+              <button
+                onClick={() => router.push("/wholesale")}
+                className="inline-flex items-center justify-center px-3 py-1.5 text-[10px] sm:text-xs font-medium text-white bg-white/10 border border-white/20 rounded-md hover:bg-white/20 transition-colors duration-200 backdrop-blur-md"
+              >
+                Learn More
+              </button>
+
+              <button
+                onClick={() => router.push("/wholesale")}
+                className="inline-flex items-center justify-center px-3 py-1.5 text-[10px] sm:text-xs font-bold text-red-950 bg-white rounded-md hover:bg-white/90 transition-all duration-200 shadow-md shadow-red-900/20 group/btn"
+              >
+                Submit Request
+                <Send className="ml-1.5 w-3 h-3 transition-transform group-hover/btn:translate-x-0.5" />
+              </button>
             </div>
           </div>
         </div>

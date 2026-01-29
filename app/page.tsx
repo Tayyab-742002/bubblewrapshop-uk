@@ -182,7 +182,6 @@ export default function Home() {
 
       <B2BBanner />
       <HeroSection />
-      {/* <TrustBar /> */}
       <CategoryGrid />
       <FeaturedProducts />
       <SustainabilityBlock />

@@ -40,7 +40,7 @@ const nextConfig: NextConfig = {
   // PERFORMANCE: Experimental features for better performance
   experimental: {
     // Optimize CSS loading to reduce render-blocking
-    optimizeCss: true,
+    optimizeCss: false,
     // Optimize imports for large packages - tree-shakes unused exports
     optimizePackageImports: [
       "lucide-react",

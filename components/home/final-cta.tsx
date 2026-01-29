@@ -1,50 +1,47 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function FinalCTA() {
   return (
-    <section className="relative border-t bg-linear-to-br from-emerald-600  to-teal-600 py-20 md:py-28 lg:py-32 overflow-hidden">
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px]">
-        <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-          {/* Heading */}
-          <h2 className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-            EXPLORE OUR COMPLETE
-            <span className="block mt-2 text-white">PRODUCT CATELOG</span>
+    <section className="py-24 md:py-32 bg-primary text-primary-foreground overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1400px]">
+        <div className="flex flex-col items-center text-center space-y-8 md:space-y-10 max-w-4xl mx-auto">
+
+          {/* Main Heading */}
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tighter leading-[1.1]">
+            Ready to upgrade your <br className="hidden md:block" />
+            <span className="text-primary-foreground/80">packaging solution?</span>
           </h2>
 
-          {/* Description */}
-          <p className="mb-10 text-base md:text-lg lg:text-xl text-white/80 max-w-2xl leading-relaxed lg:mb-12">
-            Buy the complete selection of packaging materials UK, including low-cost, cheap bubble wrap UK supplier, to high-quality protective products. It depends on whether you need to purchase bubble wrap rolls wholesale UK, mailing bags in wholesale UK, or stretch film wrap in wholesale UK. You can count on us to deliver reliable products, prices, and delivery.{" "}
-            <Link
-              href="/blog"
-              className="underline text-black hover:text-white font-medium"
-            >
-              Browse our buying guides
-            </Link>{" "}
-            and{" "}
-            <Link
-              href="/guides"
-              className="underline text-black hover:text-white font-medium"
-            >
-              packaging guides
-            </Link>{" "}
-            to find the right solution for your business.
-          </p>
+          {/* Description with SEO links */}
+          <div className="max-w-2xl space-y-6">
+            <p className="text-lg md:text-xl text-primary-foreground/70 leading-relaxed font-light">
+              Explore our complete selection of wholesale packaging materials in the UK.
+              From cost-effective bubble wrap to heavy-duty protective solutions, we deliver reliability at scale.
+            </p>
 
-          {/* CTA Button */}
-          <Button asChild variant="ghost" className="w-fit group">
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-3 px-8 py-4 mt-4 text-base font-semibold border border-white/20 text-white bg-white/20 rounded-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-            >
-              View All Products
-              <ArrowRight
-                className="h-5 w-5 transition-transform group-hover:translate-x-1"
-                strokeWidth={2.5}
-              />
+            <p className="text-sm md:text-base text-primary-foreground/50">
+              Not sure where to start? Browse our{" "}
+              <Link href="/blog" className="underline underline-offset-4 hover:text-white transition-colors">
+                buying guides
+              </Link>{" "}
+              and{" "}
+              <Link href="/guides" className="underline underline-offset-4 hover:text-white transition-colors">
+                packaging resources
+              </Link>{" "}
+              to find the perfect fit.
+            </p>
+          </div>
+
+          {/* Action Button */}
+          <Button asChild size="lg" className="h-14 px-8 text-base rounded-full bg-background text-foreground hover:bg-background/90 hover:scale-105 transition-all duration-300">
+            <Link href="/products" className="flex items-center gap-2">
+              Explore Catalog
+              <ArrowRight className="w-5 h-5 ml-1" />
             </Link>
           </Button>
+
         </div>
       </div>
     </section>
