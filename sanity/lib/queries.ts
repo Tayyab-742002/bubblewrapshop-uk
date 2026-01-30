@@ -343,3 +343,135 @@ export const HOMEPAGE_DATA_QUERY = `{
     ${PRODUCT_LISTING_QUERY}
   }
 }`;
+
+// ==========================================
+// BLOG POST QUERIES
+// ==========================================
+
+// Base blog post query with all fields (full content for detail page)
+const BLOG_POST_QUERY = `
+  _id,
+  _type,
+  title,
+  slug,
+  excerpt,
+  content,
+  featuredImage {
+    asset-> {
+      _id,
+      url,
+      metadata {
+        dimensions {
+          width,
+          height
+        }
+      }
+    },
+    alt
+  },
+  category,
+  tags,
+  publishedAt,
+  readTime,
+  isPublished,
+
+  // Author (EEAT)
+  author,
+  authorRole,
+  authorImage {
+    asset-> {
+      _id,
+      url
+    }
+  },
+
+  // Basic SEO fields
+  seoTitle,
+  seoDescription,
+  seoKeywords,
+
+  // 2026 AI & EEAT fields
+  llmSummary,
+  expertTip,
+  faqs[] {
+    question,
+    answer
+  },
+  videoUrl,
+  canonicalUrl,
+
+  // Related content
+  relatedProducts[]-> {
+    _id,
+    name,
+    slug,
+    basePrice,
+    mainImage {
+      asset-> {
+        url
+      }
+    }
+  },
+  sources[] {
+    title,
+    url
+  }
+`;
+
+// Simplified blog post query for listings
+const BLOG_POST_LISTING_QUERY = `
+  _id,
+  _type,
+  title,
+  slug,
+  excerpt,
+  featuredImage {
+    asset-> {
+      _id,
+      url,
+      metadata {
+        dimensions {
+          width,
+          height
+        }
+      }
+    },
+    alt
+  },
+  category,
+  publishedAt,
+  readTime,
+  author,
+  authorRole
+`;
+
+// All published blog posts (for listing page)
+export const ALL_BLOG_POSTS_QUERY = `*[_type == "blogPost" && isPublished == true] | order(publishedAt desc) {
+  ${BLOG_POST_LISTING_QUERY}
+}`;
+
+// Single blog post by slug
+export const BLOG_POST_BY_SLUG_QUERY = `*[_type == "blogPost" && slug.current == $slug && isPublished == true][0] {
+  ${BLOG_POST_QUERY}
+}`;
+
+// Blog posts by category
+export const BLOG_POSTS_BY_CATEGORY_QUERY = `*[_type == "blogPost" && isPublished == true && category == $category] | order(publishedAt desc) {
+  ${BLOG_POST_LISTING_QUERY}
+}`;
+
+// Related blog posts (same category, excluding current post)
+export const RELATED_BLOG_POSTS_QUERY = `*[_type == "blogPost" && isPublished == true && category == $category && slug.current != $currentSlug] | order(publishedAt desc) [0...3] {
+  ${BLOG_POST_LISTING_QUERY}
+}`;
+
+// Recent blog posts (for homepage or sidebar)
+export const RECENT_BLOG_POSTS_QUERY = `*[_type == "blogPost" && isPublished == true] | order(publishedAt desc) [0...$limit] {
+  ${BLOG_POST_LISTING_QUERY}
+}`;
+
+// Blog post slugs (for static generation)
+export const BLOG_POST_SLUGS_QUERY = `*[_type == "blogPost" && isPublished == true] {
+  "slug": slug.current,
+  publishedAt
+}`;

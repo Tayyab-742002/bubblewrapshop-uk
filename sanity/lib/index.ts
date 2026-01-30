@@ -25,5 +25,12 @@ export {
   getFilteredProducts,
   getCategoryBySlug,
   getAllCategories,
+  // Blog functions
+  getAllBlogPosts,
+  getBlogPostBySlug,
+  getBlogPostsByCategory,
+  getRelatedBlogPosts,
+  getRecentBlogPosts,
+  getBlogPostSlugs,
 } from "./api";
 

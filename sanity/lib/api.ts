@@ -20,12 +20,21 @@ import {
   HOMEPAGE_DATA_QUERY,
   ALL_BANNERS_QUERY,
   ACTIVE_ANNOUNCEMENT_QUERY,
+  // Blog queries
+  ALL_BLOG_POSTS_QUERY,
+  BLOG_POST_BY_SLUG_QUERY,
+  BLOG_POSTS_BY_CATEGORY_QUERY,
+  RELATED_BLOG_POSTS_QUERY,
+  RECENT_BLOG_POSTS_QUERY,
+  BLOG_POST_SLUGS_QUERY,
 } from "./queries";
 import {
   transformSanityProduct,
   transformSanityCategory,
   transformSanityBanner,
   transformSanityAnnouncement,
+  transformSanityBlogPost,
+  transformSanityBlogPostListing,
   buildFilterString,
   buildOrderString,
   safeQuery,
@@ -33,6 +42,7 @@ import {
   SanityCategory,
   SanityBanner,
   SanityAnnouncement,
+  SanityBlogPost,
 } from "./helpers";
 
 /**
@@ -375,3 +385,105 @@ export async function getProductSlugs() {
 //       .map((item) => item.slug!.current);
 //   });
 // }
+
+// ==========================================
+// BLOG POST FUNCTIONS
+// ==========================================
+
+// Get all published blog posts (for listing page)
+export async function getAllBlogPosts() {
+  return safeQuery(async () => {
+    const fetchData = unstable_cache(
+      async () => {
+        return await client.fetch<SanityBlogPost[]>(ALL_BLOG_POSTS_QUERY);
+      },
+      ['blog-posts-all'],
+      {
+        tags: ['blog:all', 'blog:list'],
+      }
+    );
+    const data = await fetchData();
+    return data.map(transformSanityBlogPostListing);
+  });
+}
+
+// Get single blog post by slug (for detail page)
+export async function getBlogPostBySlug(slug: string) {
+  return safeQuery(async () => {
+    const fetchData = unstable_cache(
+      async () => {
+        return await client.fetch<SanityBlogPost | null>(BLOG_POST_BY_SLUG_QUERY, { slug });
+      },
+      [`blog-post-${slug}`],
+      {
+        tags: [`blog:${slug}`, 'blog:all'],
+      }
+    );
+    const post = await fetchData();
+    return post ? transformSanityBlogPost(post) : null;
+  });
+}
+
+// Get blog posts by category
+export async function getBlogPostsByCategory(category: string) {
+  return safeQuery(async () => {
+    const fetchData = unstable_cache(
+      async () => {
+        return await client.fetch<SanityBlogPost[]>(BLOG_POSTS_BY_CATEGORY_QUERY, { category });
+      },
+      [`blog-posts-category-${category}`],
+      {
+        tags: [`blog:category:${category}`, 'blog:list'],
+      }
+    );
+    const posts = await fetchData();
+    return posts.map(transformSanityBlogPostListing);
+  });
+}
+
+// Get related blog posts (same category, excluding current)
+export async function getRelatedBlogPosts(category: string, currentSlug: string) {
+  return safeQuery(async () => {
+    const fetchData = unstable_cache(
+      async () => {
+        return await client.fetch<SanityBlogPost[]>(RELATED_BLOG_POSTS_QUERY, {
+          category,
+          currentSlug
+        });
+      },
+      [`blog-posts-related-${category}-${currentSlug}`],
+      {
+        tags: ['blog:related', 'blog:list'],
+      }
+    );
+    const posts = await fetchData();
+    return posts.map(transformSanityBlogPostListing);
+  });
+}
+
+// Get recent blog posts (for homepage or sidebar)
+export async function getRecentBlogPosts(limit: number = 3) {
+  return safeQuery(async () => {
+    const fetchData = unstable_cache(
+      async () => {
+        return await client.fetch<SanityBlogPost[]>(RECENT_BLOG_POSTS_QUERY, { limit });
+      },
+      [`blog-posts-recent-${limit}`],
+      {
+        tags: ['blog:recent', 'blog:list'],
+      }
+    );
+    const posts = await fetchData();
+    return posts.map(transformSanityBlogPostListing);
+  });
+}
+
+// Get all blog post slugs (for static generation)
+export async function getBlogPostSlugs() {
+  return safeQuery(async () => {
+    const data = await client.fetch<Array<{ slug: string; publishedAt: string }>>(
+      BLOG_POST_SLUGS_QUERY
+    );
+    return data;
+  });
+}

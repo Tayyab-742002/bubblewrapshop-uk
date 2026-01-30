@@ -192,6 +192,75 @@ export interface SanityAnnouncement {
   dismissible: boolean;
 }
 
+export interface SanityBlogPost {
+  _id: string;
+  _type: string;
+  title: string;
+  slug: { current: string };
+  excerpt: string;
+  content?: unknown[];
+  featuredImage?: {
+    asset: {
+      _id: string;
+      url: string;
+      metadata?: {
+        dimensions: {
+          width: number;
+          height: number;
+        };
+      };
+    };
+    alt?: string;
+  };
+  category: string;
+  tags?: string[];
+  publishedAt: string;
+  readTime?: number;
+  isPublished: boolean;
+
+  // Author (EEAT)
+  author?: string;
+  authorRole?: string;
+  authorImage?: {
+    asset: {
+      _id: string;
+      url: string;
+    };
+  };
+
+  // Basic SEO fields
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string[];
+
+  // 2026 AI & EEAT fields
+  llmSummary?: string;
+  expertTip?: string;
+  faqs?: Array<{
+    question: string;
+    answer: string;
+  }>;
+  videoUrl?: string;
+  canonicalUrl?: string;
+
+  // Related content
+  relatedProducts?: Array<{
+    _id: string;
+    name: string;
+    slug: { current: string };
+    basePrice: number;
+    mainImage?: {
+      asset: {
+        url: string;
+      };
+    };
+  }>;
+  sources?: Array<{
+    title: string;
+    url: string;
+  }>;
+}
+
 // Transform Sanity product to our Product type
 /**
  * Generate descriptive alt text for product images
@@ -371,6 +440,76 @@ export function transformSanityAnnouncement(
   };
 }
 
+// Transform Sanity blog post to our BlogPost type
+export function transformSanityBlogPost(sanityBlogPost: SanityBlogPost) {
+  // Generate descriptive alt text for featured image
+  const featuredImageAlt = sanityBlogPost.featuredImage?.alt
+    ? sanityBlogPost.featuredImage.alt
+    : `${sanityBlogPost.title} - packaging blog article`;
+
+  return {
+    id: sanityBlogPost._id,
+    title: sanityBlogPost.title,
+    slug: sanityBlogPost.slug.current,
+    excerpt: sanityBlogPost.excerpt,
+    content: sanityBlogPost.content,
+    featuredImage: sanityBlogPost.featuredImage?.asset?.url || "",
+    featuredImageAlt,
+    category: sanityBlogPost.category,
+    tags: sanityBlogPost.tags,
+    publishedAt: sanityBlogPost.publishedAt,
+    readTime: sanityBlogPost.readTime || 5,
+    isPublished: sanityBlogPost.isPublished,
+
+    // Author (EEAT)
+    author: sanityBlogPost.author || "Bubble Wrap Shop Team",
+    authorRole: sanityBlogPost.authorRole,
+    authorImage: sanityBlogPost.authorImage?.asset?.url,
+
+    // Basic SEO fields
+    seoTitle: sanityBlogPost.seoTitle,
+    seoDescription: sanityBlogPost.seoDescription,
+    seoKeywords: sanityBlogPost.seoKeywords,
+
+    // 2026 AI & EEAT fields
+    llmSummary: sanityBlogPost.llmSummary,
+    expertTip: sanityBlogPost.expertTip,
+    faqs: sanityBlogPost.faqs,
+    videoUrl: sanityBlogPost.videoUrl,
+    canonicalUrl: sanityBlogPost.canonicalUrl,
+
+    // Related content
+    relatedProducts: sanityBlogPost.relatedProducts?.map((product) => ({
+      id: product._id,
+      name: product.name,
+      slug: product.slug.current,
+      image: product.mainImage?.asset?.url,
+      basePrice: product.basePrice,
+    })),
+    sources: sanityBlogPost.sources,
+  };
+}
+
+// Transform Sanity blog post listing (lighter version)
+export function transformSanityBlogPostListing(sanityBlogPost: SanityBlogPost) {
+  const featuredImageAlt = sanityBlogPost.featuredImage?.alt
+    ? sanityBlogPost.featuredImage.alt
+    : `${sanityBlogPost.title} - packaging blog article`;
+
+  return {
+    id: sanityBlogPost._id,
+    title: sanityBlogPost.title,
+    slug: sanityBlogPost.slug.current,
+    excerpt: sanityBlogPost.excerpt,
+    featuredImage: sanityBlogPost.featuredImage?.asset?.url || "",
+    featuredImageAlt,
+    category: sanityBlogPost.category,
+    publishedAt: sanityBlogPost.publishedAt,
+    readTime: sanityBlogPost.readTime || 5,
+    author: sanityBlogPost.author || "Bubble Wrap Shop Team",
+    authorRole: sanityBlogPost.authorRole,
+  };
+}
 
 // Helper function to build filter string for GROQ
 export function buildFilterString(filters: {

@@ -93,7 +93,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
-      url: `${siteUrl}/blog`,
+      url: `${siteUrl}/blogs`,
       lastModified: baseDate,
       changeFrequency: "weekly",
       priority: 0.8,
@@ -197,45 +197,114 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Blog pages
-  const blogPages: MetadataRoute.Sitemap = [
-    {
-      url: `${siteUrl}/blog/how-to-choose-the-right-packaging-box`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/blog/bubble-wrap-vs-foam-which-is-better`,
-      lastModified: new Date("2024-12-10"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/blog/packaging-tips-for-fragile-items`,
-      lastModified: new Date("2024-12-05"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/blog/eco-friendly-packaging-alternatives`,
-      lastModified: new Date("2024-11-28"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/blog/how-to-calculate-packaging-costs`,
-      lastModified: new Date("2024-11-20"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/blog/cardboard-box-sizes-guide`,
-      lastModified: new Date("2024-11-15"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-  ];
+  // Fetch blog posts from Sanity
+  let blogPages: MetadataRoute.Sitemap = [];
+  try {
+    const blogPosts = await client.fetch<
+      Array<{ slug: { current: string }; publishedAt: string; _updatedAt: string }>
+    >(
+      groq`*[_type == "blogPost" && isPublished == true] | order(publishedAt desc) {
+        "slug": slug.current,
+        publishedAt,
+        _updatedAt
+      }`
+    );
+    if (blogPosts && blogPosts.length > 0) {
+      blogPages = blogPosts.map((post) => ({
+        url: `${siteUrl}/blogs/${post.slug}`,
+        lastModified: post._updatedAt
+          ? new Date(post._updatedAt)
+          : post.publishedAt
+            ? new Date(post.publishedAt)
+            : baseDate,
+        changeFrequency: "monthly" as const,
+        priority: 0.7, // Medium-high priority for blog posts
+      }));
+    }
+  } catch (error) {
+    console.error("Error fetching blog posts for sitemap:", error);
+    // Fall back to static blog pages if Sanity fetch fails
+    blogPages = [
+      {
+        url: `${siteUrl}/blogs/how-to-choose-the-right-packaging-box`,
+        lastModified: new Date("2024-12-15"),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+      {
+        url: `${siteUrl}/blogs/bubble-wrap-vs-foam-which-is-better`,
+        lastModified: new Date("2024-12-10"),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+      {
+        url: `${siteUrl}/blogs/packaging-tips-for-fragile-items`,
+        lastModified: new Date("2024-12-05"),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+      {
+        url: `${siteUrl}/blogs/eco-friendly-packaging-alternatives`,
+        lastModified: new Date("2024-11-28"),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+      {
+        url: `${siteUrl}/blogs/how-to-calculate-packaging-costs`,
+        lastModified: new Date("2024-11-20"),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+      {
+        url: `${siteUrl}/blogs/cardboard-box-sizes-guide`,
+        lastModified: new Date("2024-11-15"),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+    ];
+  }
+
+  // If no blog posts from Sanity, use static fallback
+  if (blogPages.length === 0) {
+    blogPages = [
+      {
+        url: `${siteUrl}/blogs/how-to-choose-the-right-packaging-box`,
+        lastModified: new Date("2024-12-15"),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+      {
+        url: `${siteUrl}/blogs/bubble-wrap-vs-foam-which-is-better`,
+        lastModified: new Date("2024-12-10"),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+      {
+        url: `${siteUrl}/blogs/packaging-tips-for-fragile-items`,
+        lastModified: new Date("2024-12-05"),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+      {
+        url: `${siteUrl}/blogs/eco-friendly-packaging-alternatives`,
+        lastModified: new Date("2024-11-28"),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+      {
+        url: `${siteUrl}/blogs/how-to-calculate-packaging-costs`,
+        lastModified: new Date("2024-11-20"),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+      {
+        url: `${siteUrl}/blogs/cardboard-box-sizes-guide`,
+        lastModified: new Date("2024-11-15"),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+    ];
+  }
 
   // Combine all pages
   // Sort by priority (highest first) for better SEO
