@@ -27,6 +27,12 @@ import {
   RELATED_BLOG_POSTS_QUERY,
   RECENT_BLOG_POSTS_QUERY,
   BLOG_POST_SLUGS_QUERY,
+  // Guide queries
+  ALL_GUIDES_QUERY,
+  GUIDE_BY_SLUG_QUERY,
+  GUIDES_BY_CATEGORY_QUERY,
+  RELATED_GUIDES_QUERY,
+  GUIDE_SLUGS_QUERY,
 } from "./queries";
 import {
   transformSanityProduct,
@@ -35,6 +41,8 @@ import {
   transformSanityAnnouncement,
   transformSanityBlogPost,
   transformSanityBlogPostListing,
+  transformSanityGuide,
+  transformSanityGuideListing,
   buildFilterString,
   buildOrderString,
   safeQuery,
@@ -43,6 +51,7 @@ import {
   SanityBanner,
   SanityAnnouncement,
   SanityBlogPost,
+  SanityGuide,
 } from "./helpers";
 
 /**
@@ -483,6 +492,91 @@ export async function getBlogPostSlugs() {
   return safeQuery(async () => {
     const data = await client.fetch<Array<{ slug: string; publishedAt: string }>>(
       BLOG_POST_SLUGS_QUERY
+    );
+    return data;
+  });
+}
+
+// ==========================================
+// BUYING GUIDE FUNCTIONS
+// ==========================================
+
+// Get all published guides (for listing page)
+export async function getAllGuides() {
+  return safeQuery(async () => {
+    const fetchData = unstable_cache(
+      async () => {
+        return await client.fetch<SanityGuide[]>(ALL_GUIDES_QUERY);
+      },
+      ['guides-all'],
+      {
+        tags: ['guides:all', 'guides:list'],
+      }
+    );
+    const data = await fetchData();
+    return data.map(transformSanityGuideListing);
+  });
+}
+
+// Get single guide by slug (for detail page)
+export async function getGuideBySlug(slug: string) {
+  return safeQuery(async () => {
+    const fetchData = unstable_cache(
+      async () => {
+        return await client.fetch<SanityGuide | null>(GUIDE_BY_SLUG_QUERY, { slug });
+      },
+      [`guide-${slug}`],
+      {
+        tags: [`guide:${slug}`, 'guides:all'],
+      }
+    );
+    const guide = await fetchData();
+    return guide ? transformSanityGuide(guide) : null;
+  });
+}
+
+// Get guides by category
+export async function getGuidesByCategory(category: string) {
+  return safeQuery(async () => {
+    const fetchData = unstable_cache(
+      async () => {
+        return await client.fetch<SanityGuide[]>(GUIDES_BY_CATEGORY_QUERY, { category });
+      },
+      [`guides-category-${category}`],
+      {
+        tags: [`guides:category:${category}`, 'guides:list'],
+      }
+    );
+    const guides = await fetchData();
+    return guides.map(transformSanityGuideListing);
+  });
+}
+
+// Get related guides (same category, excluding current)
+export async function getRelatedGuides(category: string, currentSlug: string) {
+  return safeQuery(async () => {
+    const fetchData = unstable_cache(
+      async () => {
+        return await client.fetch<SanityGuide[]>(RELATED_GUIDES_QUERY, {
+          category,
+          currentSlug
+        });
+      },
+      [`guides-related-${category}-${currentSlug}`],
+      {
+        tags: ['guides:related', 'guides:list'],
+      }
+    );
+    const guides = await fetchData();
+    return guides.map(transformSanityGuideListing);
+  });
+}
+
+// Get all guide slugs (for static generation)
+export async function getGuideSlugs() {
+  return safeQuery(async () => {
+    const data = await client.fetch<Array<{ slug: string; publishedAt: string; lastUpdated: string }>>(
+      GUIDE_SLUGS_QUERY
     );
     return data;
   });

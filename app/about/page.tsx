@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Breadcrumbs } from "@/components/common";
+import { Breadcrumbs, ContentCarousel } from "@/components/common";
+import { getAllBlogPosts, getAllGuides } from "@/sanity/lib";
 import {
   ArrowRight,
   Leaf,
@@ -57,7 +58,36 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  // Fetch blogs and guides for carousel
+  const [blogPosts, guides] = await Promise.all([
+    getAllBlogPosts(),
+    getAllGuides(),
+  ]);
+
+  // Transform data for carousel
+  const carouselBlogs = (blogPosts || []).slice(0, 3).map((post) => ({
+    id: post.id,
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt,
+    featuredImage: post.featuredImage,
+    category: post.category,
+    readTime: post.readTime,
+    type: "blog" as const,
+  }));
+
+  const carouselGuides = (guides || []).slice(0, 3).map((guide) => ({
+    id: guide.id,
+    title: guide.title,
+    slug: guide.slug,
+    excerpt: guide.excerpt,
+    featuredImage: guide.featuredImage,
+    category: typeof guide.category === "string" ? guide.category : "",
+    readTime: guide.readTime,
+    type: "guide" as const,
+  }));
+
   // BreadcrumbList schema
   const breadcrumbStructuredData = {
     "@context": "https://schema.org",
@@ -605,6 +635,18 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
+
+          {/* Resources Carousel */}
+          {(carouselBlogs.length > 0 || carouselGuides.length > 0) && (
+            <div className="mb-20 border-t border-emerald-400 pt-16">
+              <ContentCarousel
+                blogs={carouselBlogs}
+                guides={carouselGuides}
+                title="Packaging Resources"
+                subtitle="Learn from our expert guides and tips"
+              />
+            </div>
+          )}
 
           {/* CTA Section */}
           <section className="relative bg-gradient-to-br from-emerald-600 to-emerald-600 py-20 md:py-28 lg:py-32 overflow-hidden rounded-2xl">

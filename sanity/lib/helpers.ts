@@ -261,6 +261,95 @@ export interface SanityBlogPost {
   }>;
 }
 
+export interface SanityGuide {
+  _id: string;
+  _type: string;
+  title: string;
+  slug: { current: string };
+  excerpt: string;
+  content?: unknown[];
+  featuredImage?: {
+    asset: {
+      _id: string;
+      url: string;
+      metadata?: {
+        dimensions: {
+          width: number;
+          height: number;
+        };
+      };
+    };
+    alt?: string;
+  };
+  category: string;
+  topics?: string[];
+  readTime?: number;
+  isPublished: boolean;
+  publishedAt?: string;
+  lastUpdated?: string;
+
+  // Author (EEAT)
+  author?: string;
+  authorRole?: string;
+  authorImage?: {
+    asset: {
+      _id: string;
+      url: string;
+    };
+  };
+
+  // Basic SEO fields
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string[];
+
+  // 2026 AI & EEAT fields
+  llmSummary?: string;
+  expertTip?: string;
+  faqs?: Array<{
+    question: string;
+    answer: string;
+  }>;
+  videoUrl?: string;
+  canonicalUrl?: string;
+
+  // Related content
+  relatedProducts?: Array<{
+    _id: string;
+    name: string;
+    slug: { current: string };
+    basePrice: number;
+    mainImage?: {
+      asset: {
+        url: string;
+      };
+    };
+  }>;
+  relatedCategories?: Array<{
+    _id: string;
+    name: string;
+    slug: { current: string };
+  }>;
+  relatedGuides?: Array<{
+    _id: string;
+    title: string;
+    slug: { current: string };
+    category: string;
+    readTime?: number;
+    excerpt: string;
+    featuredImage?: {
+      asset: {
+        url: string;
+      };
+      alt?: string;
+    };
+  }>;
+  sources?: Array<{
+    title: string;
+    url: string;
+  }>;
+}
+
 // Transform Sanity product to our Product type
 /**
  * Generate descriptive alt text for product images
@@ -508,6 +597,95 @@ export function transformSanityBlogPostListing(sanityBlogPost: SanityBlogPost) {
     readTime: sanityBlogPost.readTime || 5,
     author: sanityBlogPost.author || "Bubble Wrap Shop Team",
     authorRole: sanityBlogPost.authorRole,
+  };
+}
+
+// Transform Sanity guide to our Guide type (full content for detail page)
+export function transformSanityGuide(sanityGuide: SanityGuide) {
+  // Generate descriptive alt text for featured image
+  const featuredImageAlt = sanityGuide.featuredImage?.alt
+    ? sanityGuide.featuredImage.alt
+    : `${sanityGuide.title} - packaging buying guide`;
+
+  return {
+    id: sanityGuide._id,
+    title: sanityGuide.title,
+    slug: sanityGuide.slug.current,
+    excerpt: sanityGuide.excerpt,
+    content: sanityGuide.content,
+    featuredImage: sanityGuide.featuredImage?.asset?.url || "",
+    featuredImageAlt,
+    category: sanityGuide.category,
+    topics: sanityGuide.topics || [],
+    readTime: sanityGuide.readTime || 8,
+    isPublished: sanityGuide.isPublished,
+    publishedAt: sanityGuide.publishedAt,
+    lastUpdated: sanityGuide.lastUpdated,
+
+    // Author (EEAT)
+    author: sanityGuide.author || "Bubble Wrap Shop Team",
+    authorRole: sanityGuide.authorRole,
+    authorImage: sanityGuide.authorImage?.asset?.url,
+
+    // Basic SEO fields
+    seoTitle: sanityGuide.seoTitle,
+    seoDescription: sanityGuide.seoDescription,
+    seoKeywords: sanityGuide.seoKeywords,
+
+    // 2026 AI & EEAT fields
+    llmSummary: sanityGuide.llmSummary,
+    expertTip: sanityGuide.expertTip,
+    faqs: sanityGuide.faqs,
+    videoUrl: sanityGuide.videoUrl,
+    canonicalUrl: sanityGuide.canonicalUrl,
+
+    // Related content
+    relatedProducts: sanityGuide.relatedProducts?.map((product) => ({
+      id: product._id,
+      name: product.name,
+      slug: product.slug.current,
+      image: product.mainImage?.asset?.url,
+      basePrice: product.basePrice,
+    })),
+    relatedCategories: sanityGuide.relatedCategories?.map((category) => ({
+      id: category._id,
+      name: category.name,
+      slug: category.slug.current,
+    })),
+    relatedGuides: sanityGuide.relatedGuides?.map((guide) => ({
+      id: guide._id,
+      title: guide.title,
+      slug: guide.slug.current,
+      category: guide.category,
+      readTime: guide.readTime || 8,
+      excerpt: guide.excerpt,
+      featuredImage: guide.featuredImage?.asset?.url || "",
+      featuredImageAlt: guide.featuredImage?.alt || `${guide.title} - buying guide`,
+    })),
+    sources: sanityGuide.sources,
+  };
+}
+
+// Transform Sanity guide listing (lighter version)
+export function transformSanityGuideListing(sanityGuide: SanityGuide) {
+  const featuredImageAlt = sanityGuide.featuredImage?.alt
+    ? sanityGuide.featuredImage.alt
+    : `${sanityGuide.title} - packaging buying guide`;
+
+  return {
+    id: sanityGuide._id,
+    title: sanityGuide.title,
+    slug: sanityGuide.slug.current,
+    excerpt: sanityGuide.excerpt,
+    featuredImage: sanityGuide.featuredImage?.asset?.url || "",
+    featuredImageAlt,
+    category: sanityGuide.category,
+    topics: sanityGuide.topics || [],
+    readTime: sanityGuide.readTime || 8,
+    publishedAt: sanityGuide.publishedAt,
+    lastUpdated: sanityGuide.lastUpdated,
+    author: sanityGuide.author || "Bubble Wrap Shop Team",
+    authorRole: sanityGuide.authorRole,
   };
 }
 

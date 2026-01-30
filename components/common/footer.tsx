@@ -43,25 +43,25 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Shop & Resources */}
           <div>
-            <h4 className="font-semibold text-neutral-900 mb-6">Info</h4>
+            <h4 className="font-semibold text-neutral-900 mb-6">Shop</h4>
             <ul className="space-y-4 text-sm text-neutral-600">
-              <li><Link href="/about" className="hover:text-neutral-900 transition-colors">About Company</Link></li>
-              <li><Link href="/sustainability" className="hover:text-neutral-900 transition-colors">Our Sustainability</Link></li>
-              <li><Link href="/blog" className="hover:text-neutral-900 transition-colors">Latest News</Link></li>
-              <li><Link href="/careers" className="hover:text-neutral-900 transition-colors">Careers</Link></li>
+              <li><Link href="/products" className="hover:text-neutral-900 transition-colors">All Products</Link></li>
+              <li><Link href="/categories" className="hover:text-neutral-900 transition-colors">Categories</Link></li>
+              <li><Link href="/guides" className="hover:text-neutral-900 transition-colors">Buying Guides</Link></li>
+              <li><Link href="/blogs" className="hover:text-neutral-900 transition-colors">Blog</Link></li>
             </ul>
           </div>
 
           {/* Customer Service */}
           <div>
-            <h4 className="font-semibold text-neutral-900 mb-6">Service</h4>
+            <h4 className="font-semibold text-neutral-900 mb-6">Support</h4>
             <ul className="space-y-4 text-sm text-neutral-600">
               <li><Link href="/faq" className="hover:text-neutral-900 transition-colors">Help Center</Link></li>
-              <li><Link href="/delivery" className="hover:text-neutral-900 transition-colors">Delivery Information</Link></li>
+              <li><Link href="/contact" className="hover:text-neutral-900 transition-colors">Contact Us</Link></li>
               <li><Link href="/refund-policy" className="hover:text-neutral-900 transition-colors">Returns Policy</Link></li>
-              <li><Link href="/terms" className="hover:text-neutral-900 transition-colors">Terms of Service</Link></li>
+              <li><Link href="/wholesale" className="hover:text-neutral-900 transition-colors">Wholesale</Link></li>
             </ul>
           </div>
 
@@ -87,12 +87,19 @@ export function Footer() {
         </div>
 
         {/* Legal Footer */}
-        <div className="border-t border-neutral-200 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-neutral-500">
-          <p>© {new Date().getFullYear()} Bubble Wrap Shop Ltd. All rights reserved.</p>
-          <div className="flex gap-6">
+        <div className="border-t border-neutral-200 mt-16 pt-8">
+          <div className="flex flex-wrap justify-center gap-6 mb-6 text-sm text-neutral-600">
+            <Link href="/about" className="hover:text-neutral-900 transition-colors">About Us</Link>
+            <Link href="/sustainability" className="hover:text-neutral-900 transition-colors">Sustainability</Link>
+            <Link href="/terms" className="hover:text-neutral-900 transition-colors">Terms of Service</Link>
             <Link href="/privacy" className="hover:text-neutral-900 transition-colors">Privacy Policy</Link>
-            <Link href="/cookies" className="hover:text-neutral-900 transition-colors">Cookie Policy</Link>
-            <span>VAT: GB 123456789</span>
+          </div>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-neutral-500">
+            <p>© {new Date().getFullYear()} Bubble Wrap Shop Ltd. All rights reserved.</p>
+            <div className="flex gap-4">
+              <span>Registered in England & Wales</span>
+              <span>VAT: GB 123456789</span>
+            </div>
           </div>
         </div>
       </div>

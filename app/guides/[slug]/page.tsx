@@ -2,41 +2,39 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Breadcrumbs } from "@/components/common";
-import { Button } from "@/components/ui/button";
 import {
   ArrowLeft,
-  BookOpen,
-  CheckCircle,
-  Tag,
   Clock,
-  Sparkles,
+  ChevronRight,
+  BookOpen,
   ArrowRight,
+  Lightbulb,
+  HelpCircle,
 } from "lucide-react";
 import { notFound } from "next/navigation";
+import { PortableText, PortableTextComponents } from "@portabletext/react";
+import { getGuideBySlug, getGuideSlugs, getRelatedGuides } from "@/sanity/lib";
+import {
+  Guide,
+  GuideListing,
+  StaticGuide,
+  getGuideCategoryLabel,
+  formatGuideReadTime,
+  formatGuideDate,
+} from "@/types/guide";
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+const siteUrl =
+  process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
 
-// Buying guide content
-const buyingGuides: Record<
-  string,
-  {
-    title: string;
-    excerpt: string;
-    category: string;
-    readTime: string;
-    featuredImage: string;
-    topics: string[];
-    seoTitle?: string;
-    seoDescription?: string;
-    content: string;
-  }
-> = {
+// Static buying guide content (fallback)
+const buyingGuides: Record<string, StaticGuide> = {
   "packaging-boxes-guide": {
+    slug: "packaging-boxes-guide",
     title: "Complete Guide to Buying Packaging Boxes in the UK",
     excerpt:
       "Everything you need to know about choosing the right cardboard boxes for your business. Size, strength, material, and cost considerations.",
     category: "Boxes",
-    readTime: "10 min read",
+    readTime: "10 min",
     featuredImage:
       "https://images.unsplash.com/photo-1602143407151-7111542de6e8?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1200",
     topics: [
@@ -50,8 +48,7 @@ const buyingGuides: Record<
       "Packaging Boxes Buying Guide UK | How to Choose Cardboard Boxes",
     seoDescription:
       "Complete guide to buying packaging boxes in the UK. Learn about box types, sizes, strength ratings, materials, and cost optimization for your business.",
-    content: `
-# Complete Guide to Buying Packaging Boxes in the UK
+    content: `# Complete Guide to Buying Packaging Boxes in the UK
 
 Choosing the right packaging boxes is essential for protecting your products and managing shipping costs. This comprehensive guide covers everything UK businesses need to know about buying cardboard boxes.
 
@@ -235,17 +232,15 @@ When buying packaging boxes, check:
 
 Choosing the right packaging boxes requires understanding your product needs, shipping requirements, and budget constraints. By following this guide, UK businesses can make informed decisions that protect products while managing costs effectively.
 
-Remember: The right box size and strength not only protects your products but also optimizes shipping costs and improves customer satisfaction.
-
-[Shop cardboard boxes in various sizes](/categories/shipping-boxes) with automatic bulk pricing and next-day delivery across the UK.
-    `,
+Remember: The right box size and strength not only protects your products but also optimizes shipping costs and improves customer satisfaction.`,
   },
   "bubble-wrap-guide": {
+    slug: "bubble-wrap-guide",
     title: "Bubble Wrap Buying Guide: Choose the Right Protection",
     excerpt:
       "Complete guide to selecting bubble wrap for your shipping needs. Learn about bubble sizes, thickness, and when to use different types.",
     category: "Protective Materials",
-    readTime: "8 min read",
+    readTime: "8 min",
     featuredImage:
       "https://images.unsplash.com/photo-1602143407151-7111542de6e8?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1200",
     topics: [
@@ -258,8 +253,7 @@ Remember: The right box size and strength not only protects your products but al
     seoTitle: "Bubble Wrap Buying Guide UK | How to Choose Bubble Wrap",
     seoDescription:
       "Complete guide to buying bubble wrap in the UK. Learn about bubble sizes, thickness, types, and when to use different bubble wrap for optimal protection.",
-    content: `
-# Bubble Wrap Buying Guide: Choose the Right Protection
+    content: `# Bubble Wrap Buying Guide: Choose the Right Protection
 
 Bubble wrap is one of the most popular protective packaging materials. This guide helps UK businesses choose the right bubble wrap for their shipping needs.
 
@@ -418,17 +412,15 @@ When buying bubble wrap:
 
 Choosing the right bubble wrap involves understanding your product protection needs, shipping requirements, and budget. By selecting the appropriate bubble size, thickness, and type, UK businesses can effectively protect their shipments while managing costs.
 
-Remember: Proper wrapping technique is just as important as choosing the right bubble wrap. Take time to wrap items correctly for maximum protection.
-
-[Shop bubble wrap in various sizes and types](/categories/bubble-wrap) with next-day delivery across the UK.
-    `,
+Remember: Proper wrapping technique is just as important as choosing the right bubble wrap. Take time to wrap items correctly for maximum protection.`,
   },
   "packing-tape-guide": {
+    slug: "packing-tape-guide",
     title: "Packing Tape Buying Guide: Secure Your Shipments",
     excerpt:
       "How to choose the right packing tape for your boxes. Learn about tape types, strength, and application techniques for secure shipping.",
     category: "Sealing Materials",
-    readTime: "6 min read",
+    readTime: "6 min",
     featuredImage:
       "https://images.unsplash.com/photo-1605745341112-85968b19335b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1200",
     topics: [
@@ -441,8 +433,7 @@ Remember: Proper wrapping technique is just as important as choosing the right b
     seoTitle: "Packing Tape Buying Guide UK | How to Choose Packing Tape",
     seoDescription:
       "Complete guide to buying packing tape in the UK. Learn about tape types, strength ratings, application methods, and cost efficiency for secure shipping.",
-    content: `
-# Packing Tape Buying Guide: Secure Your Shipments
+    content: `# Packing Tape Buying Guide: Secure Your Shipments
 
 Choosing the right packing tape is crucial for ensuring your packages arrive safely. This comprehensive guide helps UK businesses select the best tape for their shipping needs.
 
@@ -615,17 +606,15 @@ When buying packing tape:
 
 Choosing the right packing tape involves understanding your box sizes, shipping requirements, and volume needs. By selecting the appropriate tape type, strength, and width, UK businesses can ensure secure shipments while managing costs effectively.
 
-Remember: Proper tape application is essential for package security. Take time to seal boxes correctly for maximum protection.
-
-[Shop packing tape in various types and sizes](/categories/packing-tape) with next-day delivery across the UK.
-    `,
+Remember: Proper tape application is essential for package security. Take time to seal boxes correctly for maximum protection.`,
   },
   "protective-packaging-guide": {
+    slug: "protective-packaging-guide",
     title: "Protective Packaging Guide: Keep Items Safe During Shipping",
     excerpt:
       "Comprehensive guide to protective packaging materials. Learn when to use different materials and how to protect fragile items effectively.",
     category: "Protective Materials",
-    readTime: "9 min read",
+    readTime: "9 min",
     featuredImage:
       "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1200",
     topics: [
@@ -639,8 +628,7 @@ Remember: Proper tape application is essential for package security. Take time t
       "Protective Packaging Guide UK | How to Protect Items During Shipping",
     seoDescription:
       "Complete guide to protective packaging materials in the UK. Learn about different material types, protection levels, and best practices for shipping fragile items.",
-    content: `
-# Protective Packaging Guide: Keep Items Safe During Shipping
+    content: `# Protective Packaging Guide: Keep Items Safe During Shipping
 
 Protecting items during shipping is essential for customer satisfaction and reducing returns. This comprehensive guide covers all protective packaging materials available to UK businesses.
 
@@ -875,12 +863,277 @@ When packaging items:
 
 Choosing the right protective packaging requires understanding your product needs, shipping requirements, and budget. By selecting appropriate materials and applying them correctly, UK businesses can protect shipments effectively while managing costs.
 
-Remember: Proper protection prevents damage, reduces returns, and improves customer satisfaction. Invest in quality protective materials for long-term success.
-
-[Shop protective packaging materials](/categories/protective-materials) with next-day delivery across the UK.
-    `,
+Remember: Proper protection prevents damage, reduces returns, and improves customer satisfaction. Invest in quality protective materials for long-term success.`,
   },
 };
+
+// PortableText components for Sanity content
+const portableTextComponents: PortableTextComponents = {
+  block: {
+    h2: ({ children, value }) => {
+      const id =
+        value._key ||
+        (typeof children === "string"
+          ? children.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+          : "");
+      return (
+        <h2
+          id={id}
+          className="text-2xl font-bold text-gray-900 mt-12 mb-4 scroll-mt-24"
+        >
+          {children}
+        </h2>
+      );
+    },
+    h3: ({ children }) => (
+      <h3 className="text-xl font-semibold text-gray-900 mt-8 mb-3">
+        {children}
+      </h3>
+    ),
+    h4: ({ children }) => (
+      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-2">
+        {children}
+      </h4>
+    ),
+    normal: ({ children }) => (
+      <p className="text-gray-700 leading-relaxed mb-4">{children}</p>
+    ),
+    blockquote: ({ children }) => (
+      <blockquote className="border-l-4 border-emerald-500 pl-4 italic text-gray-600 my-6">
+        {children}
+      </blockquote>
+    ),
+  },
+  list: {
+    bullet: ({ children }) => (
+      <ul className="list-disc list-inside space-y-2 mb-4 text-gray-700">
+        {children}
+      </ul>
+    ),
+    number: ({ children }) => (
+      <ol className="list-decimal list-inside space-y-2 mb-4 text-gray-700">
+        {children}
+      </ol>
+    ),
+    checklist: ({ children }) => (
+      <ul className="space-y-2 mb-4">{children}</ul>
+    ),
+  },
+  listItem: {
+    bullet: ({ children }) => <li className="ml-4">{children}</li>,
+    number: ({ children }) => <li className="ml-4">{children}</li>,
+    checklist: ({ children }) => (
+      <li className="flex items-start gap-3">
+        <span className="inline-flex items-center justify-center w-5 h-5 mt-0.5 rounded border-2 border-gray-300 shrink-0"></span>
+        <span className="text-gray-700">{children}</span>
+      </li>
+    ),
+  },
+  marks: {
+    strong: ({ children }) => (
+      <strong className="font-semibold text-gray-900">{children}</strong>
+    ),
+    em: ({ children }) => <em className="italic">{children}</em>,
+    code: ({ children }) => (
+      <code className="bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono">
+        {children}
+      </code>
+    ),
+    link: ({ children, value }) => (
+      <a
+        href={value?.href}
+        target={value?.openInNewTab ? "_blank" : undefined}
+        rel={value?.openInNewTab ? "noopener noreferrer" : undefined}
+        className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
+      >
+        {children}
+      </a>
+    ),
+  },
+  types: {
+    image: ({ value }) => (
+      <figure className="my-8">
+        <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-100">
+          <Image
+            src={value.asset?.url || "/images/placeholder.jpg"}
+            alt={value.alt || "Guide image"}
+            fill
+            className="object-cover"
+          />
+        </div>
+        {value.caption && (
+          <figcaption className="text-sm text-gray-500 text-center mt-2">
+            {value.caption}
+          </figcaption>
+        )}
+      </figure>
+    ),
+    comparisonTable: ({ value }) => (
+      <div className="my-8 overflow-x-auto">
+        {value.title && (
+          <h4 className="text-lg font-semibold text-gray-900 mb-3">
+            {value.title}
+          </h4>
+        )}
+        <table className="w-full border-collapse border border-gray-200 rounded-lg">
+          {value.headers && (
+            <thead className="bg-gray-50">
+              <tr>
+                {value.headers.map((header: string, i: number) => (
+                  <th
+                    key={i}
+                    className="border border-gray-200 px-4 py-2 text-left font-semibold text-gray-900"
+                  >
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+          )}
+          <tbody>
+            {value.rows?.map((row: { cells: string[] }, i: number) => (
+              <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                {row.cells?.map((cell: string, j: number) => (
+                  <td
+                    key={j}
+                    className="border border-gray-200 px-4 py-2 text-gray-700"
+                  >
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ),
+    calloutBox: ({ value }) => {
+      const styles = {
+        tip: {
+          bg: "bg-emerald-50",
+          border: "border-emerald-200",
+          icon: "text-emerald-600",
+        },
+        warning: {
+          bg: "bg-amber-50",
+          border: "border-amber-200",
+          icon: "text-amber-600",
+        },
+        info: {
+          bg: "bg-blue-50",
+          border: "border-blue-200",
+          icon: "text-blue-600",
+        },
+        checklist: {
+          bg: "bg-gray-50",
+          border: "border-gray-200",
+          icon: "text-gray-600",
+        },
+      };
+      const style = styles[value.type as keyof typeof styles] || styles.info;
+
+      return (
+        <div
+          className={`my-6 p-4 rounded-lg border ${style.bg} ${style.border}`}
+        >
+          {value.title && (
+            <h4 className={`font-semibold mb-2 ${style.icon}`}>{value.title}</h4>
+          )}
+          <p className="text-gray-700">{value.content}</p>
+        </div>
+      );
+    },
+  },
+};
+
+// Format static markdown content to HTML
+function formatStaticContent(content: string): string {
+  return content
+    .split("\n")
+    .map((line) => {
+      if (line.startsWith("# ")) {
+        return `<h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">${line.substring(2)}</h1>`;
+      }
+      if (line.startsWith("## ")) {
+        const title = line.substring(3).trim();
+        const id = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        return `<h2 id="${id}" class="text-2xl font-bold text-gray-900 mt-12 mb-4 scroll-mt-24">${title}</h2>`;
+      }
+      if (line.startsWith("### ")) {
+        return `<h3 class="text-xl font-semibold text-gray-900 mt-8 mb-3">${line.substring(4)}</h3>`;
+      }
+      if (line.startsWith("- [ ]")) {
+        return `<li class="flex items-start gap-3 mb-2"><span class="inline-flex items-center justify-center w-5 h-5 mt-0.5 rounded border-2 border-gray-300 shrink-0"></span><span class="text-gray-700">${line.substring(6)}</span></li>`;
+      }
+      if (line.startsWith("- [x]")) {
+        return `<li class="flex items-start gap-3 mb-2"><span class="inline-flex items-center justify-center w-5 h-5 mt-0.5 rounded bg-emerald-600 text-white shrink-0"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg></span><span class="text-gray-700">${line.substring(6)}</span></li>`;
+      }
+      if (line.startsWith("- ")) {
+        return `<li class="text-gray-700 ml-4 mb-2 list-disc">${line.substring(2)}</li>`;
+      }
+      if (line.match(/^\d+\.\s/)) {
+        return `<li class="text-gray-700 ml-4 mb-2 list-decimal">${line.replace(/^\d+\.\s/, "")}</li>`;
+      }
+      if (line.trim() === "") {
+        return "";
+      }
+      if (line.startsWith("**") && line.endsWith("**")) {
+        return `<p class="text-gray-900 font-semibold mb-3">${line.replace(/\*\*/g, "")}</p>`;
+      }
+      const processedLine = line.replace(
+        /\*\*([^*]+)\*\*/g,
+        '<strong class="font-semibold text-gray-900">$1</strong>'
+      );
+      return `<p class="text-gray-700 leading-relaxed mb-4">${processedLine}</p>`;
+    })
+    .filter((line) => line !== "")
+    .join("");
+}
+
+// Extract sections from content for TOC
+function extractSections(
+  content: unknown[] | string | undefined
+): { title: string; id: string }[] {
+  if (!content) return [];
+
+  // For Sanity Portable Text
+  if (Array.isArray(content)) {
+    return content
+      .filter(
+        (block: unknown) =>
+          (block as { _type?: string; style?: string })._type === "block" &&
+          (block as { style?: string }).style === "h2"
+      )
+      .map((block: unknown) => {
+        const typedBlock = block as {
+          _key?: string;
+          children?: { text?: string }[];
+        };
+        const text =
+          typedBlock.children?.map((c) => c.text || "").join("") || "";
+        return {
+          title: text,
+          id:
+            typedBlock._key ||
+            text.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        };
+      });
+  }
+
+  // For static markdown content
+  if (typeof content === "string") {
+    return content
+      .split("\n")
+      .filter((line) => line.startsWith("## "))
+      .map((line) => {
+        const title = line.substring(3).trim();
+        const id = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        return { title, id };
+      });
+  }
+
+  return [];
+}
 
 interface GuidePageProps {
   params: Promise<{ slug: string }>;
@@ -890,18 +1143,32 @@ export async function generateMetadata({
   params,
 }: GuidePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const guide = buyingGuides[slug];
 
-  if (!guide) {
+  // Try Sanity first
+  const sanityGuide = await getGuideBySlug(slug);
+  const staticGuide = buyingGuides[slug];
+
+  if (!sanityGuide && !staticGuide) {
     return {
       title: "Buying Guide Not Found | Bubble Wrap Shop",
       description: "The buying guide you're looking for doesn't exist.",
     };
   }
 
-  const guideTitle = guide.seoTitle || guide.title;
-  const guideDescription = guide.seoDescription || guide.excerpt;
+  // Use Sanity data if available, otherwise static
+  const guide = sanityGuide || staticGuide;
+  const guideTitle =
+    (sanityGuide?.seoTitle || staticGuide?.seoTitle) ||
+    (sanityGuide?.title || staticGuide?.title);
+  const guideDescription =
+    (sanityGuide?.seoDescription || staticGuide?.seoDescription) ||
+    (sanityGuide?.excerpt || staticGuide?.excerpt);
   const guideUrl = `${siteUrl}/guides/${slug}`;
+  const guideImage = sanityGuide?.featuredImage || staticGuide?.featuredImage;
+  const category =
+    typeof sanityGuide?.category === "string"
+      ? sanityGuide.category
+      : staticGuide?.category || "";
 
   return {
     title: `${guideTitle} | Bubble Wrap Shop`,
@@ -910,333 +1177,441 @@ export async function generateMetadata({
       "packaging buying guide",
       "how to choose packaging",
       "packaging guide UK",
-      guide.category.toLowerCase(),
+      category.toLowerCase(),
+      ...(sanityGuide?.seoKeywords || []),
     ],
     openGraph: {
       title: guideTitle,
       description: guideDescription,
       url: guideUrl,
       type: "article",
-      images: [
-        {
-          url: guide.featuredImage,
-          width: 1200,
-          height: 630,
-          alt: guide.title,
-        },
-      ],
+      images: guideImage
+        ? [
+            {
+              url: guideImage,
+              width: 1200,
+              height: 630,
+              alt: guide?.title || "Buying Guide",
+            },
+          ]
+        : undefined,
     },
     alternates: {
-      canonical: guideUrl,
+      canonical: sanityGuide?.canonicalUrl || guideUrl,
     },
   };
 }
 
 export async function generateStaticParams() {
-  return Object.keys(buyingGuides).map((slug) => ({
-    slug,
-  }));
+  // Get slugs from Sanity
+  const sanitySlugs = await getGuideSlugs();
+
+  // Combine with static slugs
+  const allSlugs = new Set([
+    ...(sanitySlugs || []).map((s) => s.slug),
+    ...Object.keys(buyingGuides),
+  ]);
+
+  return Array.from(allSlugs).map((slug) => ({ slug }));
 }
 
 export default async function GuidePage({ params }: GuidePageProps) {
   const { slug } = await params;
-  const guide = buyingGuides[slug];
 
-  if (!guide) {
+  // Try Sanity first
+  const sanityGuide = await getGuideBySlug(slug);
+  const staticGuide = buyingGuides[slug];
+
+  if (!sanityGuide && !staticGuide) {
     notFound();
   }
 
-  // Simple markdown-like content formatter
-  const formatContent = (content: string) => {
-    return content
-      .split("\n")
-      .map((line) => {
-        if (line.startsWith("# ")) {
-          return `<h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-8 mb-4">${line.substring(2)}</h2>`;
-        }
-        if (line.startsWith("## ")) {
-          return `<h3 class="text-xl md:text-2xl font-bold text-gray-900 mt-6 mb-3">${line.substring(3)}</h3>`;
-        }
-        if (line.startsWith("### ")) {
-          return `<h4 class="text-lg md:text-xl font-semibold text-gray-900 mt-4 mb-2">${line.substring(4)}</h4>`;
-        }
-        if (line.startsWith("- ")) {
-          return `<li class="ml-6 mb-2">${line.substring(2)}</li>`;
-        }
-        if (line.startsWith("- [ ]")) {
-          return `<li class="ml-6 mb-2 list-none"><span class="text-emerald-600 mr-2">☐</span>${line.substring(6)}</li>`;
-        }
-        if (line.startsWith("- [x]")) {
-          return `<li class="ml-6 mb-2 list-none"><span class="text-emerald-600 mr-2">☑</span>${line.substring(6)}</li>`;
-        }
-        if (line.trim() === "") {
-          return "<br />";
-        }
-        if (line.includes("[") && line.includes("](")) {
-          const linkMatch = line.match(/\[([^\]]+)\]\(([^)]+)\)/);
-          if (linkMatch) {
-            const linkText = linkMatch[1];
-            const linkUrl = linkMatch[2];
-            return `<p class="mb-4 text-gray-700 leading-relaxed"><a href="${linkUrl}" class="text-emerald-600 hover:text-emerald-700 underline font-medium">${linkText}</a></p>`;
-          }
-        }
-        if (line.startsWith("**") && line.endsWith("**")) {
-          return `<p class="mb-4 text-gray-700 leading-relaxed font-semibold">${line.replace(/\*\*/g, "")}</p>`;
-        }
-        return `<p class="mb-4 text-gray-700 leading-relaxed">${line}</p>`;
-      })
-      .join("");
+  // Use Sanity data if available
+  const isSanityGuide = !!sanityGuide;
+  const guide = sanityGuide || staticGuide;
+
+  // Get related guides
+  let relatedGuides: (Guide | GuideListing)[] = [];
+  if (sanityGuide) {
+    // Use Sanity related guides if available
+    if (sanityGuide.relatedGuides && sanityGuide.relatedGuides.length > 0) {
+      relatedGuides = sanityGuide.relatedGuides as unknown as Guide[];
+    } else {
+      // Fetch related guides from same category
+      const fetchedRelatedGuides = await getRelatedGuides(
+        typeof sanityGuide.category === "string" ? sanityGuide.category : "",
+        slug
+      );
+      relatedGuides = fetchedRelatedGuides || [];
+    }
+  } else if (staticGuide) {
+    // For static guides, get other static guides
+    const otherSlugs = Object.keys(buyingGuides).filter((s) => s !== slug);
+    relatedGuides = otherSlugs.slice(0, 2).map((s) => ({
+      id: s,
+      title: buyingGuides[s].title,
+      slug: s,
+      excerpt: buyingGuides[s].excerpt,
+      featuredImage: buyingGuides[s].featuredImage,
+      featuredImageAlt: `${buyingGuides[s].title} - packaging buying guide`,
+      category: buyingGuides[s].category.toLowerCase().replace(/ /g, "-"),
+      topics: buyingGuides[s].topics,
+      readTime: parseInt(buyingGuides[s].readTime) || 8,
+      author: "Bubble Wrap Shop Team",
+    }));
+  }
+
+  // Extract sections for TOC
+  const sections = isSanityGuide
+    ? extractSections((sanityGuide as Guide).content)
+    : extractSections(staticGuide?.content);
+
+  // Format content
+  const formattedStaticContent = staticGuide
+    ? formatStaticContent(staticGuide.content)
+    : "";
+
+  // Prepare display values
+  const title = sanityGuide?.title || staticGuide?.title || "";
+  const excerpt = sanityGuide?.excerpt || staticGuide?.excerpt || "";
+  const featuredImage =
+    sanityGuide?.featuredImage || staticGuide?.featuredImage || "";
+  const featuredImageAlt =
+    sanityGuide?.featuredImageAlt || `${title} - packaging buying guide`;
+  const category = sanityGuide?.category || staticGuide?.category || "";
+  const categoryLabel = getGuideCategoryLabel(
+    typeof category === "string" ? category : ""
+  );
+  const readTime = sanityGuide?.readTime
+    ? formatGuideReadTime(sanityGuide.readTime)
+    : staticGuide?.readTime || "8 min";
+  const topics = sanityGuide?.topics || staticGuide?.topics || [];
+  const author = sanityGuide?.author || "Bubble Wrap Shop Team";
+  const authorRole = sanityGuide?.authorRole || "Packaging Specialist";
+  const publishedAt = sanityGuide?.publishedAt;
+  const lastUpdated = sanityGuide?.lastUpdated;
+  const expertTip = sanityGuide?.expertTip;
+  const faqs = sanityGuide?.faqs || [];
+  const guideUrl = `${siteUrl}/guides/${slug}`;
+
+  // JSON-LD structured data
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: excerpt,
+    image: featuredImage,
+    author: {
+      "@type": "Person",
+      name: author,
+      jobTitle: authorRole,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Bubble Wrap Shop",
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/images/logo.png`,
+      },
+    },
+    datePublished: publishedAt || new Date().toISOString(),
+    dateModified: lastUpdated || publishedAt || new Date().toISOString(),
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": guideUrl,
+    },
   };
 
-  const formattedContent = formatContent(guide.content);
+  const faqJsonLd =
+    faqs.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: faq.answer,
+            },
+          })),
+        }
+      : null;
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-linear-to-br from-emerald-50 via-white to-teal-50">
+    <div className="min-h-screen bg-white">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
+
       {/* Breadcrumbs */}
-      <div className="relative z-10 border-b border-emerald-200/30 bg-white/50 backdrop-blur-sm">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] py-6">
+      <div className="border-b border-gray-100">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-4">
           <Breadcrumbs
             items={[
               { label: "Buying Guides", href: "/guides" },
-              { label: guide.title, href: `/guides/${slug}` },
+              { label: title, href: `/guides/${slug}` },
             ]}
           />
         </div>
       </div>
 
-      {/* Hero Section with Featured Image */}
-      <section className="relative py-16 md:py-24 lg:py-32 overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0">
-          <Image
-            src={guide.featuredImage}
-            alt={guide.title}
-            fill
-            className="object-cover"
-            priority
-            quality={90}
-          />
-          <div className="absolute inset-0 bg-linear-to-br from-emerald-900/85 via-emerald-800/75 to-teal-900/85"></div>
-          <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent"></div>
-        </div>
+      {/* Header */}
+      <header className="py-12 md:py-16 border-b border-gray-100">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+          {/* Back Link */}
+          <Link
+            href="/guides"
+            className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 text-sm mb-8 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            All Guides
+          </Link>
 
-        {/* Decorative Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 right-10 w-96 h-96 bg-emerald-500/10 rounded-full mix-blend-lighten filter blur-3xl"></div>
-          <div className="absolute bottom-20 left-10 w-96 h-96 bg-teal-500/10 rounded-full mix-blend-lighten filter blur-3xl"></div>
-        </div>
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] relative z-10">
-          <div className="max-w-4xl mx-auto">
-            {/* Back Button */}
-            <Link href="/guides" className="inline-block mb-8">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-white/90 hover:text-white hover:bg-white/20 backdrop-blur-sm border border-white/30"
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" strokeWidth={2} />
-                Back to Guides
-              </Button>
-            </Link>
-
-            {/* Category Badge */}
-            <div className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-md rounded-full text-sm font-semibold text-white border border-white/30">
-                <BookOpen className="h-4 w-4" />
-                {guide.category} Guide
-              </span>
-            </div>
-
-            {/* Guide Header */}
-            <header className="mb-8">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-6 leading-tight drop-shadow-2xl">
-                {guide.title}
-              </h1>
-
-              <p className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 leading-relaxed drop-shadow-lg">
-                {guide.excerpt}
-              </p>
-
-              {/* Meta Information */}
-              <div className="flex flex-wrap items-center gap-4 text-white/90 mb-6">
-                <div className="flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-emerald-300" />
-                  <span>{guide.readTime}</span>
-                </div>
-                <span className="text-white/50">•</span>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-300" />
-                  <span>{guide.topics.length} Topics Covered</span>
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Content */}
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
+                  {categoryLabel}
+                </span>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <Clock className="h-4 w-4" />
+                  <span>{readTime} read</span>
                 </div>
               </div>
 
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                {title}
+              </h1>
+
+              <p className="text-lg text-gray-600 leading-relaxed mb-6">
+                {excerpt}
+              </p>
+
+              {/* Author & Date */}
+              {(author || publishedAt) && (
+                <div className="flex items-center gap-4 mb-6 text-sm text-gray-500">
+                  {author && (
+                    <span>
+                      By <span className="text-gray-900 font-medium">{author}</span>
+                      {authorRole && `, ${authorRole}`}
+                    </span>
+                  )}
+                  {publishedAt && (
+                    <>
+                      <span>•</span>
+                      <span>{formatGuideDate(publishedAt)}</span>
+                    </>
+                  )}
+                  {lastUpdated && (
+                    <>
+                      <span>•</span>
+                      <span>Updated {formatGuideDate(lastUpdated)}</span>
+                    </>
+                  )}
+                </div>
+              )}
+
               {/* Topics */}
               <div className="flex flex-wrap gap-2">
-                {guide.topics.map((topic) => (
+                {topics.map((topic) => (
                   <span
                     key={topic}
-                    className="inline-flex items-center gap-1 px-4 py-2 bg-white/20 backdrop-blur-sm text-white text-sm font-medium rounded-full border border-white/30"
+                    className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full"
                   >
-                    <Tag className="h-3 w-3" />
                     {topic}
                   </span>
                 ))}
               </div>
-            </header>
-          </div>
-        </div>
-      </section>
-
-      {/* Guide Content */}
-      <article className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl py-12 md:py-16 lg:py-20">
-
-        {/* Guide Content */}
-        <div
-          className="prose prose-lg prose-emerald max-w-none
-            prose-headings:font-bold prose-headings:text-gray-900
-            prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6
-            prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4
-            prose-h4:text-xl prose-h4:mt-6 prose-h4:mb-3
-            prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6
-            prose-a:text-emerald-600 prose-a:font-medium prose-a:underline hover:prose-a:text-emerald-700
-            prose-strong:text-gray-900 prose-strong:font-bold
-            prose-ul:list-disc prose-ul:ml-6 prose-ul:mb-6
-            prose-li:text-gray-700 prose-li:mb-2
-            prose-blockquote:border-l-4 prose-blockquote:border-emerald-500 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-gray-600
-            bg-white rounded-2xl shadow-lg p-8 md:p-12 lg:p-16 border border-emerald-100"
-          dangerouslySetInnerHTML={{ __html: formattedContent }}
-        />
-
-        {/* Related Content Section */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          <div className="group relative bg-white rounded-2xl p-8 border-2 border-emerald-100 hover:border-emerald-300 hover:shadow-xl transition-all duration-300 overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-emerald-500/10 to-teal-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-            <div className="relative">
-              <div className="w-14 h-14 rounded-xl bg-linear-to-br from-emerald-600 to-teal-600 flex items-center justify-center mb-6 shadow-lg">
-                <BookOpen className="h-7 w-7 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Related Blog Posts
-              </h3>
-              <ul className="space-y-3">
-                <li>
-                  <Link
-                    href="/blog/how-to-choose-the-right-packaging-box"
-                    className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium group-hover:gap-3 transition-all"
-                  >
-                    <ArrowRight className="h-4 w-4" />
-                    How to Choose the Right Packaging Box
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/blog/cardboard-box-sizes-guide"
-                    className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium group-hover:gap-3 transition-all"
-                  >
-                    <ArrowRight className="h-4 w-4" />
-                    Cardboard Box Sizes Guide
-                  </Link>
-                </li>
-              </ul>
             </div>
-          </div>
-          <div className="group relative bg-white rounded-2xl p-8 border-2 border-emerald-100 hover:border-emerald-300 hover:shadow-xl transition-all duration-300 overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-emerald-500/10 to-teal-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-            <div className="relative">
-              <div className="w-14 h-14 rounded-xl bg-linear-to-br from-emerald-600 to-teal-600 flex items-center justify-center mb-6 shadow-lg">
-                <Sparkles className="h-7 w-7 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Shop Products
-              </h3>
-              <ul className="space-y-3">
-                <li>
-                  <Link
-                    href="/products"
-                    className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium group-hover:gap-3 transition-all"
-                  >
-                    <ArrowRight className="h-4 w-4" />
-                    Browse All Products
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/categories"
-                    className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium group-hover:gap-3 transition-all"
-                  >
-                    <ArrowRight className="h-4 w-4" />
-                    View Categories
-                  </Link>
-                </li>
-              </ul>
+
+            {/* Featured Image */}
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100">
+              <Image
+                src={featuredImage}
+                alt={featuredImageAlt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+              />
             </div>
           </div>
         </div>
+      </header>
 
-      </article>
+      {/* Main Content */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-12 md:py-16">
+        <div className="grid lg:grid-cols-[1fr_280px] gap-12">
+          {/* Article Content */}
+          <article className="min-w-0">
+            {/* Expert Tip */}
+            {expertTip && (
+              <div className="mb-8 p-6 bg-amber-50 border border-amber-200 rounded-xl">
+                <div className="flex items-start gap-3">
+                  <Lightbulb className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-amber-900 mb-2">
+                      Expert Tip
+                    </h3>
+                    <p className="text-amber-800">{expertTip}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Content */}
+            {isSanityGuide && sanityGuide?.content ? (
+              <div className="prose prose-lg max-w-none">
+                <PortableText
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  value={sanityGuide.content as any}
+                  components={portableTextComponents}
+                />
+              </div>
+            ) : (
+              <div
+                className="prose prose-lg max-w-none"
+                dangerouslySetInnerHTML={{ __html: formattedStaticContent }}
+              />
+            )}
+
+            {/* FAQs */}
+            {faqs.length > 0 && (
+              <div className="mt-12 p-8 bg-gray-50 rounded-2xl">
+                <div className="flex items-center gap-2 mb-6">
+                  <HelpCircle className="h-5 w-5 text-emerald-600" />
+                  <h2 className="text-xl font-bold text-gray-900">
+                    Frequently Asked Questions
+                  </h2>
+                </div>
+                <div className="space-y-6">
+                  {faqs.map((faq, index) => (
+                    <div key={index} className="border-b border-gray-200 pb-6 last:border-0 last:pb-0">
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        {faq.question}
+                      </h3>
+                      <p className="text-gray-600">{faq.answer}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Shop CTA */}
+            <div className="mt-12 p-8 bg-gray-50 rounded-2xl">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    Ready to shop?
+                  </h3>
+                  <p className="text-gray-600">
+                    Browse our range of {categoryLabel.toLowerCase()} with
+                    next-day delivery.
+                  </p>
+                </div>
+                <Link
+                  href="/products"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-gray-800 transition-colors whitespace-nowrap"
+                >
+                  Shop now
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </article>
+
+          {/* Sidebar */}
+          <aside className="space-y-8">
+            {/* Table of Contents */}
+            <div className="sticky top-8">
+              {sections.length > 0 && (
+                <div className="p-6 bg-gray-50 rounded-xl">
+                  <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <BookOpen className="h-4 w-4" />
+                    In this guide
+                  </h4>
+                  <nav className="space-y-2">
+                    {sections.map((section) => (
+                      <a
+                        key={section.id}
+                        href={`#${section.id}`}
+                        className="block text-sm text-gray-600 hover:text-emerald-600 transition-colors py-1"
+                      >
+                        {section.title}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+              )}
+
+              {/* Related Guides */}
+              {relatedGuides.length > 0 && (
+                <div className="mt-8">
+                  <h4 className="font-semibold text-gray-900 mb-4">
+                    Related guides
+                  </h4>
+                  <div className="space-y-4">
+                    {relatedGuides.slice(0, 2).map((relatedGuide) => (
+                      <Link
+                        key={relatedGuide.id || relatedGuide.slug}
+                        href={`/guides/${relatedGuide.slug}`}
+                        className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors group"
+                      >
+                        <span className="text-xs text-emerald-600 font-medium">
+                          {getGuideCategoryLabel(
+                            typeof relatedGuide.category === "string"
+                              ? relatedGuide.category
+                              : ""
+                          )}
+                        </span>
+                        <h5 className="text-sm font-medium text-gray-900 mt-1 group-hover:text-emerald-600 transition-colors line-clamp-2">
+                          {relatedGuide.title}
+                        </h5>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </aside>
+        </div>
+      </div>
 
       {/* CTA Section */}
-      <section className="relative py-20 md:py-28 lg:py-32 overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0">
-          <Image
-            src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=2070"
-            alt="Professional packaging warehouse"
-            fill
-            className="object-cover"
-            loading="lazy"
-            quality={90}
-          />
-          <div className="absolute inset-0 bg-linear-to-br from-emerald-900/90 via-emerald-800/85 to-teal-900/90"></div>
-          <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent"></div>
-        </div>
-
-        {/* Decorative Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-emerald-500/20 rounded-full mix-blend-lighten filter blur-3xl"></div>
-          <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-teal-500/20 rounded-full mix-blend-lighten filter blur-3xl"></div>
-        </div>
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 backdrop-blur-md rounded-full mb-8 border border-white/30">
-              <Sparkles className="h-5 w-5 text-emerald-300" />
-              <span className="text-sm font-semibold text-white uppercase tracking-wider">
-                Ready to Shop
-              </span>
-            </div>
-
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight drop-shadow-2xl">
-              Ready to Shop
-              <span className="block bg-linear-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent mt-2">
-                Packaging Supplies?
-              </span>
+      <section className="py-16 md:py-24 bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Need packaging advice?
             </h2>
-            <p className="text-xl sm:text-2xl text-white/95 mb-12 leading-relaxed drop-shadow-lg max-w-3xl mx-auto">
-              Browse our complete range of packaging supplies with automatic bulk
-              pricing and next-day delivery across the UK.
+            <p className="text-lg text-gray-600 mb-8">
+              Our team of experts is ready to help you find the perfect
+              packaging solution for your business needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                asChild
-                size="lg"
-                variant="secondary"
-                className="w-full sm:w-auto shadow-2xl hover:shadow-emerald-500/50 text-lg px-8 py-6"
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-gray-800 transition-colors"
               >
-                <Link href="/products">
-                  Shop All Products
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm text-lg px-8 py-6"
+                Contact us
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/guides"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-gray-900 font-medium rounded-full border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
               >
-                <Link href="/contact">Contact Us</Link>
-              </Button>
+                More guides
+              </Link>
             </div>
           </div>
         </div>
@@ -1244,4 +1619,3 @@ export default async function GuidePage({ params }: GuidePageProps) {
     </div>
   );
 }
-

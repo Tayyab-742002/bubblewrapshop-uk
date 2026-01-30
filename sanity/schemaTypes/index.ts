@@ -6,6 +6,7 @@ import { pricingTier } from "./pricingTier";
 import { banner } from "./banner";
 import { announcement } from "./announcement";
 import { blogPost } from "./blog-post";
+import { guide } from "./guide";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -15,6 +16,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     banner,
     announcement,
     blogPost,
+    guide,
 
     // Embedded types
     productVariant,

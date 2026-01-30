@@ -18,8 +18,8 @@ import {
   Star,
   ChevronRight,
 } from "lucide-react";
-import { getAllCategories, getFeaturedProducts } from "@/sanity/lib";
-import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { getAllCategories, getFeaturedProducts, getAllBlogPosts, getAllGuides } from "@/sanity/lib";
+import { Breadcrumbs, ContentCarousel } from "@/components/common";
 import { ProductGrid } from "@/components/products/product-grid";
 import { Category } from "@/types/category";
 
@@ -250,11 +250,36 @@ export default async function LocationPage({ params }: Props) {
     notFound();
   }
 
-  // Fetch categories and featured products
-  const [categories, featuredProducts] = await Promise.all([
+  // Fetch categories, featured products, blogs, and guides
+  const [categories, featuredProducts, blogPosts, guides] = await Promise.all([
     getAllCategories(),
     getFeaturedProducts(),
+    getAllBlogPosts(),
+    getAllGuides(),
   ]);
+
+  // Transform data for carousel
+  const carouselBlogs = (blogPosts || []).slice(0, 3).map((post) => ({
+    id: post.id,
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt,
+    featuredImage: post.featuredImage,
+    category: post.category,
+    readTime: post.readTime,
+    type: "blog" as const,
+  }));
+
+  const carouselGuides = (guides || []).slice(0, 3).map((guide) => ({
+    id: guide.id,
+    title: guide.title,
+    slug: guide.slug,
+    excerpt: guide.excerpt,
+    featuredImage: guide.featuredImage,
+    category: typeof guide.category === "string" ? guide.category : "",
+    readTime: guide.readTime,
+    type: "guide" as const,
+  }));
 
   const pageUrl = `${siteUrl}/locations/${city}`;
 
@@ -668,6 +693,16 @@ export default async function LocationPage({ params }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Resources Carousel */}
+      {(carouselBlogs.length > 0 || carouselGuides.length > 0) && (
+        <ContentCarousel
+          blogs={carouselBlogs}
+          guides={carouselGuides}
+          title="Packaging Resources"
+          subtitle={`Tips and guides for ${location.city} businesses`}
+        />
+      )}
 
       {/* FAQ Section */}
       <div className="py-16 md:py-20 border-t border-border">

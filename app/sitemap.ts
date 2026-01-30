@@ -181,20 +181,71 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Continue without categories - don't break the sitemap
   }
 
-  // Buying guide pages
-  const guidePages: MetadataRoute.Sitemap = [
+  // Fetch buying guides from Sanity
+  let guidePages: MetadataRoute.Sitemap = [];
+  try {
+    const guides = await client.fetch<
+      Array<{ slug: { current: string }; publishedAt: string; lastUpdated: string; _updatedAt: string }>
+    >(
+      groq`*[_type == "guide" && isPublished == true] | order(publishedAt desc) {
+        "slug": slug.current,
+        publishedAt,
+        lastUpdated,
+        _updatedAt
+      }`
+    );
+    if (guides && guides.length > 0) {
+      guidePages = guides.map((guide) => ({
+        url: `${siteUrl}/guides/${guide.slug}`,
+        lastModified: guide.lastUpdated
+          ? new Date(guide.lastUpdated)
+          : guide._updatedAt
+            ? new Date(guide._updatedAt)
+            : guide.publishedAt
+              ? new Date(guide.publishedAt)
+              : baseDate,
+        changeFrequency: "monthly" as const,
+        priority: 0.7, // Medium-high priority for buying guides
+      }));
+    }
+  } catch (error) {
+    console.error("Error fetching guides for sitemap:", error);
+    // Continue with static fallback
+  }
+
+  // Static guide fallback pages (in case Sanity is empty)
+  const staticGuidePages: MetadataRoute.Sitemap = [
     {
       url: `${siteUrl}/guides/packaging-boxes-guide`,
       lastModified: baseDate,
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: 0.7,
     },
     {
       url: `${siteUrl}/guides/bubble-wrap-guide`,
       lastModified: baseDate,
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: 0.7,
     },
+    {
+      url: `${siteUrl}/guides/packing-tape-guide`,
+      lastModified: baseDate,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/guides/protective-packaging-guide`,
+      lastModified: baseDate,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    },
+  ];
+
+  // Merge guide pages, avoiding duplicates (Sanity takes precedence)
+  const sanityGuideSlugs = new Set(guidePages.map((p) => p.url));
+  const mergedGuidePages = [
+    ...guidePages,
+    ...staticGuidePages.filter((p) => !sanityGuideSlugs.has(p.url)),
   ];
 
   // Fetch blog posts from Sanity
@@ -313,7 +364,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...productPages,
     ...categoryPages,
     ...blogPages,
-    ...guidePages,
+    ...mergedGuidePages,
   ];
 
   // Sort by priority (descending) - helps search engines prioritize important pages

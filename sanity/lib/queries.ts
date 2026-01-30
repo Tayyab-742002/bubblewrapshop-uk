@@ -475,3 +475,153 @@ export const BLOG_POST_SLUGS_QUERY = `*[_type == "blogPost" && isPublished == tr
   "slug": slug.current,
   publishedAt
 }`;
+
+// ==========================================
+// BUYING GUIDE QUERIES
+// ==========================================
+
+// Base guide query with all fields (full content for detail page)
+const GUIDE_QUERY = `
+  _id,
+  _type,
+  title,
+  slug,
+  excerpt,
+  content,
+  featuredImage {
+    asset-> {
+      _id,
+      url,
+      metadata {
+        dimensions {
+          width,
+          height
+        }
+      }
+    },
+    alt
+  },
+  category,
+  topics,
+  readTime,
+  isPublished,
+  publishedAt,
+  lastUpdated,
+
+  // Author (EEAT)
+  author,
+  authorRole,
+  authorImage {
+    asset-> {
+      _id,
+      url
+    }
+  },
+
+  // Basic SEO fields
+  seoTitle,
+  seoDescription,
+  seoKeywords,
+
+  // 2026 AI & EEAT fields
+  llmSummary,
+  expertTip,
+  faqs[] {
+    question,
+    answer
+  },
+  videoUrl,
+  canonicalUrl,
+
+  // Related content
+  relatedProducts[]-> {
+    _id,
+    name,
+    slug,
+    basePrice,
+    mainImage {
+      asset-> {
+        url
+      }
+    }
+  },
+  relatedCategories[]-> {
+    _id,
+    name,
+    slug
+  },
+  relatedGuides[]-> {
+    _id,
+    title,
+    slug,
+    category,
+    readTime,
+    excerpt,
+    featuredImage {
+      asset-> {
+        url
+      },
+      alt
+    }
+  },
+  sources[] {
+    title,
+    url
+  }
+`;
+
+// Simplified guide query for listings
+const GUIDE_LISTING_QUERY = `
+  _id,
+  _type,
+  title,
+  slug,
+  excerpt,
+  featuredImage {
+    asset-> {
+      _id,
+      url,
+      metadata {
+        dimensions {
+          width,
+          height
+        }
+      }
+    },
+    alt
+  },
+  category,
+  topics,
+  readTime,
+  publishedAt,
+  lastUpdated,
+  author,
+  authorRole
+`;
+
+// All published guides (for listing page)
+export const ALL_GUIDES_QUERY = `*[_type == "guide" && isPublished == true] | order(publishedAt desc) {
+  ${GUIDE_LISTING_QUERY}
+}`;
+
+// Single guide by slug
+export const GUIDE_BY_SLUG_QUERY = `*[_type == "guide" && slug.current == $slug && isPublished == true][0] {
+  ${GUIDE_QUERY}
+}`;
+
+// Guides by category
+export const GUIDES_BY_CATEGORY_QUERY = `*[_type == "guide" && isPublished == true && category == $category] | order(publishedAt desc) {
+  ${GUIDE_LISTING_QUERY}
+}`;
+
+// Related guides (same category, excluding current guide)
+export const RELATED_GUIDES_QUERY = `*[_type == "guide" && isPublished == true && category == $category && slug.current != $currentSlug] | order(publishedAt desc) [0...3] {
+  ${GUIDE_LISTING_QUERY}
+}`;
+
+// Guide slugs (for static generation)
+export const GUIDE_SLUGS_QUERY = `*[_type == "guide" && isPublished == true] {
+  "slug": slug.current,
+  publishedAt,
+  lastUpdated
+}`;

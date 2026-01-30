@@ -32,5 +32,11 @@ export {
   getRelatedBlogPosts,
   getRecentBlogPosts,
   getBlogPostSlugs,
+  // Guide functions
+  getAllGuides,
+  getGuideBySlug,
+  getGuidesByCategory,
+  getRelatedGuides,
+  getGuideSlugs,
 } from "./api";
 

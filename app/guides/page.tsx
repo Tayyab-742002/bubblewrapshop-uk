@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/common";
-import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  BookOpen,
-  CheckCircle,
-  Sparkles,
-  TrendingUp,
-  Clock,
-} from "lucide-react";
+import { ArrowRight, Clock, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import { getAllGuides } from "@/sanity/lib";
+import {
+  getGuideCategoryLabel,
+  formatGuideReadTime,
+  type GuideListing,
+  type StaticGuide,
+} from "@/types/guide";
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+const siteUrl =
+  process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
 
 export const metadata: Metadata = {
-  title: "Packaging Buying Guides | Complete Guides for UK Businesses | Bubble Wrap Shop",
+  title:
+    "Packaging Buying Guides | Expert Advice for UK Businesses | Bubble Wrap Shop",
   description:
     "Comprehensive buying guides for packaging supplies. Learn how to choose the right bubble wrap, cardboard boxes, packing tape, and protective materials for your UK business.",
   keywords: [
@@ -28,7 +29,8 @@ export const metadata: Metadata = {
     "buying packaging supplies",
   ],
   openGraph: {
-    title: "Packaging Buying Guides | Complete Guides for UK Businesses",
+    title:
+      "Packaging Buying Guides | Expert Advice for UK Businesses | Bubble Wrap Shop",
     description:
       "Comprehensive buying guides for packaging supplies. Learn how to choose the right packaging materials for your business.",
     url: `${siteUrl}/guides`,
@@ -38,14 +40,15 @@ export const metadata: Metadata = {
   },
 };
 
-const buyingGuides = [
+// Static fallback guides (used when no Sanity data available)
+const staticGuides: StaticGuide[] = [
   {
     slug: "packaging-boxes-guide",
-    title: "Complete Guide to Buying Packaging Boxes in the UK",
+    title: "Complete Guide to Buying Packaging Boxes",
     excerpt:
       "Everything you need to know about choosing the right cardboard boxes for your business. Size, strength, material, and cost considerations.",
     category: "Boxes",
-    readTime: "10 min read",
+    readTime: "10 min",
     featuredImage:
       "https://images.unsplash.com/photo-1602143407151-7111542de6e8?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1200",
     topics: [
@@ -53,33 +56,33 @@ const buyingGuides = [
       "Size selection",
       "Strength ratings",
       "Cost optimization",
-      "UK suppliers",
     ],
+    content: "",
   },
   {
     slug: "bubble-wrap-guide",
-    title: "Bubble Wrap Buying Guide: Choose the Right Protection",
+    title: "Bubble Wrap Buying Guide",
     excerpt:
       "Complete guide to selecting bubble wrap for your shipping needs. Learn about bubble sizes, thickness, and when to use different types.",
     category: "Protective Materials",
-    readTime: "8 min read",
+    readTime: "8 min",
     featuredImage:
       "https://images.unsplash.com/photo-1605745341112-85968b19335b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1200",
     topics: [
       "Bubble sizes explained",
       "Thickness options",
       "When to use bubble wrap",
-      "Cost considerations",
       "Environmental alternatives",
     ],
+    content: "",
   },
   {
     slug: "packing-tape-guide",
-    title: "Packing Tape Buying Guide: Secure Your Shipments",
+    title: "Packing Tape Buying Guide",
     excerpt:
       "How to choose the right packing tape for your boxes. Learn about tape types, strength, and application techniques for secure shipping.",
     category: "Sealing Materials",
-    readTime: "6 min read",
+    readTime: "6 min",
     featuredImage:
       "https://images.unsplash.com/photo-1605745341112-85968b19335b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1200",
     topics: [
@@ -87,16 +90,16 @@ const buyingGuides = [
       "Strength ratings",
       "Application methods",
       "Cost efficiency",
-      "UK standards",
     ],
+    content: "",
   },
   {
     slug: "protective-packaging-guide",
-    title: "Protective Packaging Guide: Keep Items Safe During Shipping",
+    title: "Protective Packaging Guide",
     excerpt:
       "Comprehensive guide to protective packaging materials. Learn when to use different materials and how to protect fragile items effectively.",
     category: "Protective Materials",
-    readTime: "9 min read",
+    readTime: "9 min",
     featuredImage:
       "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1200",
     topics: [
@@ -104,239 +107,250 @@ const buyingGuides = [
       "Protection levels",
       "Cost vs protection",
       "Best practices",
-      "UK availability",
     ],
+    content: "",
   },
 ];
 
-export default function GuidesPage() {
+// Normalize static guide to match GuideListing interface
+function normalizeStaticGuide(guide: StaticGuide): GuideListing {
+  return {
+    id: guide.slug,
+    title: guide.title,
+    slug: guide.slug,
+    excerpt: guide.excerpt,
+    featuredImage: guide.featuredImage,
+    featuredImageAlt: `${guide.title} - packaging buying guide`,
+    category: guide.category.toLowerCase().replace(/ /g, "-"),
+    topics: guide.topics,
+    readTime: parseInt(guide.readTime) || 8,
+    author: "Bubble Wrap Shop Team",
+  };
+}
+
+export default async function GuidesPage() {
+  // Fetch guides from Sanity, fall back to static data
+  const sanityGuides = await getAllGuides();
+  const guides: GuideListing[] =
+    sanityGuides && sanityGuides.length > 0
+      ? sanityGuides
+      : staticGuides.map(normalizeStaticGuide);
+
   // Get unique categories
-  const categories = Array.from(
-    new Set(buyingGuides.map((guide) => guide.category))
-  );
+  const uniqueCategories = Array.from(new Set(guides.map((guide) => guide.category)));
+  const categories = ["All", ...uniqueCategories.map(getGuideCategoryLabel)];
+
+  // Featured guide (first one)
+  const featuredGuide = guides[0];
+  const otherGuides = guides.slice(1);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-linear-to-br from-emerald-50 via-white to-teal-50">
+    <div className="min-h-screen bg-white">
       {/* Breadcrumbs */}
-      <div className="relative z-10 border-b border-emerald-200/30 bg-white/50 backdrop-blur-sm">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] py-6">
+      <div className="border-b border-gray-100">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-4">
           <Breadcrumbs items={[{ label: "Buying Guides", href: "/guides" }]} />
         </div>
       </div>
 
-      {/* Hero Section */}
-      <section className="relative py-16 md:py-24 lg:py-32 overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0">
-          <Image
-            src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=2070"
-            alt="Professional packaging buying guides workspace"
-            fill
-            className="object-cover"
-            priority
-            quality={90}
-          />
-          <div className="absolute inset-0 bg-linear-to-br from-emerald-900/80 via-emerald-800/70 to-teal-900/80"></div>
-          <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent"></div>
-        </div>
-
-        {/* Decorative Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 right-10 w-96 h-96 bg-emerald-500/10 rounded-full mix-blend-lighten filter blur-3xl"></div>
-          <div className="absolute bottom-20 left-10 w-96 h-96 bg-teal-500/10 rounded-full mix-blend-lighten filter blur-3xl"></div>
-        </div>
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 backdrop-blur-md rounded-full mb-8 border border-white/30">
-              <BookOpen className="h-5 w-5 text-white" />
-              <span className="text-sm font-semibold text-white uppercase tracking-wider">
-                Expert Buying Guides
-              </span>
-              <Sparkles className="h-4 w-4 text-emerald-300" />
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-6 leading-tight drop-shadow-2xl">
-              Packaging Buying
-              <span className="block bg-linear-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent mt-2">
-                Guides for UK Businesses
-              </span>
+      {/* Header */}
+      <header className="py-16 md:py-24 border-b border-gray-100">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+          <div className="max-w-3xl">
+            <p className="text-emerald-600 font-medium mb-4 tracking-wide uppercase text-sm">
+              Expert Resources
+            </p>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              Buying Guides
             </h1>
-
-            <p className="text-lg sm:text-xl md:text-2xl text-white/95 mb-10 max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
-              Comprehensive guides to help you choose the right packaging supplies
-              for your business. Expert advice on boxes, bubble wrap, tape, and
-              protective materials.
-            </p>
-
-            {/* Category Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
-              {categories.map((category) => (
-                <span
-                  key={category}
-                  className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium text-white border border-white/30 hover:bg-white/30 transition-colors cursor-pointer"
-                >
-                  {category}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Guides Section */}
-      <section className="relative py-16 md:py-20 lg:py-24 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px]">
-
-          {/* Section Header */}
-          <div className="text-center mb-16 md:mb-20">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 rounded-full mb-6">
-              <TrendingUp className="h-5 w-5 text-emerald-600" />
-              <span className="text-sm font-semibold text-emerald-700 uppercase tracking-wider">
-                Complete Guides
-              </span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Expert Packaging
-              <span className="block text-emerald-600 mt-2">
-                Buying Guides
-              </span>
-            </h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-              Step-by-step guides to help you make informed packaging decisions
+            <p className="text-xl text-gray-600 leading-relaxed">
+              Comprehensive guides to help you choose the right packaging
+              supplies for your business. Expert advice backed by industry
+              experience.
             </p>
           </div>
 
-          {/* Guides Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-12 mb-16">
-            {buyingGuides.map((guide, index) => (
-              <Link
-                key={guide.slug}
-                href={`/guides/${guide.slug}`}
-                className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-emerald-100 hover:border-emerald-300"
+          {/* Category Filter */}
+          <div className="flex flex-wrap gap-2 mt-10">
+            {categories.map((category) => (
+              <button
+                key={category}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  category === "All"
+                    ? "bg-gray-900 text-white"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
               >
-                {/* Featured Image */}
-                <div className="relative h-64 overflow-hidden bg-linear-to-br from-emerald-50 to-teal-50">
-                  <Image
-                    src={guide.featuredImage}
-                    alt={guide.title}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    loading={index < 2 ? "eager" : "lazy"}
-                    priority={index < 2}
-                  />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent"></div>
-                  
-                  {/* Category Badge */}
-                  <div className="absolute top-4 left-4">
-                    <span className="px-4 py-1.5 bg-white/95 backdrop-blur-md rounded-full text-xs font-bold text-emerald-700 shadow-lg border border-emerald-200">
-                      {guide.category}
-                    </span>
-                  </div>
-
-                  {/* Read Time Badge */}
-                  <div className="absolute top-4 right-4">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-black/60 backdrop-blur-md rounded-full text-xs font-medium text-white">
-                      <Clock className="h-3 w-3" />
-                      {guide.readTime}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6 md:p-8">
-                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 group-hover:text-emerald-600 transition-colors leading-tight">
-                    {guide.title}
-                  </h2>
-                  <p className="text-gray-600 mb-6 leading-relaxed">{guide.excerpt}</p>
-                  
-                  {/* Topics List */}
-                  <div className="space-y-3 mb-6">
-                    {guide.topics.map((topic) => (
-                      <div
-                        key={topic}
-                        className="flex items-center gap-3 text-sm text-gray-700"
-                      >
-                        <CheckCircle className="h-5 w-5 text-emerald-600 shrink-0" />
-                        <span>{topic}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Read More Link */}
-                  <div className="flex items-center text-emerald-600 font-semibold group-hover:gap-2 transition-all">
-                    <span>Read Complete Guide</span>
-                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </div>
-              </Link>
+                {category}
+              </button>
             ))}
           </div>
         </div>
-      </section>
+      </header>
+
+      {/* Featured Guide */}
+      {featuredGuide && (
+        <section className="py-16 md:py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+            <Link href={`/guides/${featuredGuide.slug}`} className="group block">
+              <article className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+                {/* Image */}
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100">
+                  <Image
+                    src={featuredGuide.featuredImage}
+                    alt={featuredGuide.featuredImageAlt}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    priority
+                  />
+                </div>
+
+                {/* Content */}
+                <div>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
+                      {getGuideCategoryLabel(featuredGuide.category)}
+                    </span>
+                    <span className="text-sm text-gray-500">Featured Guide</span>
+                  </div>
+
+                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 group-hover:text-emerald-600 transition-colors leading-tight">
+                    {featuredGuide.title}
+                  </h2>
+
+                  <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                    {featuredGuide.excerpt}
+                  </p>
+
+                  <div className="flex items-center gap-6 text-sm text-gray-500 mb-6">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4" />
+                      <span>{formatGuideReadTime(featuredGuide.readTime)} read</span>
+                    </div>
+                    <span className="text-gray-300">•</span>
+                    <span>{featuredGuide.topics.length} topics covered</span>
+                  </div>
+
+                  {/* Topics Preview */}
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {featuredGuide.topics.slice(0, 3).map((topic) => (
+                      <span
+                        key={topic}
+                        className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full"
+                      >
+                        {topic}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="inline-flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-3 transition-all">
+                    Read guide
+                    <ArrowRight className="h-4 w-4" />
+                  </div>
+                </div>
+              </article>
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {/* Divider */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <hr className="border-gray-100" />
+      </div>
+
+      {/* Other Guides */}
+      {otherGuides.length > 0 && (
+        <section className="py-16 md:py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-10">
+              More Guides
+            </h2>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {otherGuides.map((guide, index) => (
+                <Link
+                  key={guide.id}
+                  href={`/guides/${guide.slug}`}
+                  className="group"
+                >
+                  <article className="h-full">
+                    {/* Image */}
+                    <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-gray-100 mb-5">
+                      <Image
+                        src={guide.featuredImage}
+                        alt={guide.featuredImageAlt}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        loading={index < 2 ? "eager" : "lazy"}
+                      />
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-xs font-medium text-emerald-600">
+                        {getGuideCategoryLabel(guide.category)}
+                      </span>
+                      <span className="text-gray-300">•</span>
+                      <span className="text-xs text-gray-500">
+                        {formatGuideReadTime(guide.readTime)} read
+                      </span>
+                    </div>
+
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors leading-snug">
+                      {guide.title}
+                    </h3>
+
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2 leading-relaxed">
+                      {guide.excerpt}
+                    </p>
+
+                    {/* Topics */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {guide.topics.slice(0, 2).map((topic) => (
+                        <span
+                          key={topic}
+                          className="px-2 py-0.5 bg-gray-100 text-gray-500 text-xs rounded"
+                        >
+                          {topic}
+                        </span>
+                      ))}
+                    </div>
+                  </article>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA Section */}
-      <section className="relative py-20 md:py-28 lg:py-32 overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0">
-          <Image
-            src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=2070"
-            alt="Professional packaging consultation"
-            fill
-            className="object-cover"
-            loading="lazy"
-            quality={90}
-          />
-          <div className="absolute inset-0 bg-linear-to-br from-emerald-900/90 via-emerald-800/85 to-teal-900/90"></div>
-          <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent"></div>
-        </div>
-
-        {/* Decorative Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-emerald-500/20 rounded-full mix-blend-lighten filter blur-3xl"></div>
-          <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-teal-500/20 rounded-full mix-blend-lighten filter blur-3xl"></div>
-        </div>
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 backdrop-blur-md rounded-full mb-8 border border-white/30">
-              <Sparkles className="h-5 w-5 text-emerald-300" />
-              <span className="text-sm font-semibold text-white uppercase tracking-wider">
-                Need More Help?
-              </span>
-            </div>
-
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight drop-shadow-2xl">
-              Our Packaging Experts
-              <span className="block bg-linear-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent mt-2">
-                Are Here to Help
-              </span>
+      <section className="py-16 md:py-24 bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Need packaging advice?
             </h2>
-            <p className="text-xl sm:text-2xl text-white/95 mb-12 leading-relaxed drop-shadow-lg max-w-3xl mx-auto">
-              Our packaging experts are here to help you find the perfect
-              solutions for your business needs.
+            <p className="text-lg text-gray-600 mb-8">
+              Our team of experts is ready to help you find the perfect
+              packaging solution for your business needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                asChild
-                size="lg"
-                variant="secondary"
-                className="w-full sm:w-auto shadow-2xl hover:shadow-emerald-500/50 text-lg px-8 py-6"
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-gray-800 transition-colors"
               >
-                <Link href="/contact">
-                  Contact Our Experts
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm text-lg px-8 py-6"
+                Contact us
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/products"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-gray-900 font-medium rounded-full border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
               >
-                <Link href="/blog">Read Our Blog</Link>
-              </Button>
+                Browse products
+              </Link>
             </div>
           </div>
         </div>
@@ -344,4 +358,3 @@ export default function GuidesPage() {
     </div>
   );
 }
-

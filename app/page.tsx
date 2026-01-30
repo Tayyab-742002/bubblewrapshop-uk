@@ -10,7 +10,8 @@ import {
   GalleryShowcase,
   TrustBar,
 } from "@/components/home";
-import { getAllCategories } from "@/sanity/lib";
+import { ContentCarousel } from "@/components/common";
+import { getAllCategories, getAllBlogPosts, getAllGuides } from "@/sanity/lib";
 
 // Revalidation strategy: On-demand revalidation via Sanity webhooks
 // Pages will only revalidate when content changes in Sanity CMS
@@ -75,6 +76,35 @@ export const metadata: Metadata = {
 export default async function Home() {
   // Fetch categories for the CategoryGrid
   const categories = await getAllCategories();
+
+  // Fetch blogs and guides for the carousel
+  const [blogPosts, guides] = await Promise.all([
+    getAllBlogPosts(),
+    getAllGuides(),
+  ]);
+
+  // Transform data for carousel
+  const carouselBlogs = (blogPosts || []).slice(0, 4).map((post) => ({
+    id: post.id,
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt,
+    featuredImage: post.featuredImage,
+    category: post.category,
+    readTime: post.readTime,
+    type: "blog" as const,
+  }));
+
+  const carouselGuides = (guides || []).slice(0, 4).map((guide) => ({
+    id: guide.id,
+    title: guide.title,
+    slug: guide.slug,
+    excerpt: guide.excerpt,
+    featuredImage: guide.featuredImage,
+    category: typeof guide.category === "string" ? guide.category : "",
+    readTime: guide.readTime,
+    type: "guide" as const,
+  }));
   // Organization Structured Data (JSON-LD) for SEO
   const organizationStructuredData = {
     "@context": "https://schema.org",
@@ -215,6 +245,12 @@ export default async function Home() {
       <GalleryShowcase />
       <SustainabilityBlock />
       <NewArrivals />
+      <ContentCarousel
+        blogs={carouselBlogs}
+        guides={carouselGuides}
+        title="Expert Resources"
+        subtitle="Tips, guides, and insights to help with your packaging needs"
+      />
       <FinalCTA />
     </>
   );
