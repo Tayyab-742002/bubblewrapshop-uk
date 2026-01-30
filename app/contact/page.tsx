@@ -17,6 +17,7 @@ import {
   ArrowLeft,
   AlertCircle,
 } from "lucide-react";
+import * as pixel from "@/lib/meta/fpixel";
 
 interface FormErrors {
   name?: string;
@@ -160,6 +161,10 @@ export default function ContactPage() {
 
       if (response.ok && result.success) {
         setSubmitStatus("success");
+
+        // Track Contact event for Meta Pixel
+        pixel.contact();
+
         if (formRef.current) {
           formRef.current.reset();
         } else if (form) {

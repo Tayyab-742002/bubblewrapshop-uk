@@ -20,6 +20,7 @@ import {
   AlertCircle,
   Loader2,
 } from "lucide-react";
+import * as pixel from "@/lib/meta/fpixel";
 import type { CreateB2BRequestInput } from "@/types/b2b-request";
 
 interface FormErrors {
@@ -313,6 +314,15 @@ export function B2BRequestForm() {
 
       if (response.ok && result.success) {
         setSubmitStatus("success");
+
+        // Track Lead event for Meta Pixel
+        pixel.lead({
+          content_name: "B2B Quote Request",
+          content_category: "Wholesale Packaging",
+          value: formData.budgetRange ? parseFloat(formData.budgetRange.replace(/[^0-9]/g, "")) || 0 : 0,
+          currency: "GBP",
+        });
+
         // Reset form
         setFormData({
           companyName: "",

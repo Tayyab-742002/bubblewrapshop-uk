@@ -23,6 +23,7 @@ import {
   Lightbulb,
   Tag,
 } from "lucide-react";
+import { CategoryPixelTracker } from "@/components/meta/CategoryPixelTracker";
 
 export const revalidate = false;
 
@@ -289,6 +290,9 @@ export default async function CategoryPage({
           }}
         />
       )}
+
+      {/* Meta Pixel ViewCategory Tracker */}
+      <CategoryPixelTracker categoryName={category.name} categorySlug={slug} />
 
       {/* Hero Section with Gradient */}
       <div className="relative bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-700 overflow-hidden">

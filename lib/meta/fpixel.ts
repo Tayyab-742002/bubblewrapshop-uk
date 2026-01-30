@@ -136,3 +136,44 @@ export const contact = (): void => {
   if (!isPixelAvailable()) return;
   window.fbq("track", "Contact");
 };
+
+/**
+ * Track ViewCategory event (Custom)
+ * Fire when a user views a category page
+ */
+export const viewCategory = (params: {
+  content_name: string;
+  content_category: string;
+  content_ids?: string[];
+}): void => {
+  if (!isPixelAvailable()) return;
+  window.fbq("track", "ViewCategory", params);
+};
+
+/**
+ * Track CompleteRegistration event
+ * Fire when a user completes account registration
+ */
+export const completeRegistration = (params?: {
+  content_name?: string;
+  currency?: string;
+  value?: number;
+  status?: string;
+}): void => {
+  if (!isPixelAvailable()) return;
+  window.fbq("track", "CompleteRegistration", params || {});
+};
+
+/**
+ * Track AddPaymentInfo event
+ * Fire when a user adds payment info during checkout
+ */
+export const addPaymentInfo = (params: {
+  content_ids?: string[];
+  contents?: Array<{ id: string; quantity: number }>;
+  currency: string;
+  value: number;
+}): void => {
+  if (!isPixelAvailable()) return;
+  window.fbq("track", "AddPaymentInfo", params);
+};

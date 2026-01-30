@@ -20,6 +20,7 @@ import { useCartStore } from "@/lib/stores/cart-store";
 import { useAuth } from "@/components/auth/auth-provider";
 import Image from "next/image";
 import { Category } from "@/types/category";
+import * as pixel from "@/lib/meta/fpixel";
 
 interface HeaderProps {
   categories?: Category[];
@@ -98,6 +99,11 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
     (e: React.FormEvent) => {
       e.preventDefault();
       if (searchQuery.trim()) {
+        // Track Search event for Meta Pixel
+        pixel.search({
+          search_string: searchQuery.trim(),
+          content_type: "product",
+        });
         window.location.href = `/products?search=${encodeURIComponent(searchQuery)}`;
       }
     },

@@ -1,33 +1,46 @@
 "use client"
 
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircle, ArrowRight, Loader2, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/components/auth/auth-provider'
+import * as pixel from "@/lib/meta/fpixel"
 
 function SignupSuccessContent() {
   const router = useRouter()
   const { user, refreshUser } = useAuth()
   const [isVerifying, setIsVerifying] = useState(true)
+  const registrationTracked = useRef(false)
 
   useEffect(() => {
     // Check if user is authenticated (email confirmed)
     const checkAuth = async () => {
       // Give it a moment for the session to be established
       await new Promise((resolve) => setTimeout(resolve, 500))
-      
+
       // Refresh user data to get latest auth state
       if (refreshUser) {
         await refreshUser()
       }
-      
+
       setIsVerifying(false)
     }
 
     checkAuth()
   }, [refreshUser])
+
+  // Track CompleteRegistration event for Meta Pixel (only once)
+  useEffect(() => {
+    if (!isVerifying && !registrationTracked.current) {
+      registrationTracked.current = true
+      pixel.completeRegistration({
+        content_name: "Account Registration",
+        status: "success",
+      })
+    }
+  }, [isVerifying])
 
   const handleContinue = () => {
     if (user) {
