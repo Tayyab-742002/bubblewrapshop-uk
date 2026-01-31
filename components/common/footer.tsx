@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Instagram } from "lucide-react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 export function Footer() {
   return (
@@ -28,17 +26,23 @@ export function Footer() {
               The UK's trusted source for wholesale packaging solutions. We provide businesses with high-quality, eco-conscious materials delivered next-day.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="p-2 bg-white rounded-full border border-neutral-200 hover:border-neutral-400 transition-colors text-neutral-600 hover:text-neutral-900">
+              <a
+                href="https://www.facebook.com/people/Bubble-Wrap-Shop/61568200401222/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 bg-white rounded-full border border-neutral-200 hover:border-blue-400 hover:bg-blue-50 transition-colors text-neutral-600 hover:text-blue-600"
+                aria-label="Follow us on Facebook"
+              >
                 <Facebook className="w-4 h-4" />
               </a>
-              <a href="#" className="p-2 bg-white rounded-full border border-neutral-200 hover:border-neutral-400 transition-colors text-neutral-600 hover:text-neutral-900">
+              <a
+                href="https://www.instagram.com/bubblewrapshop"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 bg-white rounded-full border border-neutral-200 hover:border-pink-400 hover:bg-pink-50 transition-colors text-neutral-600 hover:text-pink-600"
+                aria-label="Follow us on Instagram"
+              >
                 <Instagram className="w-4 h-4" />
-              </a>
-              <a href="#" className="p-2 bg-white rounded-full border border-neutral-200 hover:border-neutral-400 transition-colors text-neutral-600 hover:text-neutral-900">
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a href="#" className="p-2 bg-white rounded-full border border-neutral-200 hover:border-neutral-400 transition-colors text-neutral-600 hover:text-neutral-900">
-                <Linkedin className="w-4 h-4" />
               </a>
             </div>
           </div>

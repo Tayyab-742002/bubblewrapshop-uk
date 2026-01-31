@@ -139,9 +139,8 @@ export default async function AboutPage() {
       availableLanguage: "English",
     },
     sameAs: [
-      "https://www.facebook.com/bubblewrapshop",
+      "https://www.facebook.com/people/Bubble-Wrap-Shop/61568200401222/",
       "https://www.instagram.com/bubblewrapshop",
-      "https://www.linkedin.com/company/bubblewrapshop",
     ],
     aggregateRating: {
       "@type": "AggregateRating",

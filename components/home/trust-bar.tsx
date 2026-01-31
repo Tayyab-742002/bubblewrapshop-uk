@@ -8,7 +8,7 @@ export function TrustBar() {
           {/* Local Signal */}
           <div className="flex items-center gap-2 text-foreground">
             <MapPin className="w-4 h-4 text-primary" />
-            <span className="font-medium">Family-Run in Blackburn</span>
+            <span className="font-medium">Family-Run Business in Blackburn</span>
           </div>
 
           {/* Delivery Promise */}
