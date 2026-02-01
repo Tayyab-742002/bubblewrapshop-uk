@@ -148,7 +148,7 @@ export default async function RootLayout({
         {/* Removed unused connections to r2.dev and unsplash to fix Lighthouse warnings */}
       </head>
       <body
-        className="min-h-screen bg-background font-sans antialiased"
+        className="flex flex-col min-h-screen bg-background font-sans antialiased"
         suppressHydrationWarning
       >
         {/* Console silencing script removed - was causing CSP violations

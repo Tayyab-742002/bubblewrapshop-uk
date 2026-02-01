@@ -13,10 +13,9 @@ export function Footer() {
               <Image
                 src="/logo.jpg"
                 alt="Bubble Wrap Shop"
-                width={120} // Intrinsic width
-                height={40} // Intrinsic height
-                priority
-                // Added: aspect-[120/40] so the browser knows the ratio immediately
+                width={120}
+                height={40}
+                /* Remove 'priority' here - footer images should lazy load */
                 className="h-9 lg:h-11 w-auto aspect-[120/40] object-contain transition-opacity duration-200 group-hover:opacity-80"
               />
             </Link>
