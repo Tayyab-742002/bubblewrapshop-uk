@@ -9,6 +9,7 @@ import { getAllCategories } from "@/sanity/lib";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import FacebookPixel from "@/components/meta/FacebookPixel";
+import { CookieConsent } from "@/components/common";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -163,6 +164,9 @@ export default async function RootLayout({
               {children}
               <FacebookPixel />
             </WebsiteLayoutWrapper>
+
+            {/* Cookie Consent Banner - GDPR Compliance */}
+            <CookieConsent />
 
             {/* Optimized Wrapper: Only loads listener in Draft Mode */}
             <SanityLiveWrapper />

@@ -27,7 +27,6 @@
     "@react-email/render": "^1.4.0",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.11.0",
-    "@sentry/nextjs": "^10.23.0",
     "@stripe/stripe-js": "^8.2.0",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.76.1",

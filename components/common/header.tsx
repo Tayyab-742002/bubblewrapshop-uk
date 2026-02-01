@@ -14,6 +14,12 @@ import {
   MapPin,
   ShieldCheck,
   ChevronDown,
+  Phone,
+  Truck,
+  BookOpen,
+  FileText,
+  Building2,
+  ChevronRight,
 } from "lucide-react";
 import { MiniCart } from "@/components/cart/mini-cart";
 import { useCartStore } from "@/lib/stores/cart-store";
@@ -29,28 +35,38 @@ interface HeaderProps {
 const MOCK_CATEGORIES: Category[] = [
   {
     id: "1",
-    name: "Packaging Solutions",
-    slug: "packaging",
-    image:
-      "https://images.unsplash.com/photo-1586528116493-a029325540fa?w=400&auto=format&fit=crop",
+    name: "Bubble Wrap",
+    slug: "bubble-wrap",
+    image: "https://images.unsplash.com/photo-1586528116493-a029325540fa?w=400&auto=format&fit=crop",
   },
   {
     id: "2",
-    name: "Eco Materials",
-    slug: "eco-materials",
-    image:
-      "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&auto=format&fit=crop",
+    name: "Mailing Bags",
+    slug: "mailing-bags",
+    image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&auto=format&fit=crop",
   },
   {
     id: "3",
-    name: "Protective Packaging",
-    slug: "protective",
+    name: "Cardboard Boxes",
+    slug: "cardboard-boxes",
   },
   {
     id: "4",
-    name: "Shipping Supplies",
-    slug: "shipping",
+    name: "Packing Tape",
+    slug: "packing-tape",
   },
+];
+
+// Quick links for the mega menu
+const quickLinks = [
+  { name: "New Arrivals", href: "/products?sort=newest", icon: Package },
+  { name: "Wholesale Deals", href: "/wholesale", icon: Building2 },
+];
+
+const resourceLinks = [
+  { name: "Buying Guides", href: "/guides", icon: BookOpen },
+  { name: "Blog Articles", href: "/blogs", icon: FileText },
+  { name: "FAQ", href: "/faq", icon: FileText },
 ];
 
 export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
@@ -58,13 +74,13 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<Category | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [mounted, setMounted] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
-  // Helper to check if a nav link is active - memoized to prevent re-renders
   const isActiveLink = useCallback((href: string) => {
     if (href === "/products") return pathname?.startsWith("/products");
+    if (href === "/categories") return pathname?.startsWith("/categories");
     return pathname === href;
   }, [pathname]);
 
@@ -83,14 +99,26 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
     };
   }, []);
 
-  // Removed automatic refresh - the auth provider handles all state management
-  // This prevents issues when switching tabs or when components remount
-  // The auth provider's onAuthStateChange and getInitialSession handle everything
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
 
   const handleSignOut = useCallback(async () => {
     const result = await signOut();
     if (result.success) {
-      // Redirect to home page after successful signout
       router.push("/");
     }
   }, [signOut, router]);
@@ -99,7 +127,6 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
     (e: React.FormEvent) => {
       e.preventDefault();
       if (searchQuery.trim()) {
-        // Track Search event for Meta Pixel
         pixel.search({
           search_string: searchQuery.trim(),
           content_type: "product",
@@ -116,485 +143,700 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
       megaMenuTimeoutRef.current = null;
     }
     setIsMegaMenuOpen(true);
-    if (categories.length > 0 && !activeCategory) {
-      setActiveCategory(categories[0]);
-    }
-  }, [categories, activeCategory]);
+  }, []);
 
   const handleMegaMenuLeave = useCallback(() => {
     megaMenuTimeoutRef.current = setTimeout(() => {
       setIsMegaMenuOpen(false);
-      setActiveCategory(null);
-    }, 150);
+    }, 200);
   }, []);
 
-  // Memoized callback for closing mobile menu
   const closeMobileMenu = useCallback(() => {
     setIsMobileMenuOpen(false);
   }, []);
 
   return (
     <>
-      {/* Eco-Friendly Header with Gradient */}
-      <header className="sticky top-0 z-50 w-full bg-linear-to-r from-emerald-600  to-teal-600 shadow-lg backdrop-blur-sm">
+      {/* Top Bar - Contact & Utility */}
+      <div className="hidden lg:block bg-neutral-900 text-white">
         <div className="container mx-auto px-6">
-          <div className="flex h-16 items-center justify-between gap-8">
+          <div className="flex h-10 items-center justify-between text-sm">
+            {/* Left - Contact & Delivery */}
+            <div className="flex items-center gap-6">
+              <a href="tel:+447728342335" className="flex items-center gap-2 hover:text-emerald-400 transition-colors">
+                <Phone className="h-3.5 w-3.5" />
+                <span>07728 342335</span>
+              </a>
+              <div className="flex items-center gap-2 text-emerald-400">
+                <Truck className="h-3.5 w-3.5" />
+                <span>Next-Day Delivery Available</span>
+              </div>
+            </div>
+            {/* Right - Utility Links */}
+            <div className="flex items-center gap-6">
+              <Link href="/wholesale" className="hover:text-emerald-400 transition-colors">
+                Wholesale
+              </Link>
+              <Link href="/b2b-request" className="hover:text-emerald-400 transition-colors">
+                B2B Enquiries
+              </Link>
+              <Link href="/contact" className="hover:text-emerald-400 transition-colors">
+                Contact Us
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Header */}
+      <header className="sticky top-0 z-50 w-full bg-white border-b-2 border-neutral-200">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="flex h-16 lg:h-18 items-center justify-between gap-4 lg:gap-8">
             {/* Logo */}
-            <Link href="/" className="shrink-0 cursor-pointer group">
+            <Link href="/" className="shrink-0 group">
               <Image
                 src="/logo.jpg"
-                alt="Logo"
-                width={100}
-                height={32}
+                alt="Bubble Wrap Shop"
+                width={120}
+                height={40}
                 priority
-                className="h-10 w-auto transition-transform duration-300 group-hover:scale-105"
+                className="h-9 lg:h-11 w-auto transition-opacity duration-200 group-hover:opacity-80"
               />
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
+              {/* Shop Dropdown */}
               <div
                 onMouseEnter={handleMegaMenuEnter}
                 onMouseLeave={handleMegaMenuLeave}
                 className="relative"
               >
-                <button className={`px-4 py-2 text-sm font-normal text-white cursor-pointer hover:bg-white/10 rounded-lg transition-all duration-300 flex items-center gap-1 ${isActiveLink("/products") ? "bg-white/15" : ""}`}>
-                  Products
-                  <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isMegaMenuOpen ? "rotate-180" : ""}`} />
-                </button>
+                <Link
+                  href="/products"
+                  className={`inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    isActiveLink("/products") || isMegaMenuOpen
+                      ? "text-emerald-700 bg-emerald-50"
+                      : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
+                  }`}
+                  aria-haspopup="true"
+                  aria-expanded={isMegaMenuOpen}
+                >
+                  Shop
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform duration-200 ${isMegaMenuOpen ? "rotate-180" : ""}`}
+                    aria-hidden="true"
+                  />
+                </Link>
               </div>
+
               <Link
-                href="/sustainability"
-                className={`px-4 py-2 text-sm font-normal cursor-pointer text-white hover:bg-white/10 rounded-lg transition-all duration-300 ${isActiveLink("/sustainability") ? "bg-white/15" : ""}`}
+                href="/categories"
+                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  isActiveLink("/categories")
+                    ? "text-emerald-700 bg-emerald-50"
+                    : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
+                }`}
               >
-                Sustainability
+                Categories
               </Link>
+
               <Link
-                href="/b2b-request"
-                className={`px-4 py-2 text-sm font-normal cursor-pointer text-white hover:bg-white/10 rounded-lg transition-all duration-300 ${isActiveLink("/b2b-request") ? "bg-white/15" : ""}`}
+                href="/guides"
+                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  isActiveLink("/guides")
+                    ? "text-emerald-700 bg-emerald-50"
+                    : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
+                }`}
               >
-                B2B Request
+                Guides
               </Link>
+
+              <Link
+                href="/blogs"
+                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  isActiveLink("/blogs")
+                    ? "text-emerald-700 bg-emerald-50"
+                    : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
+                }`}
+              >
+                Blog
+              </Link>
+
               <Link
                 href="/about"
-                className={`px-4 py-2 text-sm font-normal cursor-pointer text-white hover:bg-white/10 rounded-lg transition-all duration-300 ${isActiveLink("/about") ? "bg-white/15" : ""}`}
+                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  isActiveLink("/about")
+                    ? "text-emerald-700 bg-emerald-50"
+                    : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
+                }`}
               >
                 About
               </Link>
-              <Link
-                href="/contact"
-                className={`px-4 py-2 text-sm font-normal cursor-pointer text-white hover:bg-white/10 rounded-lg transition-all duration-300 ${isActiveLink("/contact") ? "bg-white/15" : ""}`}
-              >
-                Contact
-              </Link>
             </nav>
 
-            {/* Right Actions */}
-            <div className="flex items-center gap-3">
-              {/* Desktop Search */}
-              <form onSubmit={handleSearch} className="hidden lg:block">
-                <div className="relative group">
-                  <Search
-                    className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-600 transition-colors group-focus-within:text-emerald-700"
-                    strokeWidth={2}
-                  />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search..."
-                    className="w-56 rounded-lg border-2 border-white/20 bg-white/95 py-1.5 pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-white focus:outline-none focus:ring-0 transition-all duration-300"
-                  />
-                </div>
-              </form>
+            {/* Search Bar - Desktop */}
+            <form onSubmit={handleSearch} className="hidden lg:block flex-1 max-w-md">
+              <div className={`relative transition-all duration-200 ${isSearchFocused ? "scale-[1.02]" : ""}`}>
+                <Search
+                  className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400"
+                  strokeWidth={2}
+                />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onBlur={() => setIsSearchFocused(false)}
+                  placeholder="Search products..."
+                  className="w-full rounded-full border border-neutral-200 bg-neutral-50 py-2.5 pl-11 pr-4 text-sm text-neutral-900 placeholder:text-neutral-500 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all duration-200"
+                />
+              </div>
+            </form>
 
-              {/* Account */}
-              {/* Only show loading spinner if we don't have a user yet */}
-              {/* If user exists, show profile even if loading (prevents flicker on tab switch) */}
+            {/* Right Actions */}
+            <div className="flex items-center gap-1 lg:gap-2">
+              {/* Account - Desktop */}
               {authLoading && !user ? (
                 <div className="hidden lg:block">
-                  <div className="p-2 text-white/50 rounded-lg">
-                    <User className="h-5 w-5" strokeWidth={2} />
+                  <div className="p-2.5 text-neutral-300 rounded-lg">
+                    <User className="h-5 w-5" strokeWidth={1.5} />
                   </div>
                 </div>
               ) : isAuthenticated && user ? (
                 <div className="hidden lg:block relative group">
-                  <button className="p-2 text-white hover:bg-white/10 rounded-lg transition-all duration-300">
-                    <User className="h-5 w-5" strokeWidth={2} />
+                  <button className="p-2.5 text-neutral-600 hover:text-emerald-700 hover:bg-neutral-50 rounded-lg transition-all duration-200">
+                    <User className="h-5 w-5" strokeWidth={1.5} />
                   </button>
-                  <div className="absolute right-0 top-full mt-2 w-56 rounded-xl bg-white border border-emerald-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-                    <div className="p-3 border-b border-emerald-100 bg-linear-to-r from-emerald-50 to-teal-50">
-                      <p className="text-sm font-semibold text-gray-900 truncate">
-                        {user?.fullName || "User"}
-                      </p>
-                      <p className="text-xs text-gray-600 truncate">
-                        {user?.email}
-                      </p>
-                    </div>
-                    <div className="p-1">
-                      {user?.role === "admin" && (
+                  <div className="absolute right-0 top-full pt-2 w-60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    <div className="bg-white rounded-xl border border-neutral-200 shadow-xl overflow-hidden">
+                      <div className="p-4 border-b border-neutral-100 bg-gradient-to-br from-emerald-50 to-teal-50">
+                        <p className="text-sm font-semibold text-neutral-900 truncate">
+                          {user?.fullName || "User"}
+                        </p>
+                        <p className="text-xs text-neutral-600 truncate mt-0.5">
+                          {user?.email}
+                        </p>
+                      </div>
+                      <div className="p-2">
+                        {user?.role === "admin" && (
+                          <Link
+                            href="/admin"
+                            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 transition-all font-medium mb-1"
+                          >
+                            <ShieldCheck className="h-4 w-4" />
+                            Admin Dashboard
+                          </Link>
+                        )}
                         <Link
-                          href="/admin"
-                          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm cursor-pointer text-white bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-colors font-semibold shadow-md mb-1"
+                          href="/account"
+                          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
                         >
-                          <ShieldCheck className="h-4 w-4" />
-                          Admin Dashboard
+                          <Settings className="h-4 w-4 text-neutral-400" />
+                          My Account
                         </Link>
-                      )}
-                      <Link
-                        href="/account"
-                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm cursor-pointer text-gray-900 hover:bg-emerald-50 transition-colors"
-                      >
-                        <Settings className="h-4 w-4 text-emerald-600" />
-                        Account
-                      </Link>
-                      <Link
-                        href="/account?tab=orders"
-                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm cursor-pointer text-gray-900 hover:bg-emerald-50 transition-colors"
-                      >
-                        <Package className="h-4 w-4 text-emerald-600" />
-                        Orders
-                      </Link>
-                      <Link
-                        href="/account?tab=addresses"
-                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm cursor-pointer text-gray-900 hover:bg-emerald-50 transition-colors"
-                      >
-                        <MapPin className="h-4 w-4 text-emerald-600" />
-                        Addresses
-                      </Link>
-                    </div>
-                    <div className="border-t border-emerald-100 p-1">
-                      <button
-                        onClick={handleSignOut}
-                        className="flex items-center gap-2 w-full rounded-lg px-3 py-2 text-sm cursor-pointer text-red-600 hover:bg-red-50 transition-colors"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        Sign Out
-                      </button>
+                        <Link
+                          href="/account?tab=orders"
+                          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                        >
+                          <Package className="h-4 w-4 text-neutral-400" />
+                          Orders
+                        </Link>
+                        <Link
+                          href="/account?tab=addresses"
+                          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                        >
+                          <MapPin className="h-4 w-4 text-neutral-400" />
+                          Addresses
+                        </Link>
+                      </div>
+                      <div className="border-t border-neutral-100 p-2">
+                        <button
+                          onClick={handleSignOut}
+                          className="flex items-center gap-3 w-full rounded-lg px-3 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Sign Out
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               ) : !authLoading ? (
                 <Link
                   href="/auth/login"
-                  className="hidden lg:block px-4 py-2 text-sm font-semibold cursor-pointer text-white hover:bg-white/10 rounded-lg transition-all duration-300"
+                  className="hidden lg:flex items-center gap-2 px-4 py-2 text-sm font-medium text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50 rounded-lg transition-all duration-200"
                 >
+                  <User className="h-4 w-4" strokeWidth={1.5} />
                   Sign In
                 </Link>
               ) : null}
 
               {/* Cart */}
               <MiniCart>
-                <button aria-label="View shopping cart" className="relative p-2 text-white hover:bg-white/10 rounded-lg transition-all duration-300 group">
-                  <ShoppingCart
-                    className="h-5 w-5 group-hover:scale-110 transition-transform"
-                    strokeWidth={2}
-                  />
-                  {mounted && cartItemCount > 0 ? (
-                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-r from-orange-600 to-red-600 text-[10px] font-bold text-white shadow-lg">
+                <button
+                  aria-label="View shopping cart"
+                  className="relative p-2.5 text-neutral-600 hover:text-emerald-700 hover:bg-neutral-50 rounded-lg transition-all duration-200"
+                >
+                  <ShoppingCart className="h-5 w-5" strokeWidth={1.5} />
+                  {mounted && cartItemCount > 0 && (
+                    <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white">
                       {cartItemCount > 9 ? "9+" : cartItemCount}
                     </span>
-                  ) : null}
+                  )}
                 </button>
               </MiniCart>
 
-              {/* Mobile Menu */}
+              {/* Mobile Menu Toggle */}
               <button
-                aria-label="Open navigation menu"
+                aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-2 lg:hidden text-white hover:bg-white/10 rounded-lg transition-all"
+                className="p-2.5 lg:hidden text-neutral-600 hover:text-emerald-700 hover:bg-neutral-50 rounded-lg transition-all duration-200"
               >
                 {isMobileMenuOpen ? (
-                  <X className="h-6 w-6" strokeWidth={2} />
+                  <X className="h-6 w-6" strokeWidth={1.5} />
                 ) : (
-                  <Menu className="h-6 w-6" strokeWidth={2} />
+                  <Menu className="h-6 w-6" strokeWidth={1.5} />
                 )}
               </button>
             </div>
           </div>
         </div>
 
-        {/* Eco-Friendly Mega Menu */}
-        {isMegaMenuOpen && (
-          <div
-            onMouseEnter={handleMegaMenuEnter}
-            onMouseLeave={handleMegaMenuLeave}
-            className="hidden lg:block absolute left-0 right-0 top-full border-b border-emerald-200 bg-white shadow-2xl"
-          >
-            <div className="container mx-auto px-6">
-              <div className="flex py-6">
-                {/* Category Tabs */}
-                <div className="w-52 border-r border-emerald-100 pr-6">
-                  {/* View All Products Link */}
+        {/* Mega Menu */}
+        <div
+          onMouseEnter={handleMegaMenuEnter}
+          onMouseLeave={handleMegaMenuLeave}
+          className={`hidden lg:block absolute left-0 right-0 top-full bg-white border-b border-neutral-200 shadow-xl transition-all duration-300 ${
+            isMegaMenuOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2"
+          }`}
+        >
+          <div className="container mx-auto px-6 py-8">
+            <div className="grid grid-cols-12 gap-8">
+              {/* Categories Grid */}
+              <div className="col-span-7">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider">
+                    Shop by Category
+                  </h3>
                   <Link
-                    href="/products"
-                    onClick={handleMegaMenuLeave}
-                    className="w-full flex items-center gap-2 px-3 py-2 mb-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-50 rounded-lg transition-all duration-300"
+                    href="/categories"
+                    onClick={() => setIsMegaMenuOpen(false)}
+                    className="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors flex items-center gap-1"
                   >
-                    <Package className="h-4 w-4" />
-                    View All Products
+                    View All
+                    <ChevronRight className="h-4 w-4" />
                   </Link>
-                  <div className="border-t border-emerald-100 my-2" />
-                  {categories.map((category) => (
-                    <button
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  {categories.slice(0, 6).map((category) => (
+                    <Link
                       key={category.id}
-                      onMouseEnter={() => setActiveCategory(category)}
-                      className={`w-full text-left px-3 py-2 cursor-pointer text-sm rounded-lg transition-all duration-300 ${
-                        activeCategory?.id === category.id
-                          ? "bg-linear-to-r from-emerald-600 to-teal-600 text-white shadow-lg"
-                          : "text-gray-900 hover:bg-emerald-50"
-                      }`}
+                      href={`/categories/${category.slug}`}
+                      onClick={() => setIsMegaMenuOpen(false)}
+                      className="group flex items-center gap-3 p-3 rounded-xl border border-neutral-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-all duration-200"
                     >
-                      {category.name}
-                    </button>
+                      {category.image ? (
+                        <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-neutral-100 shrink-0">
+                          <Image
+                            src={category.image}
+                            alt={category.name}
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-300"
+                            sizes="48px"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center shrink-0">
+                          <Package className="h-5 w-5 text-emerald-600" />
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-neutral-900 group-hover:text-emerald-700 transition-colors truncate">
+                          {category.name}
+                        </p>
+                        {category.description && (
+                          <p className="text-xs text-neutral-500 truncate mt-0.5">
+                            {category.description}
+                          </p>
+                        )}
+                      </div>
+                    </Link>
                   ))}
                 </div>
+              </div>
 
-                {/* Category Description and CTA */}
-                <div className="flex-1 px-6">
-                  {activeCategory ? (
-                    <div className="py-6">
-                      <h3 className="text-lg font-bold text-gray-900 mb-2">
-                        {activeCategory.name}
-                      </h3>
-                      <p className="text-sm text-gray-600 mb-4 leading-relaxed max-w-2xl line-clamp-3">
-                        {activeCategory.description || `Explore our ${activeCategory.name.toLowerCase()} collection for quality packaging solutions.`}
-                      </p>
+              {/* Quick Links & Resources */}
+              <div className="col-span-5 grid grid-cols-2 gap-8 pl-8 border-l border-neutral-100">
+                {/* Quick Links */}
+                <div>
+                  <h3 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider mb-4">
+                    Quick Links
+                  </h3>
+                  <div className="space-y-1">
+                    <Link
+                      href="/products"
+                      onClick={() => setIsMegaMenuOpen(false)}
+                      className="flex items-center gap-3 p-2.5 rounded-lg text-neutral-700 hover:text-emerald-700 hover:bg-emerald-50/50 transition-all duration-200"
+                    >
+                      <Package className="h-4 w-4 text-neutral-400" />
+                      <span className="text-sm font-medium">All Products</span>
+                    </Link>
+                    {quickLinks.map((link) => (
                       <Link
-                        href={`/categories/${activeCategory.slug}`}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold cursor-pointer text-white bg-linear-to-r from-emerald-600 to-teal-600 rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-105"
-                        onClick={handleMegaMenuLeave}
+                        key={link.name}
+                        href={link.href}
+                        onClick={() => setIsMegaMenuOpen(false)}
+                        className="flex items-center gap-3 p-2.5 rounded-lg text-neutral-700 hover:text-emerald-700 hover:bg-emerald-50/50 transition-all duration-200"
                       >
-                        Browse {activeCategory.name}
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
+                        <link.icon className="h-4 w-4 text-neutral-400" />
+                        <span className="text-sm font-medium">{link.name}</span>
                       </Link>
-
-                                          </div>
-                  ) : (
-                    <div className="py-6">
-                      <p className="text-sm text-gray-500">Hover over a category to see details</p>
-                    </div>
-                  )}
+                    ))}
+                  </div>
                 </div>
 
-                {/* Featured Image */}
-                {activeCategory?.image && (
-                  <div className="w-64 pl-6 border-l border-emerald-100">
-                    <Link
-                      href={`/categories/${activeCategory.slug}`}
-                      className="block group cursor-pointer border-2 border-emerald-100 hover:border-emerald-300 p-3 rounded-xl transition-all duration-300 hover:shadow-lg"
-                      onClick={handleMegaMenuLeave}
-                    >
-                      <div className="relative aspect-square overflow-hidden rounded-lg bg-linear-to-br from-emerald-50 to-teal-50">
-                        <Image
-                          src={activeCategory.image}
-                          alt={activeCategory.name}
-                          fill
-                          className="object-cover transition-transform duration-300 group-hover:scale-110"
-                          sizes="256px"
-                        />
-                      </div>
-                      <p className="mt-2 text-sm font-semibold cursor-pointer text-gray-900 group-hover:text-emerald-600 transition-colors">
-                        {activeCategory.name}
-                      </p>
-                    </Link>
+                {/* Resources */}
+                <div>
+                  <h3 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider mb-4">
+                    Resources
+                  </h3>
+                  <div className="space-y-1">
+                    {resourceLinks.map((link) => (
+                      <Link
+                        key={link.name}
+                        href={link.href}
+                        onClick={() => setIsMegaMenuOpen(false)}
+                        className="flex items-center gap-3 p-2.5 rounded-lg text-neutral-700 hover:text-emerald-700 hover:bg-emerald-50/50 transition-all duration-200"
+                      >
+                        <link.icon className="h-4 w-4 text-neutral-400" />
+                        <span className="text-sm font-medium">{link.name}</span>
+                      </Link>
+                    ))}
                   </div>
-                )}
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Banner */}
+            <div className="mt-6 pt-6 border-t border-neutral-100">
+              <div className="flex items-center justify-between bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl p-4 text-white">
+                <div className="flex items-center gap-4">
+                  <div className="p-2 bg-white/20 rounded-lg">
+                    <Truck className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">Free UK Delivery on Orders Over £75</p>
+                    <p className="text-sm text-white/80">Next-day delivery available on most items</p>
+                  </div>
+                </div>
+                <Link
+                  href="/wholesale"
+                  onClick={() => setIsMegaMenuOpen(false)}
+                  className="px-5 py-2.5 bg-white text-emerald-700 font-semibold rounded-lg hover:bg-emerald-50 transition-colors text-sm"
+                >
+                  Get Wholesale Prices
+                </Link>
               </div>
             </div>
           </div>
-        )}
+        </div>
       </header>
 
-      {/* Mobile Menu with Eco Design */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={closeMobileMenu}
-          />
-          <div className="absolute right-0 top-0 bottom-0 w-80 bg-linear-to-b from-white to-emerald-50 overflow-y-auto shadow-2xl">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <span className="text-sm font-bold text-gray-900">Menu</span>
-                <button
-                  onClick={closeMobileMenu}
-                  className="p-2 hover:bg-emerald-100 rounded-lg transition-colors"
-                >
-                  <X className="h-6 w-6 text-gray-900" />
-                </button>
-              </div>
+      {/* Mobile Menu */}
+      <div
+        className={`fixed inset-0 z-50 lg:hidden transition-all duration-300 ${
+          isMobileMenuOpen ? "visible" : "invisible"
+        }`}
+      >
+        {/* Backdrop */}
+        <div
+          className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+            isMobileMenuOpen ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={closeMobileMenu}
+        />
 
-              <form onSubmit={handleSearch} className="mb-6">
-                <div className="relative flex gap-2">
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-600" />
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search products..."
-                      className="w-full rounded-lg border-2 border-emerald-200 py-2 pl-10 pr-4 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200 transition-all"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-linear-to-r from-emerald-600 to-teal-600 text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all"
-                  >
-                    Search
-                  </button>
+        {/* Drawer */}
+        <div
+          className={`absolute right-0 top-0 bottom-0 w-full max-w-sm bg-white shadow-2xl transition-transform duration-300 ease-out ${
+            isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <div className="flex flex-col h-full">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-neutral-100">
+              <Link href="/" onClick={closeMobileMenu}>
+                <Image
+                  src="/logo.jpg"
+                  alt="Bubble Wrap Shop"
+                  width={100}
+                  height={32}
+                  className="h-8 w-auto"
+                />
+              </Link>
+              <button
+                onClick={closeMobileMenu}
+                className="p-2 text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 rounded-lg transition-colors"
+              >
+                <X className="h-6 w-6" strokeWidth={1.5} />
+              </button>
+            </div>
+
+            {/* Search */}
+            <div className="p-4 border-b border-neutral-100">
+              <form onSubmit={handleSearch}>
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search products..."
+                    className="w-full rounded-full border border-neutral-200 bg-neutral-50 py-3 pl-11 pr-4 text-sm focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                  />
                 </div>
               </form>
+            </div>
 
-              {/* Only show loading if we don't have a user yet */}
-              {authLoading && !user ? (
-                <div className="mb-6 flex h-10 items-center justify-center rounded-lg bg-gray-100 animate-pulse">
-                  <div className="h-4 w-24 bg-gray-300 rounded"></div>
+            {/* User Section */}
+            {authLoading && !user ? (
+              <div className="p-4 border-b border-neutral-100">
+                <div className="h-12 bg-neutral-100 rounded-lg animate-pulse" />
+              </div>
+            ) : isAuthenticated && user ? (
+              <div className="p-4 border-b border-neutral-100">
+                <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <User className="h-5 w-5 text-emerald-600" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-neutral-900 truncate">
+                      {user?.fullName || "User"}
+                    </p>
+                    <p className="text-xs text-neutral-600 truncate">
+                      {user?.email}
+                    </p>
+                  </div>
                 </div>
-              ) : isAuthenticated && user ? (
-                <div className="mb-6 rounded-xl bg-linear-to-r from-emerald-50 to-teal-50 p-4 border border-emerald-200">
-                  <p className="text-sm font-semibold text-gray-900 truncate">
-                    {user?.fullName || "User"}
-                  </p>
-                  <p className="text-xs text-gray-600 truncate">
-                    {user?.email}
-                  </p>
-                </div>
-              ) : (
+              </div>
+            ) : (
+              <div className="p-4 border-b border-neutral-100">
                 <Link
                   href="/auth/login"
-                  className="mb-6 flex h-10 items-center justify-center rounded-lg bg-linear-to-r from-emerald-600 to-teal-600 text-sm font-semibold text-white hover:shadow-lg transition-all"
                   onClick={closeMobileMenu}
+                  className="flex items-center justify-center gap-2 w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-colors"
                 >
+                  <User className="h-5 w-5" />
                   Sign In
                 </Link>
-              )}
+              </div>
+            )}
 
-              <nav className="space-y-1">
+            {/* Navigation */}
+            <nav className="flex-1 overflow-y-auto p-4" aria-label="Mobile navigation">
+              {/* Main Links */}
+              <div className="space-y-1">
                 <Link
                   href="/products"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-100 transition-colors"
                   onClick={closeMobileMenu}
+                  className="flex items-center justify-between p-3 rounded-xl text-neutral-900 hover:bg-neutral-50 transition-colors"
                 >
-                  <Package className="h-4 w-4" />
-                  All Products
+                  <span className="font-medium">Shop All Products</span>
+                  <ChevronRight className="h-5 w-5 text-neutral-400" />
                 </Link>
+                <Link
+                  href="/categories"
+                  onClick={closeMobileMenu}
+                  className="flex items-center justify-between p-3 rounded-xl text-neutral-900 hover:bg-neutral-50 transition-colors"
+                >
+                  <span className="font-medium">Categories</span>
+                  <ChevronRight className="h-5 w-5 text-neutral-400" />
+                </Link>
+              </div>
 
-                <div className="my-2 border-t border-emerald-200" />
-                <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Categories</p>
+              {/* Categories */}
+              <div className="mt-6">
+                <p className="px-3 mb-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+                  Popular Categories
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  {categories.slice(0, 6).map((category) => (
+                    <Link
+                      key={category.id}
+                      href={`/categories/${category.slug}`}
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-2 p-3 rounded-xl border border-neutral-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-colors"
+                    >
+                      {category.image ? (
+                        <Image
+                          src={category.image}
+                          alt={category.name}
+                          width={32}
+                          height={32}
+                          className="rounded-lg object-cover"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                          <Package className="h-4 w-4 text-emerald-600" />
+                        </div>
+                      )}
+                      <span className="text-sm font-medium text-neutral-700 truncate">
+                        {category.name}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
 
-                {categories.map((category) => (
+              {/* Business */}
+              <div className="mt-6">
+                <p className="px-3 mb-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+                  Business
+                </p>
+                <div className="space-y-1">
                   <Link
-                    key={category.id}
-                    href={`/categories/${category.slug}`}
-                    className="rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors flex items-center gap-3"
+                    href="/wholesale"
                     onClick={closeMobileMenu}
+                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
                   >
-                    {category.image && (
-                      <Image
-                        src={category.image}
-                        alt={category.name}
-                        width={32}
-                        height={32}
-                        className="rounded-lg"
-                      />
-                    )}
-                    {category.name}
+                    <Building2 className="h-5 w-5 text-neutral-400" />
+                    <span className="font-medium">Wholesale</span>
                   </Link>
-                ))}
+                  <Link
+                    href="/b2b-request"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                  >
+                    <FileText className="h-5 w-5 text-neutral-400" />
+                    <span className="font-medium">B2B Request</span>
+                  </Link>
+                </div>
+              </div>
 
-                <div className="my-3 border-t border-emerald-200" />
-                <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Company</p>
+              {/* Resources */}
+              <div className="mt-6">
+                <p className="px-3 mb-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+                  Resources
+                </p>
+                <div className="space-y-1">
+                  <Link
+                    href="/guides"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                  >
+                    <BookOpen className="h-5 w-5 text-neutral-400" />
+                    <span className="font-medium">Buying Guides</span>
+                  </Link>
+                  <Link
+                    href="/blogs"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                  >
+                    <FileText className="h-5 w-5 text-neutral-400" />
+                    <span className="font-medium">Blog</span>
+                  </Link>
+                </div>
+              </div>
 
-                <Link
-                  href="/b2b-request"
-                  className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-emerald-100 transition-colors"
-                  onClick={closeMobileMenu}
-                >
-                  B2B Request
-                </Link>
-                <Link
-                  href="/sustainability"
-                  className="block rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors"
-                  onClick={closeMobileMenu}
-                >
-                  Sustainability
-                </Link>
-                <Link
-                  href="/about"
-                  className="block rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors"
-                  onClick={closeMobileMenu}
-                >
-                  About
-                </Link>
-                <Link
-                  href="/contact"
-                  className="block rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors"
-                  onClick={closeMobileMenu}
-                >
-                  Contact
-                </Link>
-              </nav>
+              {/* Company */}
+              <div className="mt-6">
+                <p className="px-3 mb-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+                  Company
+                </p>
+                <div className="space-y-1">
+                  <Link
+                    href="/about"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                  >
+                    <span className="font-medium">About Us</span>
+                  </Link>
+                  <Link
+                    href="/sustainability"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                  >
+                    <span className="font-medium">Sustainability</span>
+                  </Link>
+                  <Link
+                    href="/contact"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                  >
+                    <span className="font-medium">Contact</span>
+                  </Link>
+                  <Link
+                    href="/faq"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                  >
+                    <span className="font-medium">FAQ</span>
+                  </Link>
+                </div>
+              </div>
 
+              {/* Account Links */}
               {isAuthenticated && (
-                <>
-                  <div className="my-4 border-t border-emerald-200" />
-                  <nav className="space-y-1">
-                    {user?.role === "admin" ? (
+                <div className="mt-6">
+                  <p className="px-3 mb-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+                    Account
+                  </p>
+                  <div className="space-y-1">
+                    {user?.role === "admin" && (
                       <Link
                         href="/admin"
-                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-white bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-colors font-semibold shadow-md mb-1"
                         onClick={closeMobileMenu}
+                        className="flex items-center gap-3 p-3 rounded-xl text-white bg-gradient-to-r from-violet-600 to-indigo-600 transition-colors"
                       >
-                        <ShieldCheck className="h-4 w-4" />
-                        Admin Dashboard
+                        <ShieldCheck className="h-5 w-5" />
+                        <span className="font-semibold">Admin Dashboard</span>
                       </Link>
-                    ) : null}
+                    )}
                     <Link
                       href="/account"
-                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors"
                       onClick={closeMobileMenu}
+                      className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
                     >
-                      <Settings className="h-4 w-4 text-emerald-600" />
-                      Account
+                      <Settings className="h-5 w-5 text-neutral-400" />
+                      <span className="font-medium">My Account</span>
                     </Link>
                     <Link
-                      href="/account/orders"
-                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors"
+                      href="/account?tab=orders"
                       onClick={closeMobileMenu}
+                      className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
                     >
-                      <Package className="h-4 w-4 text-emerald-600" />
-                      Orders
+                      <Package className="h-5 w-5 text-neutral-400" />
+                      <span className="font-medium">Orders</span>
                     </Link>
                     <button
                       onClick={() => {
                         handleSignOut();
                         closeMobileMenu();
                       }}
-                      className="flex items-center gap-2 w-full rounded-lg px-3 py-2 text-sm hover:bg-red-100 text-red-600 transition-colors"
+                      className="flex items-center gap-3 w-full p-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors"
                     >
-                      <LogOut className="h-4 w-4" />
-                      Sign Out
+                      <LogOut className="h-5 w-5" />
+                      <span className="font-medium">Sign Out</span>
                     </button>
-                  </nav>
-                </>
+                  </div>
+                </div>
               )}
+            </nav>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-neutral-100 bg-neutral-50">
+              <a
+                href="tel:+447728342335"
+                className="flex items-center justify-center gap-2 w-full p-3 text-emerald-700 font-medium"
+              >
+                <Phone className="h-4 w-4" />
+                07728 342335
+              </a>
             </div>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 }

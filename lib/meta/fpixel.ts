@@ -140,6 +140,7 @@ export const contact = (): void => {
 /**
  * Track ViewCategory event (Custom)
  * Fire when a user views a category page
+ * Uses trackCustom for non-standard events as per Meta's documentation
  */
 export const viewCategory = (params: {
   content_name: string;
@@ -147,7 +148,7 @@ export const viewCategory = (params: {
   content_ids?: string[];
 }): void => {
   if (!isPixelAvailable()) return;
-  window.fbq("track", "ViewCategory", params);
+  window.fbq("trackCustom", "ViewCategory", params);
 };
 
 /**
