@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { useCartStore, cartStorageHelpers } from "@/lib/stores/cart-store";
 import { useAuth } from "@/components/auth/auth-provider";
 import { saveCartToSupabase } from "@/services/cart/cart.service";
 import { createClient } from "@/lib/supabase/client";
-import { Subscription } from "@supabase/supabase-js";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 /**
  * Cart Provider Component
@@ -14,168 +14,219 @@ import { Subscription } from "@supabase/supabase-js";
  * - Authenticated users: Supabase database with Realtime subscriptions
  * - Auto-migrates localStorage cart to Supabase on login
  * - Clears localStorage for authenticated users
+ *
+ * IMPORTANT: Realtime subscription is managed carefully to avoid unnecessary
+ * reconnections. The subscription persists through the session and is only
+ * cleaned up on explicit logout or component unmount.
  */
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated, loading } = useAuth();
   const { initializeCart } = useCartStore();
-  const prevIsAuthenticatedRef = useRef(isAuthenticated);
+
+  // Use refs to track state without causing re-renders
+  const prevUserIdRef = useRef<string | null>(null);
   const hasMigratedRef = useRef(false);
-  const subscriptionRef = useRef<Subscription | null>(null);
+  const subscriptionRef = useRef<RealtimeChannel | null>(null);
+  const subscriptionUserIdRef = useRef<string | null>(null);
+  const isInitializingRef = useRef(false);
+
+  // Stable reference to user ID
+  const userId = user?.id || null;
 
   // Initialize cart when auth state changes
-  useEffect(() => {
-    const initializeCartWithAuth = async () => {
-      try {
-        // Track if this is a login transition (was guest, now authenticated)
-        const isLoginTransition =
-          !prevIsAuthenticatedRef.current && isAuthenticated && user;
+  const initializeCartWithAuth = useCallback(async () => {
+    // Prevent concurrent initializations
+    if (isInitializingRef.current) {
+      return;
+    }
 
-        if (isAuthenticated && user) {
-          // User is authenticated
-          if (isLoginTransition && !hasMigratedRef.current) {
-            // First time logging in - check if localStorage cart has items
-            const guestCartItems = cartStorageHelpers.loadGuestCart();
-            
-            if (guestCartItems.length > 0) {
-              // Migrate localStorage cart to Supabase BEFORE initializing
-              // Retry up to 3 times with exponential backoff to handle session cookie delays
-              let retries = 0;
-              const maxRetries = 3;
-              let lastError: unknown;
-              
-              while (retries < maxRetries) {
-                try {
-                  console.log(`Migrating ${guestCartItems.length} items from localStorage to Supabase (attempt ${retries + 1}/${maxRetries})`);
-                  await saveCartToSupabase(guestCartItems, user.id);
-                  console.log("Cart migrated successfully to Supabase");
-                  break; // Success, exit retry loop
-                } catch (error) {
-                  lastError = error;
-                  console.error(`Failed to migrate cart to Supabase (attempt ${retries + 1}/${maxRetries}):`, error);
-                  retries++;
-                  
-                  if (retries < maxRetries) {
-                    // Exponential backoff: 100ms, 200ms, 400ms
-                    await new Promise(resolve => setTimeout(resolve, 100 * Math.pow(2, retries - 1)));
-                  }
+    isInitializingRef.current = true;
+
+    try {
+      // Check if this is a login transition (different user than before)
+      const isNewLogin = userId && userId !== prevUserIdRef.current;
+      const isLogout = !userId && prevUserIdRef.current;
+
+      if (userId) {
+        // User is authenticated
+        if (isNewLogin && !hasMigratedRef.current) {
+          // First time logging in - check if localStorage cart has items
+          const guestCartItems = cartStorageHelpers.loadGuestCart();
+
+          if (guestCartItems.length > 0) {
+            // Migrate localStorage cart to Supabase
+            let retries = 0;
+            const maxRetries = 3;
+
+            while (retries < maxRetries) {
+              try {
+                if (process.env.NODE_ENV === "development") {
+                  console.log(
+                    `[Cart Provider] Migrating ${guestCartItems.length} items to Supabase (attempt ${retries + 1}/${maxRetries})`
+                  );
+                }
+                await saveCartToSupabase(guestCartItems, userId);
+                if (process.env.NODE_ENV === "development") {
+                  console.log("[Cart Provider] Cart migrated successfully");
+                }
+                break;
+              } catch (error) {
+                retries++;
+                if (retries < maxRetries) {
+                  await new Promise((resolve) =>
+                    setTimeout(resolve, 100 * Math.pow(2, retries - 1))
+                  );
+                } else if (process.env.NODE_ENV === "development") {
+                  console.warn(
+                    "[Cart Provider] Failed to migrate cart after all retries:",
+                    error
+                  );
                 }
               }
-              
-              if (retries === maxRetries) {
-                console.error("Failed to migrate cart after all retries:", lastError);
-              }
             }
-
-            // Clear localStorage after successful migration
-            cartStorageHelpers.clearGuestCart();
-            console.log("Guest cart cleared from localStorage after migration");
-
-            // Mark as migrated to prevent duplicate migrations
-            hasMigratedRef.current = true;
           }
 
-          // Initialize with user ID (loads from Supabase)
-          await initializeCart(user.id);
-        } else {
-          // User is not authenticated - initialize as guest
-          // loadGuestCart is called in initializeCart
-          await initializeCart();
-          hasMigratedRef.current = false; // Reset migration flag for next login
+          // Clear localStorage after migration attempt
+          cartStorageHelpers.clearGuestCart();
+          if (process.env.NODE_ENV === "development") {
+            console.log("[Cart Provider] Guest cart cleared from localStorage");
+          }
+          hasMigratedRef.current = true;
         }
 
-        // Update previous auth state
-        prevIsAuthenticatedRef.current = isAuthenticated;
-      } catch (error) {
-        console.error("Failed to initialize cart:", error);
-      }
-    };
+        // Initialize with user ID (loads from Supabase)
+        await initializeCart(userId);
+        prevUserIdRef.current = userId;
+      } else if (isLogout) {
+        // User logged out - reset state
+        hasMigratedRef.current = false;
+        useCartStore.setState({ isInitialized: false });
+        await initializeCart();
+        prevUserIdRef.current = null;
 
+        if (process.env.NODE_ENV === "development") {
+          console.log("[Cart Provider] User logged out, switched to guest cart");
+        }
+      } else if (!prevUserIdRef.current) {
+        // Initial load as guest
+        await initializeCart();
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("[Cart Provider] Failed to initialize cart:", error);
+      }
+    } finally {
+      isInitializingRef.current = false;
+    }
+  }, [userId, initializeCart]);
+
+  // Initialize cart when auth state settles
+  useEffect(() => {
     if (!loading) {
       initializeCartWithAuth();
     }
-  }, [isAuthenticated, user, loading, initializeCart]);
+  }, [loading, initializeCartWithAuth]);
 
   // Set up Supabase Realtime subscription for authenticated users
-  // Use user.id as dependency instead of entire user object to prevent re-subscription loops
-  const userId = user?.id;
-  
   useEffect(() => {
-    // Don't set up subscription if not authenticated or no user ID
-    if (!isAuthenticated || !userId) {
-      // Clean up any existing subscription when logged out
-      if (subscriptionRef.current) {
-        console.log("Cleaning up Realtime subscription");
-        subscriptionRef.current.unsubscribe();
-        subscriptionRef.current = null;
+    // Case 1: User logged out - clean up subscription
+    if (!userId && subscriptionRef.current) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("[Cart Provider] Cleaning up Realtime subscription (user logged out)");
       }
+      subscriptionRef.current.unsubscribe();
+      subscriptionRef.current = null;
+      subscriptionUserIdRef.current = null;
       return;
     }
 
-    // Prevent duplicate subscriptions for same user
-    if (subscriptionRef.current) {
-      console.log("Realtime subscription already exists, skipping setup");
+    // Case 2: No user - nothing to do
+    if (!userId) {
       return;
     }
 
-    // Subscribe to cart changes in real-time
+    // Case 3: Subscription already exists for this user - keep it
+    if (subscriptionRef.current && subscriptionUserIdRef.current === userId) {
+      return;
+    }
+
+    // Case 4: Different user - clean up old subscription first
+    if (subscriptionRef.current && subscriptionUserIdRef.current !== userId) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("[Cart Provider] User changed, cleaning up old subscription");
+      }
+      subscriptionRef.current.unsubscribe();
+      subscriptionRef.current = null;
+    }
+
+    // Case 5: Create new subscription for current user
     const supabase = createClient();
-    
-    console.log("Setting up Realtime subscription for user:", userId);
-    
-    const subscription = supabase
-      .channel(`cart-changes-${userId}`)
+
+    if (process.env.NODE_ENV === "development") {
+      console.log("[Cart Provider] Setting up Realtime subscription for user:", userId);
+    }
+
+    const channel = supabase
+      .channel(`cart-changes-${userId}-${Date.now()}`) // Unique channel name
       .on(
         "postgres_changes",
         {
-          event: "*", // Listen to all events (INSERT, UPDATE, DELETE)
+          event: "*",
           schema: "public",
           table: "carts",
           filter: `user_id=eq.${userId}`,
         },
         async (payload) => {
-          console.log("Cart changed via Realtime:", payload);
-          
-          // Reload cart from Supabase on any change
+          if (process.env.NODE_ENV === "development") {
+            console.log("[Cart Provider] Cart changed via Realtime:", payload.eventType);
+          }
+
           try {
-            const { loadCartFromSupabase } = await import("@/services/cart/cart.service");
+            const { loadCartFromSupabase } = await import(
+              "@/services/cart/cart.service"
+            );
             const cartItems = await loadCartFromSupabase(userId);
-            
-            // Update cart directly without calling initializeCart (which checks isInitialized)
+
             useCartStore.setState({
               items: cartItems,
             });
-            
-            console.log("Cart reloaded from Realtime update:", cartItems.length, "items");
+
+            if (process.env.NODE_ENV === "development") {
+              console.log(
+                "[Cart Provider] Cart reloaded from Realtime:",
+                cartItems.length,
+                "items"
+              );
+            }
           } catch (error) {
-            console.error("Failed to reload cart after Realtime update:", error);
+            if (process.env.NODE_ENV === "development") {
+              console.warn(
+                "[Cart Provider] Failed to reload cart after Realtime update:",
+                error
+              );
+            }
           }
         }
       )
       .subscribe((status) => {
-        console.log("Realtime subscription status:", status);
+        if (process.env.NODE_ENV === "development") {
+          console.log("[Cart Provider] Realtime subscription status:", status);
+        }
       });
 
-    subscriptionRef.current = subscription as unknown as Subscription;
+    subscriptionRef.current = channel;
+    subscriptionUserIdRef.current = userId;
 
-    // Cleanup on unmount or when user changes
+    // Cleanup only on component unmount
     return () => {
-      console.log("Unsubscribing from Realtime cart changes");
-      subscription.unsubscribe();
+      if (process.env.NODE_ENV === "development") {
+        console.log("[Cart Provider] Component unmounting, cleaning up subscription");
+      }
+      channel.unsubscribe();
       subscriptionRef.current = null;
+      subscriptionUserIdRef.current = null;
     };
-  }, [isAuthenticated, userId]);
-
-  // Handle logout - keep localStorage cart, just reset initialized flag
-  useEffect(() => {
-    if (!isAuthenticated && !loading && prevIsAuthenticatedRef.current) {
-      // User just logged out - reset initialized flag to allow guest cart to load
-      useCartStore.setState({
-        isInitialized: false,
-      });
-
-      console.log("User logged out, switching to guest cart");
-    }
-  }, [isAuthenticated, loading]);
+  }, [userId]);
 
   return <>{children}</>;
 }

@@ -49,7 +49,7 @@ export function Footer() {
 
           {/* Shop & Resources */}
           <div>
-            <h4 className="font-semibold text-neutral-900 mb-6">Shop</h4>
+            <div className="font-semibold text-neutral-900 mb-6">Shop</div>
             <ul className="space-y-4 text-sm text-neutral-600">
               <li><Link href="/products" className="hover:text-neutral-900 transition-colors">All Products</Link></li>
               <li><Link href="/categories" className="hover:text-neutral-900 transition-colors">Categories</Link></li>
@@ -60,7 +60,7 @@ export function Footer() {
 
           {/* Customer Service */}
           <div>
-            <h4 className="font-semibold text-neutral-900 mb-6">Support</h4>
+            <div className="font-semibold text-neutral-900 mb-6">Support</div>
             <ul className="space-y-4 text-sm text-neutral-600">
               <li><Link href="/faq" className="hover:text-neutral-900 transition-colors">Help Center</Link></li>
               <li><Link href="/contact" className="hover:text-neutral-900 transition-colors">Contact Us</Link></li>
@@ -71,7 +71,7 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-semibold text-neutral-900 mb-6">Contact</h4>
+            <div className="font-semibold text-neutral-900 mb-6">Contact</div>
             <ul className="space-y-4 text-sm text-neutral-600">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-neutral-400 shrink-0 mt-0.5" />

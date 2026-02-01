@@ -1,30 +1,72 @@
-import { CartItem, Order, ShippingAddress, BillingAddress } from "@/types/cart";
+import { CartItem } from "@/types/cart";
 import { createClient } from "@/lib/supabase/client";
 import { SupabaseClient } from "@supabase/supabase-js";
-
-// Database response types from Supabase (snake_case)
-interface SupabaseOrderData {
-  id: string;
-  user_id: string | null;
-  items: CartItem[];
-  shipping_address: ShippingAddress;
-  billing_address: BillingAddress;
-  total_amount: number;
-  shipping?: number | null;
-  status: string;
-  created_at: string;
-  stripe_payment_intent_id?: string | null;
-}
 
 /**
  * Cart Service
  * Handles cart persistence and order management with Supabase
  * Reference: Architecture.md Section 4.3
+ *
+ * IMPORTANT: This service now handles errors gracefully.
+ * If the carts table doesn't exist or is inaccessible, the app will
+ * continue to work using localStorage for cart persistence.
  */
+
+// Cache the table accessibility check result to avoid repeated queries
+let cartsTableAccessible: boolean | null = null;
+let lastAccessibilityCheck = 0;
+const ACCESSIBILITY_CHECK_INTERVAL = 60000; // 1 minute
+
+/**
+ * Check if the carts table exists and is accessible
+ * Results are cached for 1 minute to avoid repeated queries
+ */
+async function isCartsTableAccessible(
+  supabase: SupabaseClient
+): Promise<boolean> {
+  const now = Date.now();
+
+  // Return cached result if still valid
+  if (
+    cartsTableAccessible !== null &&
+    now - lastAccessibilityCheck < ACCESSIBILITY_CHECK_INTERVAL
+  ) {
+    return cartsTableAccessible;
+  }
+
+  try {
+    // Try a simple query to check if table is accessible
+    const { error } = await supabase
+      .from("carts")
+      .select("id")
+      .limit(1);
+
+    // If no error or just "no rows" error, table is accessible
+    if (!error || error.code === "PGRST116") {
+      cartsTableAccessible = true;
+      lastAccessibilityCheck = now;
+      return true;
+    }
+
+    // Log the specific error for debugging
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[Cart Service] Carts table not accessible:", error.message, error.code);
+    }
+
+    cartsTableAccessible = false;
+    lastAccessibilityCheck = now;
+    return false;
+  } catch {
+    cartsTableAccessible = false;
+    lastAccessibilityCheck = now;
+    return false;
+  }
+}
 
 /**
  * Save cart to Supabase
  * Persists cart to Supabase database with proper RLS policies
+ * Returns silently on errors to allow app to continue with localStorage fallback
  */
 export async function saveCartToSupabase(
   cartItems: CartItem[],
@@ -34,6 +76,13 @@ export async function saveCartToSupabase(
   try {
     const supabase = createClient() as SupabaseClient;
 
+    // Check if carts table is accessible first
+    const tableAccessible = await isCartsTableAccessible(supabase);
+    if (!tableAccessible) {
+      // Don't log repeatedly - table check already logged
+      return;
+    }
+
     // Prepare cart data
     const cartData = {
       items: cartItems,
@@ -42,27 +91,22 @@ export async function saveCartToSupabase(
 
     if (userId) {
       // Authenticated user cart - verify session first
-
       const {
         data: { user: authUser },
         error: sessionError,
       } = await supabase.auth.getUser();
 
       if (sessionError || !authUser) {
-        console.error("Session verification failed:", sessionError?.message);
-        throw new Error(`Authentication required: ${sessionError?.message}`);
+        // Session might be temporarily invalid - don't throw
+        return;
       }
 
       if (authUser.id !== userId) {
-        console.error("User ID mismatch:", {
-          authUserId: authUser.id,
-          providedUserId: userId,
-        });
-        throw new Error("User ID mismatch - authentication error");
+        // User ID mismatch - don't throw, just skip
+        return;
       }
 
-      // Authenticated user cart - check if cart exists
-
+      // Check if cart exists
       const { data: existingCart, error: checkError } = await supabase
         .from("carts")
         .select("id")
@@ -70,55 +114,39 @@ export async function saveCartToSupabase(
         .maybeSingle();
 
       if (checkError && checkError.code !== "PGRST116") {
-        console.error("Error checking for existing cart:", checkError);
-        throw checkError;
+        // Error checking cart - skip silently
+        return;
       }
 
       if (existingCart) {
         // If no items, delete cart row instead of storing empty array
         if (cartItems.length === 0) {
-          const { error } = await supabase
+          await supabase
             .from("carts")
             .delete()
             .eq("user_id", userId);
-
-          if (error) {
-            throw error;
-          }
-
           return;
         }
         // Update existing cart
-
-        const { error } = await supabase
+        await supabase
           .from("carts")
           .update({
             items: cartData.items,
             updated_at: cartData.updated_at,
           } as Record<string, unknown>)
           .eq("user_id", userId);
-
-        if (error) {
-          console.error("Error updating authenticated cart:", error);
-          throw error;
-        }
       } else {
         // If no items, nothing to persist
         if (cartItems.length === 0) {
           return;
         }
-        // Insert new car
-        const { error } = await supabase.from("carts").insert({
+        // Insert new cart
+        await supabase.from("carts").insert({
           user_id: userId,
           session_id: null,
           items: cartData.items,
           updated_at: cartData.updated_at,
         } as Record<string, unknown>);
-
-        if (error) {
-          console.error("Error creating authenticated cart:", error);
-          throw error;
-        }
       }
     } else if (sessionId) {
       // Guest cart - check if cart exists
@@ -129,67 +157,48 @@ export async function saveCartToSupabase(
         .maybeSingle();
 
       if (checkError && checkError.code !== "PGRST116") {
-        console.error("Error checking for existing guest cart:", checkError);
-        throw checkError;
+        return;
       }
 
       if (existingCart) {
-        // If no items, delete cart row instead of storing empty array
         if (cartItems.length === 0) {
-          const { error } = await supabase
+          await supabase
             .from("carts")
             .delete()
             .eq("session_id", sessionId);
-
-          if (error) {
-            console.error("Error deleting guest cart:", error);
-            throw error;
-          }
           return;
         }
-        // Update existing guest cart
-        const { error } = await supabase
+        await supabase
           .from("carts")
           .update({
             items: cartData.items,
             updated_at: cartData.updated_at,
           } as Record<string, unknown>)
           .eq("session_id", sessionId);
-
-        if (error) {
-          console.error("Error updating guest cart:", error);
-          throw error;
-        }
       } else {
-        // If no items, nothing to persist
         if (cartItems.length === 0) {
           return;
         }
-        // Insert new guest cart
-        const { error } = await supabase.from("carts").insert({
+        await supabase.from("carts").insert({
           user_id: null,
           session_id: sessionId,
           items: cartData.items,
           updated_at: cartData.updated_at,
         } as Record<string, unknown>);
-
-        if (error) {
-          console.error("Error creating guest cart:", error);
-          throw error;
-        }
       }
-    } else {
-      throw new Error("Either userId or sessionId must be provided");
     }
   } catch (error) {
-    console.error("Failed to save cart to Supabase:", error);
-    throw error;
+    // Log in development only - don't throw
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[Cart Service] Failed to save cart:", error);
+    }
   }
 }
 
 /**
  * Load cart from Supabase
  * Fetches cart from Supabase database
+ * Returns empty array on errors to allow app to continue with localStorage fallback
  */
 export async function loadCartFromSupabase(
   userId?: string,
@@ -197,6 +206,12 @@ export async function loadCartFromSupabase(
 ): Promise<CartItem[]> {
   try {
     const supabase = createClient() as SupabaseClient;
+
+    // Check if carts table is accessible first
+    const tableAccessible = await isCartsTableAccessible(supabase);
+    if (!tableAccessible) {
+      return [];
+    }
 
     if (userId) {
       // Load authenticated user cart - verify session first
@@ -206,58 +221,43 @@ export async function loadCartFromSupabase(
       } = await supabase.auth.getUser();
 
       if (sessionError || !authUser) {
-        console.error(
-          "Session verification failed for loadCart:",
-          sessionError?.message
-        );
-        throw new Error(`Authentication required: ${sessionError?.message}`);
+        return [];
       }
 
       if (authUser.id !== userId) {
-        console.error("User ID mismatch for loadCart:", {
-          authUserId: authUser.id,
-          providedUserId: userId,
-        });
-        throw new Error("User ID mismatch - authentication error");
+        return [];
       }
 
       const { data, error } = await supabase
         .from("carts")
         .select("items")
         .eq("user_id", userId)
-        .single();
+        .maybeSingle();
 
       if (error && error.code !== "PGRST116") {
-        // PGRST116 = no rows returned
-        console.error("Error loading authenticated cart:", error);
-        throw error;
+        return [];
       }
 
       return data?.items || [];
     } else if (sessionId) {
-      // Load guest cart
       const { data, error } = await supabase
         .from("carts")
         .select("items")
         .eq("session_id", sessionId)
-        .single();
+        .maybeSingle();
 
       if (error && error.code !== "PGRST116") {
-        // PGRST116 = no rows returned
-        console.error("Error loading guest cart:", error);
-        throw error;
+        return [];
       }
 
       return data?.items || [];
-    } else {
-      throw new Error("Either userId or sessionId must be provided");
     }
+
+    return [];
   } catch (error) {
-    console.error("Failed to load cart from Supabase:", error);
-    throw error;
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[Cart Service] Failed to load cart:", error);
+    }
+    return [];
   }
 }
-
-
-
-

@@ -126,23 +126,28 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
           return (
             <div
               key={banner.id}
-              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${isActive ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-                }`}
+              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                isActive
+                  ? "opacity-100 z-10"
+                  : "opacity-0 z-0 pointer-events-none"
+              }`}
             >
               <div className="relative w-full h-full">
                 {/* Media Layer */}
                 {isVideo ? (
                   <video
-                    src={banner.video}
-                    poster={banner.videoPoster}
-                    autoPlay={banner.videoSettings?.autoplay !== false}
-                    loop={banner.videoSettings?.loop !== false}
-                    muted={banner.videoSettings?.muted !== false}
+                    autoPlay
+                    loop
+                    muted
                     playsInline
-                    controls={banner.videoSettings?.showControls === true}
-                    className="w-full h-full object-cover"
-                    preload={index === 0 ? "auto" : "none"}
-                  />
+                    className="absolute inset-0 w-full h-full object-cover"
+                    preload="auto"
+                    fetchPriority={index === 0 ? "high" : "auto"} // High priority only for first slide
+                    {...(banner.videoPoster && { poster: banner.videoPoster })}
+                  >
+                    <source src={banner.video} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
                 ) : (
                   <Image
                     src={banner.image || ""}
@@ -161,7 +166,9 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                 {/* Content Layer */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-full max-w-7xl mx-auto px-6 md:px-12 text-center md:text-left">
-                    <div className={`max-w-3xl transform transition-all duration-1000 ease-out ${isActive ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}`}>
+                    <div
+                      className={`max-w-3xl transform transition-all duration-1000 ease-out ${isActive ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}`}
+                    >
                       {banner.title && (
                         <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tighter text-white mb-6 leading-[1.1]">
                           {banner.title}
@@ -218,10 +225,11 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`h-1 rounded-full transition-all duration-500 ${index === currentSlide
-                    ? "w-8 bg-white"
-                    : "w-2 bg-white/40 hover:bg-white/60"
-                    }`}
+                  className={`h-1 rounded-full transition-all duration-500 ${
+                    index === currentSlide
+                      ? "w-8 bg-white"
+                      : "w-2 bg-white/40 hover:bg-white/60"
+                  }`}
                   aria-label={`Go to slide ${index + 1}`}
                   aria-current={index === currentSlide}
                 />
@@ -233,4 +241,3 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
     </section>
   );
 }
-

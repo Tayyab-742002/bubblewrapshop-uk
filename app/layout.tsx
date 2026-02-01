@@ -141,11 +141,7 @@ export default async function RootLayout({
     >
       <head>
         {/* Only keep preconnect for critical LCP assets (Sanity Images) */}
-        <link
-          rel="preconnect"
-          href="https://cdn.sanity.io"
-          crossOrigin="anonymous"
-        />
+        <link rel="preconnect" href="https://www.facebook.com"></link>
         <link rel="dns-prefetch" href="//cdn.sanity.io" />
 
         {/* Removed unused connections to r2.dev and unsplash to fix Lighthouse warnings */}
