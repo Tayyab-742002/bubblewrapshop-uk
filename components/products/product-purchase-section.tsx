@@ -161,7 +161,7 @@ export function ProductPurchaseSection({
   return (
     <div className="space-y-5">
       {/* Price Display */}
-      <div className="pb-5 border-b border-border">
+      {/* <div className="pb-5 border-b border-border">
         <div className="flex items-baseline gap-2.5">
           <span className="text-2xl font-semibold tracking-tight text-foreground">
             £{calculatedPricePerUnit.toFixed(2)}
@@ -175,7 +175,7 @@ export function ProductPurchaseSection({
         <p className="text-xs text-muted-foreground mt-1.5 tracking-wide">
           Tax included. Shipping calculated at checkout.
         </p>
-      </div>
+      </div> */}
 
       {/* Variant Selector - Using label prop, no duplicate h3 */}
       {product.variants && product.variants.length > 0 && (
