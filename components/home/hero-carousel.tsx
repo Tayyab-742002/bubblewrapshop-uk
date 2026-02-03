@@ -171,7 +171,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                 src={banner.image}
                 alt={banner.alt || banner.title || "Banner"}
                 fill
-                className="object-center"
+                className="object-cover md:object-center"
                 priority={index === 0}
                 quality={95}
                 sizes="100vw"
