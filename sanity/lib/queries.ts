@@ -90,6 +90,12 @@ const PRODUCT_QUERY = `
       unit,
       pricePerUnit,
       isActive
+    },
+    pricingTiers[] {
+      minQuantity,
+      maxQuantity,
+      discount,
+      label
     }
   },
   pricingTiers[] {
@@ -153,7 +159,13 @@ const PRODUCT_LISTING_QUERY = `
     name,
     sku,
     priceAdjustment,
-    isActive
+    isActive,
+    pricingTiers[] {
+      minQuantity,
+      maxQuantity,
+      discount,
+      label
+    }
   }
 `;
 
@@ -272,6 +284,8 @@ const BANNER_QUERY = `
   _type,
   title,
   description,
+  ctaLink,
+  ctaText,
   index,
   isActive,
   mediaType,

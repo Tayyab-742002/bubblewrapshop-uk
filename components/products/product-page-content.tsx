@@ -18,11 +18,13 @@ function ProductPageContent({
   description,
   specifications,
   delivery,
+  initialVariantSku,
 }: {
   product: Product;
   description?: string;
   specifications?: Record<string, string>;
   delivery?: string;
+  initialVariantSku?: string;
 }) {
   // Track ViewContent event for Meta Pixel
   useEffect(() => {
@@ -51,7 +53,7 @@ function ProductPageContent({
           showBackButton
           backUrl="/products"
         >
-          <ProductPurchaseSection product={product} />
+          <ProductPurchaseSection product={product} initialVariantSku={initialVariantSku} />
         </ErrorBoundary>
 
         {/* Product Info Accordion */}

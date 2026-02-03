@@ -13,16 +13,18 @@ import { ProductVariant } from "@/types/product";
 interface VariantSelectorProps {
   variants: ProductVariant[];
   label?: string;
+  initialVariantId?: string; // Pre-select variant by ID (from URL param)
   onVariantChange?: (variantId: string) => void;
 }
 
 export function VariantSelector({
   variants,
   label = "Size",
+  initialVariantId,
   onVariantChange,
 }: VariantSelectorProps) {
   const [selectedVariant, setSelectedVariant] = useState<string>(
-    variants[0]?.id || ""
+    initialVariantId || variants[0]?.id || ""
   );
 
   const handleValueChange = (value: string) => {

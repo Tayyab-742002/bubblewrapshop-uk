@@ -12,9 +12,20 @@ export interface Banner {
   id: string;
   title: string;
   description: string;
+  ctaLink: string | null;
+  ctaText: string | null;
   index: number;
+  mediaType: "image" | "video";
   image: string;
   alt: string;
+  video: string;
+  videoPoster: string;
+  videoSettings: {
+    autoplay: boolean;
+    loop: boolean;
+    muted: boolean;
+    showControls: boolean;
+  };
 }
 
 /**

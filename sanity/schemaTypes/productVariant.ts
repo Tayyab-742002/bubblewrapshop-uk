@@ -110,6 +110,14 @@ export const productVariant = defineType({
       description: "Available quantity in stock (optional)",
       validation: (Rule) => Rule.min(0),
     }),
+    defineField({
+      name: "pricingTiers",
+      title: "Variant Pricing Tiers (Deals)",
+      type: "array",
+      of: [{ type: "pricingTier" }],
+      description:
+        "Optional: Add special deals/discounts for THIS specific size only. Leave empty to use product-level pricing tiers. Example: Buy 20+ of this size, get 10% off.",
+    }),
   ],
   preview: {
     select: {
@@ -117,16 +125,21 @@ export const productVariant = defineType({
       sku: "sku",
       adjustment: "priceAdjustment",
       quantityOptions: "quantityOptions",
+      pricingTiers: "pricingTiers",
     },
-    prepare({ name, sku, adjustment, quantityOptions }) {
+    prepare({ name, sku, adjustment, quantityOptions, pricingTiers }) {
       const priceText =
         adjustment !== 0 ? ` (${adjustment > 0 ? "+" : ""}£${adjustment})` : "";
       const qtyText =
         quantityOptions && quantityOptions.length > 0
           ? ` • ${quantityOptions.length} qty options`
           : "";
+      const dealsText =
+        pricingTiers && pricingTiers.length > 0
+          ? ` • ${pricingTiers.length} deal(s)`
+          : "";
       return {
-        title: `${name} - ${sku}${priceText}${qtyText}`,
+        title: `${name} - ${sku}${priceText}${qtyText}${dealsText}`,
       };
     },
   },

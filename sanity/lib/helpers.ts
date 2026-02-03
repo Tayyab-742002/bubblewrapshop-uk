@@ -89,6 +89,12 @@ export interface SanityProduct {
       pricePerUnit?: number;
       isActive: boolean;
     }>;
+    pricingTiers?: Array<{
+      minQuantity: number;
+      maxQuantity?: number;
+      discount: number;
+      label?: string;
+    }>;
   }>;
   pricingTiers?: Array<{
     minQuantity: number;
@@ -144,6 +150,8 @@ export interface SanityBanner {
   _type: string;
   title?: string;
   description?: string;
+  ctaLink?: string;
+  ctaText?: string;
   index: number;
   isActive: boolean;
   mediaType: "image" | "video";
@@ -422,6 +430,12 @@ export function transformSanityProduct(sanityProduct: SanityProduct) {
               pricePerUnit: qty.pricePerUnit,
               isActive: qty.isActive,
             })),
+          pricingTiers: variant.pricingTiers?.map((tier) => ({
+            minQuantity: tier.minQuantity,
+            maxQuantity: tier.maxQuantity,
+            discount: tier.discount || 0,
+            label: tier.label,
+          })),
         })) || [],
     pricingTiers:
       sanityProduct.pricingTiers?.map((tier) => ({
@@ -497,6 +511,8 @@ export function transformSanityBanner(sanityBanner: SanityBanner) {
     id: sanityBanner._id,
     title: sanityBanner.title || "",
     description: sanityBanner.description || "",
+    ctaLink: sanityBanner.ctaLink || null,
+    ctaText: sanityBanner.ctaText || null,
     index: sanityBanner.index,
     mediaType: sanityBanner.mediaType || "image",
     image: sanityBanner.backgroundImage?.asset?.url || "",

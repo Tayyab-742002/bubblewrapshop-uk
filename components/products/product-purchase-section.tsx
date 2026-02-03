@@ -11,6 +11,7 @@ import { Truck, ShieldCheck, RotateCcw } from "lucide-react";
 
 interface ProductPurchaseSectionProps {
   product: Product;
+  initialVariantSku?: string; // SKU from URL param to pre-select variant
 }
 
 // Helper function to get the first/lowest quantity option
@@ -57,9 +58,20 @@ function getMinimumQuantity(
 
 export function ProductPurchaseSection({
   product,
+  initialVariantSku,
 }: ProductPurchaseSectionProps) {
-  // Initialize with first variant
-  const firstVariant = product.variants?.[0];
+  // Find variant by SKU from URL param, or fall back to first variant
+  const getInitialVariant = () => {
+    if (initialVariantSku && product.variants) {
+      const variantBySku = product.variants.find(
+        (v) => v.sku === initialVariantSku
+      );
+      if (variantBySku) return variantBySku;
+    }
+    return product.variants?.[0];
+  };
+
+  const firstVariant = getInitialVariant();
 
   // Initialize with first quantity option if first variant has options
   const initialQuantityOption = firstVariant
@@ -128,6 +140,16 @@ export function ProductPurchaseSection({
     return quantity;
   }, [selectedQuantityOption, quantity]);
 
+  // Determine which pricing tiers to use: variant-specific (deals) or product-level
+  const activePricingTiers = useMemo(() => {
+    // If variant has its own pricing tiers (deals), use those
+    if (selectedVariant?.pricingTiers && selectedVariant.pricingTiers.length > 0) {
+      return selectedVariant.pricingTiers;
+    }
+    // Otherwise fall back to product-level tiers
+    return product.pricingTiers || [];
+  }, [selectedVariant, product.pricingTiers]);
+
   // Calculate the final price per unit based on total quantity with pricing tiers
   const calculatedPricePerUnit = useMemo(() => {
     const adjustedBasePrice =
@@ -140,11 +162,12 @@ export function ProductPurchaseSection({
       return selectedQuantityOption.pricePerUnit;
     }
 
-    if (product.pricingTiers && product.pricingTiers.length > 0) {
+    // Use active pricing tiers (variant-specific if available, otherwise product-level)
+    if (activePricingTiers.length > 0) {
       return calculatePricePerUnit(
         totalQuantity,
         product.basePrice,
-        product.pricingTiers,
+        activePricingTiers,
         selectedVariant?.price_adjustment || 0
       );
     }
@@ -152,7 +175,7 @@ export function ProductPurchaseSection({
     return adjustedBasePrice;
   }, [
     product.basePrice,
-    product.pricingTiers,
+    activePricingTiers,
     selectedVariant,
     totalQuantity,
     selectedQuantityOption,
@@ -182,6 +205,7 @@ export function ProductPurchaseSection({
         <VariantSelector
           variants={product.variants}
           label="Size"
+          initialVariantId={firstVariant?.id}
           onVariantChange={handleVariantChange}
         />
       )}
@@ -202,14 +226,16 @@ export function ProductPurchaseSection({
           </div>
         )}
 
-      {/* Pricing Table */}
-      {product.pricingTiers && product.pricingTiers.length > 0 && (
+      {/* Pricing Table - Shows variant-specific deals if available, otherwise product-level */}
+      {activePricingTiers.length > 0 && (
         <div className="space-y-2">
           <label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Volume Pricing
+            {selectedVariant?.pricingTiers && selectedVariant.pricingTiers.length > 0
+              ? "Special Deal"
+              : "Volume Pricing"}
           </label>
           <PricingTable
-            tiers={product.pricingTiers}
+            tiers={activePricingTiers}
             basePrice={product.basePrice}
             variantPriceAdjustment={selectedVariant?.price_adjustment || 0}
           />
@@ -227,7 +253,7 @@ export function ProductPurchaseSection({
             return (
               <QuantityPriceSelector
                 key={`quantity-selector-${selectedVariant?.id || "no-variant"}-${selectedQuantityOption?.quantity || "no-option"}`}
-                pricingTiers={product.pricingTiers || []}
+                pricingTiers={activePricingTiers}
                 basePrice={product.basePrice}
                 variantPriceAdjustment={selectedVariant?.price_adjustment || 0}
                 initialQuantity={1}
@@ -262,7 +288,7 @@ export function ProductPurchaseSection({
         ) : (
           <QuantityPriceSelector
             key={`quantity-selector-${selectedVariant?.id || "no-variant"}`}
-            pricingTiers={product.pricingTiers || []}
+            pricingTiers={activePricingTiers}
             basePrice={product.basePrice}
             variantPriceAdjustment={selectedVariant?.price_adjustment || 0}
             initialQuantity={1}

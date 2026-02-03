@@ -87,14 +87,15 @@ function clearGuestCartFromLocalStorage(): void {
 
 // Helper function to calculate price per unit based on pricing tiers
 // Uses the pricing service for consistency
-// Priority: quantity option price > pricing tiers > base price
+// Priority: quantity option price > variant pricing tiers > product pricing tiers > base price
 // Matches the logic from product-purchase-section.tsx
 function calculateItemPricePerUnit(
   quantity: number,
   basePrice: number,
   variantAdjustment: number,
-  pricingTiers?: PricingTier[],
-  quantityOptionPrice?: number // Price from selected quantity option (takes priority)
+  productPricingTiers?: PricingTier[],
+  quantityOptionPrice?: number, // Price from selected quantity option (takes priority)
+  variantPricingTiers?: PricingTier[] // Variant-specific pricing tiers (overrides product tiers)
 ): number {
   const adjustedBasePrice = basePrice + variantAdjustment;
 
@@ -103,12 +104,22 @@ function calculateItemPricePerUnit(
     return quantityOptionPrice;
   }
 
-  // If pricing tiers exist, apply them based on quantity
-  if (pricingTiers && pricingTiers.length > 0) {
+  // If variant has its own pricing tiers, use them (second priority - for size-specific deals)
+  if (variantPricingTiers && variantPricingTiers.length > 0) {
     return calculatePricePerUnit(
       quantity,
       basePrice,
-      pricingTiers,
+      variantPricingTiers,
+      variantAdjustment
+    );
+  }
+
+  // If product-level pricing tiers exist, apply them based on quantity
+  if (productPricingTiers && productPricingTiers.length > 0) {
+    return calculatePricePerUnit(
+      quantity,
+      basePrice,
+      productPricingTiers,
       variantAdjustment
     );
   }
@@ -243,7 +254,8 @@ export const useCartStore = create<CartStore>()((set, get) => ({
           product.basePrice,
           variantPriceAdjustment,
           product.pricingTiers,
-          quantityOptionPrice
+          quantityOptionPrice,
+          variant?.pricingTiers // Variant-specific deals (overrides product tiers)
         );
 
         items[existingItemIndex] = {
@@ -263,7 +275,8 @@ export const useCartStore = create<CartStore>()((set, get) => ({
           product.basePrice,
           variantPriceAdjustment,
           product.pricingTiers,
-          quantityOptionPrice
+          quantityOptionPrice,
+          variant?.pricingTiers // Variant-specific deals (overrides product tiers)
         );
 
         // Generate unique cart item ID
@@ -392,7 +405,7 @@ export const useCartStore = create<CartStore>()((set, get) => ({
           }
 
           // Calculate price per unit using pricing service
-          // Priority: quantity option price > pricing tiers > base price
+          // Priority: quantity option price > variant pricing tiers > product pricing tiers > base price
           // Matches the logic from product-purchase-section.tsx
           // Pricing tiers are ALWAYS recalculated based on the new quantity
           const pricePerUnit = calculateItemPricePerUnit(
@@ -400,7 +413,8 @@ export const useCartStore = create<CartStore>()((set, get) => ({
             item.product.basePrice,
             variantAdjustment,
             item.product.pricingTiers,
-            quantityOptionPrice
+            quantityOptionPrice,
+            item.variant?.pricingTiers // Variant-specific deals (overrides product tiers)
           );
 
           if (process.env.NODE_ENV === "development") {

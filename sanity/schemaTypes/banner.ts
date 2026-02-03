@@ -164,6 +164,20 @@ export const banner = defineType({
       },
     }),
     defineField({
+      name: "ctaLink",
+      title: "CTA Link",
+      type: "string",
+      description:
+        "Link for the call-to-action button. For product with variant pre-selected: /products/small-bubble-wrap?variant=SKU123",
+    }),
+    defineField({
+      name: "ctaText",
+      title: "CTA Button Text",
+      type: "string",
+      description: 'Text for the CTA button (e.g., "Shop Now", "View Deal")',
+      validation: (Rule) => Rule.max(30),
+    }),
+    defineField({
       name: "index",
       title: "Display Order",
       description:

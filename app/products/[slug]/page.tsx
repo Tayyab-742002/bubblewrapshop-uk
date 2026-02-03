@@ -28,6 +28,7 @@ const ProductGallery = dynamic(
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ variant?: string }>;
 }
 
 /**
@@ -115,8 +116,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
+export default async function ProductPage({ params, searchParams }: ProductPageProps) {
   const { slug } = await params;
+  const { variant: initialVariantSku } = await searchParams;
   const product = await getProductBySlug(slug);
 
   if (!product) {
@@ -386,6 +388,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               description={product.description}
               specifications={product.specifications}
               delivery={product.delivery}
+              initialVariantSku={initialVariantSku}
             />
 
             {/* 2026 EEAT: Expert Tip Section */}

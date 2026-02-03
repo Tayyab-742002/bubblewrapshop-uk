@@ -12,6 +12,7 @@ export interface ProductVariant {
   sku: string;
   price_adjustment: number;
   quantityOptions?: QuantityOption[]; // Optional: only for products sold in packets/pouches
+  pricingTiers?: PricingTier[]; // Optional: variant-specific pricing tiers (overrides product-level tiers)
 }
 
 export interface PricingTier {
