@@ -187,15 +187,6 @@ export default async function Home() {
     ],
     description:
       "Family-run packaging supplier in Blackburn, Lancashire. Wholesale bubble wrap, mailing bags, and boxes with next-day delivery to Manchester, London, and UK-wide.",
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: "Packaging Supplies",
-      itemListElement: [
-        { "@type": "Offer", itemOffered: { "@type": "Product", name: "Bubble Wrap Rolls" } },
-        { "@type": "Offer", itemOffered: { "@type": "Product", name: "Mailing Bags" } },
-        { "@type": "Offer", itemOffered: { "@type": "Product", name: "Cardboard Boxes" } },
-      ],
-    },
   };
 
   // Website Structured Data (JSON-LD) for SEO
