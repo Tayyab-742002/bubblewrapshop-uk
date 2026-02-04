@@ -21,7 +21,11 @@ export default function robots(): MetadataRoute.Robots {
         // By default, everything is allowed - we only specify what to block
         userAgent: "*",
         // Allow root to ensure homepage is crawlable
-        allow: "/",
+        allow: [
+          "/",
+          // ✅ FIX: Allow Google to read the announcement bar text
+          "/api/announcements", 
+        ],
         disallow: [
           // Private/User-specific pages
           "/admin/",
