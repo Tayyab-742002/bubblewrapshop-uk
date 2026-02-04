@@ -204,7 +204,7 @@ export default async function Home() {
       "query-input": "required name=search_term_string",
     },
   };
-
+  
   return (
     <>
       {/* Structured Data (JSON-LD) */}

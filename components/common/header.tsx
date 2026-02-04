@@ -159,9 +159,35 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
   const closeMobileMenu = useCallback(() => {
     setIsMobileMenuOpen(false);
   }, []);
-
+  // --- SEO: Generate Schema for Sitelinks ---
+  const navigationSchema = {
+    "@context": "https://schema.org",
+    "@type": "SiteNavigationElement",
+    name: [
+      "Shop Products",
+      "Categories",
+      "Buying Guides",
+      "Blog",
+      "About",
+      ...categories.slice(0, 4).map((c) => c.name),
+    ],
+    url: [
+      "https://www.bubblewrapshop.co.uk/products",
+      "https://www.bubblewrapshop.co.uk/categories",
+      "https://www.bubblewrapshop.co.uk/guides",
+      "https://www.bubblewrapshop.co.uk/blogs",
+      "https://www.bubblewrapshop.co.uk/about",
+      ...categories
+        .slice(0, 4)
+        .map((c) => `https://www.bubblewrapshop.co.uk/categories/${c.slug}`),
+    ],
+  };
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(navigationSchema) }}
+      />
       {/* Top Bar - Contact & Utility */}
       <div className="hidden lg:block bg-neutral-900 text-white">
         <div className="container mx-auto px-6">
@@ -223,77 +249,89 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav
-              className="hidden lg:flex items-center gap-1"
-              aria-label="Main navigation"
-            >
-              {/* Shop Dropdown */}
-              <div
-                onMouseEnter={handleMegaMenuEnter}
-                onMouseLeave={handleMegaMenuLeave}
-                className="relative"
-              >
-                <Link
-                  href="/products"
-                  className={`inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    isActiveLink("/products") || isMegaMenuOpen
-                      ? "text-emerald-700 bg-emerald-50"
-                      : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
-                  }`}
-                  aria-haspopup="true"
-                  aria-expanded={isMegaMenuOpen}
-                >
-                  Shop
-                  <ChevronDown
-                    className={`h-4 w-4 transition-transform duration-200 ${isMegaMenuOpen ? "rotate-180" : ""}`}
-                    aria-hidden="true"
-                  />
-                </Link>
-              </div>
+       
+            <nav className="hidden lg:block" aria-label="Main navigation">
+              <ul className="flex items-center gap-1 list-none m-0 p-0">
+                {/* Shop Dropdown */}
+                <li>
+                  <div
+                    onMouseEnter={handleMegaMenuEnter}
+                    onMouseLeave={handleMegaMenuLeave}
+                    className="relative"
+                  >
+                    <Link
+                      href="/products"
+                      className={`inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                        isActiveLink("/products") || isMegaMenuOpen
+                          ? "text-emerald-700 bg-emerald-50"
+                          : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
+                      }`}
+                      aria-haspopup="true"
+                      aria-expanded={isMegaMenuOpen}
+                    >
+                      Shop
+                      <ChevronDown
+                        className={`h-4 w-4 transition-transform duration-200 ${
+                          isMegaMenuOpen ? "rotate-180" : ""
+                        }`}
+                        aria-hidden="true"
+                      />
+                    </Link>
+                  </div>
+                </li>
 
-              <Link
-                href="/categories"
-                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  isActiveLink("/categories")
-                    ? "text-emerald-700 bg-emerald-50"
-                    : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
-                }`}
-              >
-                Categories
-              </Link>
+                <li>
+                  <Link
+                    href="/categories"
+                    className={`block px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                      isActiveLink("/categories")
+                        ? "text-emerald-700 bg-emerald-50"
+                        : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
+                    }`}
+                  >
+                    Categories
+                  </Link>
+                </li>
 
-              <Link
-                href="/guides"
-                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  isActiveLink("/guides")
-                    ? "text-emerald-700 bg-emerald-50"
-                    : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
-                }`}
-              >
-                Guides
-              </Link>
+                <li>
+                  <Link
+                    href="/guides"
+                    className={`block px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                      isActiveLink("/guides")
+                        ? "text-emerald-700 bg-emerald-50"
+                        : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
+                    }`}
+                  >
+                    Guides
+                  </Link>
+                </li>
 
-              <Link
-                href="/blogs"
-                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  isActiveLink("/blogs")
-                    ? "text-emerald-700 bg-emerald-50"
-                    : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
-                }`}
-              >
-                Blog
-              </Link>
+                <li>
+                  <Link
+                    href="/blogs"
+                    className={`block px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                      isActiveLink("/blogs")
+                        ? "text-emerald-700 bg-emerald-50"
+                        : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
+                    }`}
+                  >
+                    Blog
+                  </Link>
+                </li>
 
-              <Link
-                href="/about"
-                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  isActiveLink("/about")
-                    ? "text-emerald-700 bg-emerald-50"
-                    : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
-                }`}
-              >
-                About
-              </Link>
+                <li>
+                  <Link
+                    href="/about"
+                    className={`block px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                      isActiveLink("/about")
+                        ? "text-emerald-700 bg-emerald-50"
+                        : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
+                    }`}
+                  >
+                    About
+                  </Link>
+                </li>
+              </ul>
             </nav>
 
             {/* Search Bar - Desktop */}
@@ -665,62 +703,68 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
             )}
 
             {/* Navigation */}
+           {/* Navigation */}
             <nav
               className="flex-1 overflow-y-auto p-4"
               aria-label="Mobile navigation"
             >
               {/* Main Links */}
-              <div className="space-y-1">
-                <Link
-                  href="/products"
-                  onClick={closeMobileMenu}
-                  className="flex items-center justify-between p-3 rounded-xl text-neutral-900 hover:bg-neutral-50 transition-colors"
-                >
-                  <span className="font-medium">Shop All Products</span>
-                  <ChevronRight className="h-5 w-5 text-neutral-400" />
-                </Link>
-                <Link
-                  href="/categories"
-                  onClick={closeMobileMenu}
-                  className="flex items-center justify-between p-3 rounded-xl text-neutral-900 hover:bg-neutral-50 transition-colors"
-                >
-                  <span className="font-medium">Categories</span>
-                  <ChevronRight className="h-5 w-5 text-neutral-400" />
-                </Link>
-              </div>
+              <ul className="space-y-1 list-none p-0 m-0">
+                <li>
+                  <Link
+                    href="/products"
+                    onClick={closeMobileMenu}
+                    className="flex items-center justify-between p-3 rounded-xl text-neutral-900 hover:bg-neutral-50 transition-colors"
+                  >
+                    <span className="font-medium">Shop All Products</span>
+                    <ChevronRight className="h-5 w-5 text-neutral-400" />
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/categories"
+                    onClick={closeMobileMenu}
+                    className="flex items-center justify-between p-3 rounded-xl text-neutral-900 hover:bg-neutral-50 transition-colors"
+                  >
+                    <span className="font-medium">Categories</span>
+                    <ChevronRight className="h-5 w-5 text-neutral-400" />
+                  </Link>
+                </li>
+              </ul>
 
               {/* Categories */}
               <div className="mt-6">
                 <p className="px-3 mb-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
                   Popular Categories
                 </p>
-                <div className="grid grid-cols-2 gap-2">
+                <ul className="grid grid-cols-2 gap-2 list-none p-0 m-0">
                   {categories.slice(0, 6).map((category) => (
-                    <Link
-                      key={category.id}
-                      href={`/categories/${category.slug}`}
-                      onClick={closeMobileMenu}
-                      className="flex items-center gap-2 p-3 rounded-xl border border-neutral-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-colors"
-                    >
-                      {category.image ? (
-                        <Image
-                          src={category.image}
-                          alt={category.name}
-                          width={32}
-                          height={32}
-                          className="rounded-lg object-cover"
-                        />
-                      ) : (
-                        <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
-                          <Package className="h-4 w-4 text-emerald-600" />
-                        </div>
-                      )}
-                      <span className="text-sm font-medium text-neutral-700 truncate">
-                        {category.name}
-                      </span>
-                    </Link>
+                    <li key={category.id}>
+                      <Link
+                        href={`/categories/${category.slug}`}
+                        onClick={closeMobileMenu}
+                        className="flex items-center gap-2 p-3 rounded-xl border border-neutral-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-colors"
+                      >
+                        {category.image ? (
+                          <Image
+                            src={category.image}
+                            alt={category.name}
+                            width={32}
+                            height={32}
+                            className="rounded-lg object-cover"
+                          />
+                        ) : (
+                          <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                            <Package className="h-4 w-4 text-emerald-600" />
+                          </div>
+                        )}
+                        <span className="text-sm font-medium text-neutral-700 truncate">
+                          {category.name}
+                        </span>
+                      </Link>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
 
               {/* Business */}
@@ -728,24 +772,28 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 <p className="px-3 mb-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
                   Business
                 </p>
-                <div className="space-y-1">
-                  <Link
-                    href="/wholesale"
-                    onClick={closeMobileMenu}
-                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
-                  >
-                    <Building2 className="h-5 w-5 text-neutral-400" />
-                    <span className="font-medium">Wholesale</span>
-                  </Link>
-                  <Link
-                    href="/b2b-request"
-                    onClick={closeMobileMenu}
-                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
-                  >
-                    <FileText className="h-5 w-5 text-neutral-400" />
-                    <span className="font-medium">B2B Request</span>
-                  </Link>
-                </div>
+                <ul className="space-y-1 list-none p-0 m-0">
+                  <li>
+                    <Link
+                      href="/wholesale"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                    >
+                      <Building2 className="h-5 w-5 text-neutral-400" />
+                      <span className="font-medium">Wholesale</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/b2b-request"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                    >
+                      <FileText className="h-5 w-5 text-neutral-400" />
+                      <span className="font-medium">B2B Request</span>
+                    </Link>
+                  </li>
+                </ul>
               </div>
 
               {/* Resources */}
@@ -753,24 +801,20 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 <p className="px-3 mb-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
                   Resources
                 </p>
-                <div className="space-y-1">
-                  <Link
-                    href="/guides"
-                    onClick={closeMobileMenu}
-                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
-                  >
-                    <BookOpen className="h-5 w-5 text-neutral-400" />
-                    <span className="font-medium">Buying Guides</span>
-                  </Link>
-                  <Link
-                    href="/blogs"
-                    onClick={closeMobileMenu}
-                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
-                  >
-                    <FileText className="h-5 w-5 text-neutral-400" />
-                    <span className="font-medium">Blog</span>
-                  </Link>
-                </div>
+                <ul className="space-y-1 list-none p-0 m-0">
+                  {resourceLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link
+                        href={link.href}
+                        onClick={closeMobileMenu}
+                        className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                      >
+                        <link.icon className="h-5 w-5 text-neutral-400" />
+                        <span className="font-medium">{link.name}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
               {/* Company */}
@@ -778,36 +822,44 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 <p className="px-3 mb-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
                   Company
                 </p>
-                <div className="space-y-1">
-                  <Link
-                    href="/about"
-                    onClick={closeMobileMenu}
-                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
-                  >
-                    <span className="font-medium">About Us</span>
-                  </Link>
-                  <Link
-                    href="/sustainability"
-                    onClick={closeMobileMenu}
-                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
-                  >
-                    <span className="font-medium">Sustainability</span>
-                  </Link>
-                  <Link
-                    href="/contact"
-                    onClick={closeMobileMenu}
-                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
-                  >
-                    <span className="font-medium">Contact</span>
-                  </Link>
-                  <Link
-                    href="/faq"
-                    onClick={closeMobileMenu}
-                    className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
-                  >
-                    <span className="font-medium">FAQ</span>
-                  </Link>
-                </div>
+                <ul className="space-y-1 list-none p-0 m-0">
+                  <li>
+                    <Link
+                      href="/about"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                    >
+                      <span className="font-medium">About Us</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/sustainability"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                    >
+                      <span className="font-medium">Sustainability</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/contact"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                    >
+                      <span className="font-medium">Contact</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/faq"
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                    >
+                      <span className="font-medium">FAQ</span>
+                    </Link>
+                  </li>
+                </ul>
               </div>
 
               {/* Account Links */}
@@ -816,44 +868,52 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                   <p className="px-3 mb-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
                     Account
                   </p>
-                  <div className="space-y-1">
+                  <ul className="space-y-1 list-none p-0 m-0">
                     {user?.role === "admin" && (
-                      <Link
-                        href="/admin"
-                        onClick={closeMobileMenu}
-                        className="flex items-center gap-3 p-3 rounded-xl text-white bg-gradient-to-r from-violet-600 to-indigo-600 transition-colors"
-                      >
-                        <ShieldCheck className="h-5 w-5" />
-                        <span className="font-semibold">Admin Dashboard</span>
-                      </Link>
+                      <li>
+                        <Link
+                          href="/admin"
+                          onClick={closeMobileMenu}
+                          className="flex items-center gap-3 p-3 rounded-xl text-white bg-gradient-to-r from-violet-600 to-indigo-600 transition-colors"
+                        >
+                          <ShieldCheck className="h-5 w-5" />
+                          <span className="font-semibold">Admin Dashboard</span>
+                        </Link>
+                      </li>
                     )}
-                    <Link
-                      href="/account"
-                      onClick={closeMobileMenu}
-                      className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
-                    >
-                      <Settings className="h-5 w-5 text-neutral-400" />
-                      <span className="font-medium">My Account</span>
-                    </Link>
-                    <Link
-                      href="/account?tab=orders"
-                      onClick={closeMobileMenu}
-                      className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
-                    >
-                      <Package className="h-5 w-5 text-neutral-400" />
-                      <span className="font-medium">Orders</span>
-                    </Link>
-                    <button
-                      onClick={() => {
-                        handleSignOut();
-                        closeMobileMenu();
-                      }}
-                      className="flex items-center gap-3 w-full p-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors"
-                    >
-                      <LogOut className="h-5 w-5" />
-                      <span className="font-medium">Sign Out</span>
-                    </button>
-                  </div>
+                    <li>
+                      <Link
+                        href="/account"
+                        onClick={closeMobileMenu}
+                        className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                      >
+                        <Settings className="h-5 w-5 text-neutral-400" />
+                        <span className="font-medium">My Account</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/account?tab=orders"
+                        onClick={closeMobileMenu}
+                        className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                      >
+                        <Package className="h-5 w-5 text-neutral-400" />
+                        <span className="font-medium">Orders</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          handleSignOut();
+                          closeMobileMenu();
+                        }}
+                        className="flex items-center gap-3 w-full p-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors"
+                      >
+                        <LogOut className="h-5 w-5" />
+                        <span className="font-medium">Sign Out</span>
+                      </button>
+                    </li>
+                  </ul>
                 </div>
               )}
             </nav>
