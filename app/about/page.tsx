@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
 
 // 2026 SEO: About page with Blackburn location and EEAT signals
 export const metadata: Metadata = {

@@ -15,7 +15,7 @@ export const revalidate = 3600; // Regenerate every hour
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl =
-    process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+    process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
   const baseDate = new Date();
 
   // Static pages with optimized priorities and change frequencies

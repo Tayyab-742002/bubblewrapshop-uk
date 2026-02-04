@@ -11,7 +11,7 @@ import { MapPin, Truck, BadgePercent, Star } from "lucide-react";
 // For development, use `npm run dev` which has hot reloading
 export const revalidate = false;
 
-const siteUrl = "https://bubblewrapshop.co.uk";
+const siteUrl = "https://www.bubblewrapshop.co.uk";
 
 // Default metadata for /products page (no category filter)
 // 2026 SEO: Include location (Blackburn), transactional intent, and trust signals
@@ -165,7 +165,7 @@ export default async function ProductsPage({
     : null;
 
   const searchQuery = sp.search?.trim();
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
   const pageUrl = `${siteUrl}/products`;
 
   // Trust signals for EEAT

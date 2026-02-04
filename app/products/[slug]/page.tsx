@@ -49,7 +49,7 @@ export async function generateMetadata({
   }
 
   const siteUrl =
-    process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+    process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
   const productUrl = `${siteUrl}/products/${slug}`;
   const productImage = product.images?.[0] || product.image;
   const productPrice = product.basePrice.toFixed(2);
@@ -131,7 +131,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
     : [];
 
   const siteUrl =
-    process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+    process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
   const productUrl = `${siteUrl}/products/${slug}`;
   const productPrice = product.basePrice.toFixed(2);
   const priceValidUntil = new Date(

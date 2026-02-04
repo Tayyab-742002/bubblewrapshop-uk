@@ -8,7 +8,7 @@ import { ChevronRight, Truck, BadgePercent, Package, MapPin } from "lucide-react
 
 export const revalidate = false;
 
-const siteUrl = "https://bubblewrapshop.co.uk";
+const siteUrl = "https://www.bubblewrapshop.co.uk";
 
 // 2026 SEO: Include Blackburn location, transactional intent, and trust signals
 export const metadata: Metadata = {

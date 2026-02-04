@@ -92,7 +92,7 @@ const locationsSchema = {
   "@type": "Organization",
   name: "Bubble Wrap Shop UK",
   description: "Wholesale packaging supplies delivered across the UK from Blackburn, Lancashire",
-  url: "https://bubblewrapshop.co.uk",
+  url: "https://www.bubblewrapshop.co.uk",
   areaServed: [
     {
       "@type": "City",

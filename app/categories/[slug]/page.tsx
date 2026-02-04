@@ -27,7 +27,7 @@ import { CategoryPixelTracker } from "@/components/meta/CategoryPixelTracker";
 
 export const revalidate = false;
 
-const siteUrl = "https://bubblewrapshop.co.uk";
+const siteUrl = "https://www.bubblewrapshop.co.uk";
 
 // Generate static paths for all categories
 export async function generateStaticParams() {

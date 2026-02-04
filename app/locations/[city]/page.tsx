@@ -25,7 +25,7 @@ import { Category } from "@/types/category";
 
 export const revalidate = false;
 
-const siteUrl = "https://bubblewrapshop.co.uk";
+const siteUrl = "https://www.bubblewrapshop.co.uk";
 
 // 2026 SEO: Comprehensive location-specific data with delivery hooks and local content
 interface LocationData {

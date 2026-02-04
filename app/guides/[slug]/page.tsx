@@ -24,7 +24,7 @@ import {
 } from "@/types/guide";
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+  process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
 
 // Static buying guide content (fallback)
 const buyingGuides: Record<string, StaticGuide> = {

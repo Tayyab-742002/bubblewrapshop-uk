@@ -19,7 +19,7 @@ import { getAllCategories, getAllBlogPosts, getAllGuides } from "@/sanity/lib";
 export const revalidate = false;
 
 // Hardcoded to ensure consistency across all pages
-const siteUrl = "https://bubblewrapshop.co.uk";
+const siteUrl = "https://www.bubblewrapshop.co.uk";
 
 /**
  * Homepage Metadata

@@ -18,7 +18,7 @@ const inter = Inter({
 });
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+  process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),

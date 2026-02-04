@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getAllProducts } from "@/sanity/lib/api";
 import { getAllCategories } from "@/sanity/lib/api";
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
 
 /**
  * Image Sitemap for SEO

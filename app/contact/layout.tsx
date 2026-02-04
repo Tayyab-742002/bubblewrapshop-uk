@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const siteUrl = "https://bubblewrapshop.co.uk";
+const siteUrl = "https://www.bubblewrapshop.co.uk";
 
 // 2026 SEO: Contact page with Blackburn location and local SEO signals
 export const metadata: Metadata = {

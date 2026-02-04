@@ -23,7 +23,7 @@ export function Breadcrumbs({ items, variant = "default" }: BreadcrumbsProps) {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+    const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
     const breadcrumbList = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",

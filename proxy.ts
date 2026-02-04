@@ -8,6 +8,18 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function proxy(request: NextRequest) {
+  const { pathname, search } = request.nextUrl;
+  const host = request.headers.get("host") || "";
+
+  // ✅ CRITICAL: Redirect non-www to www (301 Permanent Redirect)
+  // This ensures consistent domain usage and prevents SEO duplicate content issues
+  if (host === "bubblewrapshop.co.uk" || host ==="shop.bubblewrapshop.co.uk" || host === "www.shop.bubblewrapshop.co.uk") {
+    return NextResponse.redirect(
+      `https://www.bubblewrapshop.co.uk${pathname}${search}`,
+      { status: 301 } // Permanent redirect for SEO
+    );
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });
