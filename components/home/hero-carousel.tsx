@@ -110,21 +110,23 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
   // Early return if no banners
   if (!banners || banners.length === 0) {
     return (
-      <div className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
-        <div className="text-center text-white px-4">
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">
-            Premium Packaging Supplies
-          </h1>
-          <p className="text-lg md:text-xl mb-8 text-gray-300">
-            Bubble wrap, mailing bags & boxes delivered next day
-          </p>
-          <Link
-            href="/products"
-            className="inline-block bg-white text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors"
-          >
-            Shop Now
-          </Link>
+      <div className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col items-center justify-between py-8 sm:py-12 md:py-16">
+        <div className="flex-1 flex items-center">
+          <div className="text-center text-white px-4">
+            <h1 className="text-3xl md:text-5xl font-bold mb-4">
+              Premium Packaging Supplies
+            </h1>
+            <p className="text-lg md:text-xl text-gray-300">
+              Bubble wrap, mailing bags & boxes delivered next day
+            </p>
+          </div>
         </div>
+        <Link
+          href="/products"
+          className="inline-block bg-red-600 text-white px-8 py-3 rounded-md font-semibold hover:bg-red-700 transition-colors shadow-lg mb-10 sm:mb-12"
+        >
+          Shop Now
+        </Link>
       </div>
     );
   }
@@ -169,7 +171,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                 src={banner.image}
                 alt={banner.alt || banner.title || "Banner"}
                 fill
-                className="object-center"
+                className="object-cover md:object-center"
                 priority={index === 0}
                 quality={95}
                 sizes="100vw"
@@ -183,25 +185,27 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
 
             {/* Content */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center text-white px-4 sm:px-6 max-w-4xl mx-auto">
-                {banner.title && (
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 md:mb-4 drop-shadow-lg leading-tight">
-                    {banner.title}
-                  </h1>
-                )}
-                {banner.description && (
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-6 md:mb-8 drop-shadow-md text-gray-100 max-w-2xl mx-auto leading-relaxed">
-                    {banner.description}
-                  </p>
-                )}
-                <Link
-                  href={banner.ctaLink || "/products"}
-                  className="inline-block bg-white text-gray-900 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold text-sm sm:text-base hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
-                >
-                  {banner.ctaText || "Shop Now"}
-                </Link>
+            <div className="absolute inset-0 flex flex-col items-center justify-between py-8 sm:py-12 md:py-16">
+              <div className="flex-1 flex items-center">
+                <div className="text-center text-white px-4 sm:px-6 max-w-4xl mx-auto">
+                  {banner.title && (
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 md:mb-4 drop-shadow-lg leading-tight">
+                      {banner.title}
+                    </h1>
+                  )}
+                  {banner.description && (
+                    <p className="text-sm sm:text-base md:text-lg lg:text-xl drop-shadow-md text-gray-100 max-w-2xl mx-auto leading-relaxed">
+                      {banner.description}
+                    </p>
+                  )}
+                </div>
               </div>
+              <Link
+                href={banner.ctaLink || "/products"}
+                className="inline-block bg-red-600 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-md font-semibold text-sm sm:text-base hover:bg-red-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 mb-10 sm:mb-12"
+              >
+                {banner.ctaText || "Shop Now"}
+              </Link>
             </div>
           </div>
         );
