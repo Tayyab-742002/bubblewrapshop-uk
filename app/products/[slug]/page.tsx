@@ -53,8 +53,20 @@ export async function generateMetadata({
   const siteUrl =
     process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
   const productUrl = `${siteUrl}/products/${slug}`;
-  const rawImage = product.images?.[0] || product.image;
-  const productImage = rawImage ? urlFor(rawImage).width(1200).height(630).url() : "";
+
+  // Format all product images for SEO (Google search results)
+  const allImages = product.images && product.images.length > 0
+    ? product.images
+    : [product.image];
+
+  // Primary image for Open Graph
+  const productImage = allImages[0] ? urlFor(allImages[0]).width(1200).height(630).url() : "";
+
+  // All images formatted for schema.org (supports multiple images in search)
+  const schemaImages = allImages
+    .filter(img => img) // Remove null/undefined
+    .map(img => urlFor(img).width(1200).url());
+
   // Use lowest available price across all variants and quantity options for SEO
   const productPrice = getLowestPrice(product).toFixed(2);
 
@@ -82,6 +94,14 @@ export async function generateMetadata({
       "next day delivery packaging",
     ];
 
+  // Format all product images for Open Graph (show multiple images in search)
+  const openGraphImages = schemaImages.slice(0, 4).map((url, index) => ({
+    url,
+    width: 1200,
+    height: 630,
+    alt: `${product.name} - ${index === 0 ? 'Main' : `Image ${index + 1}`}`,
+  }));
+
   return {
     title: seoTitle,
     description: seoDescription,
@@ -92,20 +112,13 @@ export async function generateMetadata({
       description: seoDescription,
       url: productUrl,
       siteName: "Bubble Wrap Shop",
-      images: [
-        {
-          url: productImage,
-          width: 1200,
-          height: 630,
-          alt: `${product.name} - Packaging Supplies UK`,
-        },
-      ],
+      images: openGraphImages,
     },
     twitter: {
       card: "summary_large_image",
       title: seoTitle,
       description: seoDescription,
-      images: [productImage],
+      images: schemaImages.slice(0, 1),
     },
     alternates: {
       canonical: productUrl,
@@ -137,6 +150,15 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
   const siteUrl =
     process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
   const productUrl = `${siteUrl}/products/${slug}`;
+
+  // Format all product images for schema.org
+  const allImages = product.images && product.images.length > 0
+    ? product.images
+    : [product.image];
+  const schemaImages = allImages
+    .filter(img => img)
+    .map(img => urlFor(img).width(1200).url());
+
   // Use lowest available price for schema markup
   const productPrice = getLowestPrice(product).toFixed(2);
   const priceValidUntil = new Date(
@@ -187,7 +209,6 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
         ]),
     ],
   };
-const schemaImage = product.images ? urlFor(product.images[0]).width(1200).url() : "";
   // 2026 Enhanced Product Schema with GTIN, dimensions, LocalBusiness seller
   const productStructuredData = {
     "@context": "https://schema.org",
@@ -198,7 +219,8 @@ const schemaImage = product.images ? urlFor(product.images[0]).width(1200).url()
       product.llmSummary ||
       product.description ||
       `${product.name} - Premium packaging supplies from Blackburn`,
-    image: schemaImage,
+    // Multiple images for rich search results (Google shows carousels)
+    image: schemaImages,
     sku: product.product_code,
     // Google Shopping identifiers
     ...(product.gtin && { gtin: product.gtin }),
