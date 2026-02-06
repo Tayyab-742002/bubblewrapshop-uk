@@ -9,12 +9,13 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8">
           {/* Brand Column - Wider */}
           <div className="lg:col-span-2 space-y-6">
-            <Link href="/" className="inline-block">
+            <Link href="/" className="inline-block" title="Go to Bubble Wrap Shop homepage">
               <Image
                 src="/logo.jpg"
                 alt="Bubble Wrap Shop"
                 width={120}
                 height={40}
+                title="Bubble Wrap Shop Logo"
                 /* Remove 'priority' here - footer images should lazy load */
                 className="h-9 lg:h-11 w-auto aspect-[120/40] object-contain transition-opacity duration-200 group-hover:opacity-80"
               />
@@ -31,6 +32,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="p-2 bg-white rounded-full border border-neutral-200 hover:border-blue-400 hover:bg-blue-50 transition-colors text-neutral-600 hover:text-blue-600"
                 aria-label="Follow us on Facebook"
+                title="Follow us on Facebook"
               >
                 <Facebook className="w-4 h-4" />
               </a>
@@ -40,6 +42,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="p-2 bg-white rounded-full border border-neutral-200 hover:border-pink-400 hover:bg-pink-50 transition-colors text-neutral-600 hover:text-pink-600"
                 aria-label="Follow us on Instagram"
+                title="Follow us on Instagram"
               >
                 <Instagram className="w-4 h-4" />
               </a>
@@ -54,6 +57,7 @@ export function Footer() {
                 <Link
                   href="/products"
                   className="hover:text-neutral-900 transition-colors"
+                  title="Browse all Products"
                 >
                   All Products
                 </Link>
@@ -62,6 +66,7 @@ export function Footer() {
                 <Link
                   href="/categories"
                   className="hover:text-neutral-900 transition-colors"
+                  title="Browse our Packaging Categories"
                 >
                   Categories
                 </Link>
@@ -70,6 +75,7 @@ export function Footer() {
                 <Link
                   href="/guides"
                   className="hover:text-neutral-900 transition-colors"
+                  title="Browse our Buying Guides"
                 >
                   Buying Guides
                 </Link>
@@ -78,8 +84,9 @@ export function Footer() {
                 <Link
                   href="/blogs"
                   className="hover:text-neutral-900 transition-colors"
+                  title="Read our Blog"
                 >
-                  Blog
+                  Blogs
                 </Link>
               </li>
             </ul>
@@ -93,6 +100,7 @@ export function Footer() {
                 <Link
                   href="/faq"
                   className="hover:text-neutral-900 transition-colors"
+                  title="Visit our Help Center"
                 >
                   Help Center
                 </Link>
@@ -101,6 +109,7 @@ export function Footer() {
                 <Link
                   href="/contact"
                   className="hover:text-neutral-900 transition-colors"
+                  title="Contact Bubble Wrap Shop"
                 >
                   Contact Us
                 </Link>
@@ -109,6 +118,7 @@ export function Footer() {
                 <Link
                   href="/refund-policy"
                   className="hover:text-neutral-900 transition-colors"
+                  title="Read our Returns Policy"
                 >
                   Returns Policy
                 </Link>
@@ -117,6 +127,7 @@ export function Footer() {
                 <Link
                   href="/wholesale"
                   className="hover:text-neutral-900 transition-colors"
+                  title="Learn about our Wholesale options"
                 >
                   Wholesale
                 </Link>
@@ -141,6 +152,7 @@ export function Footer() {
                 <a
                   href="tel:+447728342335"
                   className="hover:text-neutral-900 transition-colors"
+                  title="Call Bubble Wrap Shop"
                 >
                   07728 342335
                 </a>
@@ -150,6 +162,7 @@ export function Footer() {
                 <a
                   href="mailto:sales@bubblewrapshop.co.uk"
                   className="hover:text-neutral-900 transition-colors"
+                  title="Email Bubble Wrap Shop"
                 >
                   Email Us
                 </a>
@@ -164,24 +177,28 @@ export function Footer() {
             <Link
               href="/about"
               className="hover:text-neutral-900 transition-colors"
+              title="Learn more about Bubble Wrap Shop"
             >
               About Us
             </Link>
             <Link
               href="/sustainability"
               className="hover:text-neutral-900 transition-colors"
+              title="Read about our Sustainability efforts"
             >
               Sustainability
             </Link>
             <Link
               href="/terms"
               className="hover:text-neutral-900 transition-colors"
+              title="Read our Terms of Service"
             >
               Terms of Service
             </Link>
             <Link
               href="/privacy"
               className="hover:text-neutral-900 transition-colors"
+              title="Read our Privacy Policy"
             >
               Privacy Policy
             </Link>

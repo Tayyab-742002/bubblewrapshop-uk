@@ -48,7 +48,7 @@ export async function NewArrivals() {
         {/* Mobile View All Button */}
         <div className="mt-10 text-center md:hidden">
           <Button asChild variant="outline" className="rounded-full w-full sm:w-auto">
-            <Link href="/products?sort=newest">
+            <Link href="/products?sort=newest" title="View All New Arrivals">
               View All New Arrivals
             </Link>
           </Button>

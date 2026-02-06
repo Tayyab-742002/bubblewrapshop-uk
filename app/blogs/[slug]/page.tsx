@@ -18,6 +18,7 @@ import {
   getRelatedBlogPosts,
   getBlogPostSlugs,
 } from "@/sanity/lib";
+import { getLowestPrice } from "@/lib/helpers/get-lowest-price";
 import {
   getCategoryLabel,
   formatReadTime,
@@ -596,24 +597,24 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     sanityRelatedPosts && sanityRelatedPosts.length > 0
       ? sanityRelatedPosts
       : Object.entries(staticBlogPosts)
-          .filter(
-            ([s, p]) =>
-              s !== slug &&
-              p.category.toLowerCase().replace(/ /g, "-") === post!.category
-          )
-          .slice(0, 2)
-          .map(([s, p]) => ({
-            id: s,
-            title: p.title,
-            slug: p.slug,
-            excerpt: p.excerpt,
-            featuredImage: p.featuredImage,
-            featuredImageAlt: `${p.title} - packaging blog article`,
-            category: p.category.toLowerCase().replace(/ /g, "-"),
-            publishedAt: p.publishedAt,
-            readTime: parseInt(p.readTime) || 5,
-            author: p.author,
-          }));
+        .filter(
+          ([s, p]) =>
+            s !== slug &&
+            p.category.toLowerCase().replace(/ /g, "-") === post!.category
+        )
+        .slice(0, 2)
+        .map(([s, p]) => ({
+          id: s,
+          title: p.title,
+          slug: p.slug,
+          excerpt: p.excerpt,
+          featuredImage: p.featuredImage,
+          featuredImageAlt: `${p.title} - packaging blog article`,
+          category: p.category.toLowerCase().replace(/ /g, "-"),
+          publishedAt: p.publishedAt,
+          readTime: parseInt(p.readTime) || 5,
+          author: p.author,
+        }));
 
   // Article structured data
   const articleStructuredData = {
@@ -642,17 +643,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // FAQ structured data (if FAQs exist)
   const faqStructuredData = post.faqs?.length
     ? {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        mainEntity: post.faqs.map((faq) => ({
-          "@type": "Question",
-          name: faq.question,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: faq.answer,
-          },
-        })),
-      }
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: post.faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.answer,
+        },
+      })),
+    }
     : null;
 
   return (
@@ -720,6 +721,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     src={post.authorImage}
                     alt={post.author}
                     width={32}
+                    title={post.author}
                     height={32}
                     className="rounded-full"
                   />
@@ -756,6 +758,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               src={post.featuredImage}
               alt={post.featuredImageAlt}
               fill
+              title={post.title}
               className="object-cover"
               priority
               sizes="(max-width: 896px) 100vw, 896px"
@@ -829,6 +832,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                           src={product.image}
                           alt={product.name}
                           fill
+                          title={product.name}
                           className="object-contain"
                         />
                       </div>
@@ -838,7 +842,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                         {product.name}
                       </h3>
                       <p className="text-sm text-emerald-600 font-semibold">
-                        From £{product.basePrice.toFixed(2)}
+                        From £{getLowestPrice(product as any).toFixed(2)}
                       </p>
                     </div>
                   </Link>
@@ -908,6 +912,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                         src={relatedPost.featuredImage}
                         alt={relatedPost.featuredImageAlt}
                         fill
+                        title={relatedPost.title}
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                         sizes="(max-width: 768px) 100vw, 50vw"
                       />

@@ -158,6 +158,7 @@ export function ContentCarousel({
                     src={item.featuredImage || "/images/placeholder.jpg"}
                     alt={item.title}
                     fill
+                    title={item.title}
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                     sizes="300px"
                   />

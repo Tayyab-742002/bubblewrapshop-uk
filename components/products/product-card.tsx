@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/types/product";
 import { Plus } from "lucide-react";
+import { getLowestPrice } from "@/lib/helpers/get-lowest-price";
 
 interface ProductCardProps {
   product: Product;
@@ -9,7 +10,10 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const hasVariants = product.variants && product.variants.length > 1;
-  const shouldShowPrice = product.basePrice !== 0;
+  const lowestPrice = getLowestPrice(product);
+  const shouldShowPrice = lowestPrice > 0;
+  // Show 'From' prefix if product has variants or quantity options
+  const hasMultiplePriceOptions = product.variants && product.variants.length > 0;
 
   return (
     <Link
@@ -52,13 +56,18 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <div className="flex items-center gap-2">
           {shouldShowPrice ? (
-            <div className="flex items-baseline gap-2">
-              <span className="text-sm font-semibold text-foreground">
-                £{product.basePrice.toFixed(2)}
-              </span>
+            <div className="flex flex-col gap-0.5">
+              <div className="flex items-baseline gap-1.5">
+                {hasMultiplePriceOptions && (
+                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">From</span>
+                )}
+                <span className="text-xl font-bold text-emerald-600 tracking-tight">
+                  £{lowestPrice.toFixed(2)}
+                </span>
+              </div>
               {Number(product.discount) > 0 && (
-                <span className="text-xs text-muted-foreground line-through decoration-destructive/30">
-                  £{((product.basePrice * 100) / (100 - Number(product.discount))).toFixed(2)}
+                <span className="text-xs text-muted-foreground line-through">
+                  £{((lowestPrice * 100) / (100 - Number(product.discount))).toFixed(2)}
                 </span>
               )}
             </div>

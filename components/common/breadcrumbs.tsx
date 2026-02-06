@@ -70,6 +70,7 @@ export function Breadcrumbs({ items, variant = "default" }: BreadcrumbsProps) {
         aria-label="Home"
         href="/"
         className={`flex items-center ${textColor} transition-colors ${hoverColor}`}
+        title="Return to Homepage"
       >
         <Home className="h-4 w-4" strokeWidth={1.5} />
       </Link>
@@ -80,6 +81,7 @@ export function Breadcrumbs({ items, variant = "default" }: BreadcrumbsProps) {
             <Link
               href={item.href}
               className={`label-luxury ${textColor} transition-colors ${hoverColor}`}
+              title={`Return to ${item.label}`}
             >
               {item.label}
             </Link>

@@ -57,6 +57,7 @@ export function SustainabilityBlock() {
               <Link
                 href="/sustainability"
                 className="group inline-flex items-center gap-2 text-white font-medium hover:text-emerald-200 transition-colors"
+                title="Learn more about our sustainability initiatives"
               >
                 View Impact Report
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

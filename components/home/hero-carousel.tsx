@@ -158,6 +158,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
               <video
                 ref={(el) => { videoRefs.current[index] = el; }}
                 autoPlay={isActive}
+                title={banner.title || "Hero Banner Video"}
                 loop
                 muted
                 playsInline
@@ -171,10 +172,11 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                 src={banner.image}
                 alt={banner.alt || banner.title || "Banner"}
                 fill
+                title="Banner Image"
                 className="object-cover md:object-center"
                 priority={index === 0}
                 quality={95}
-                sizes="100vw"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1600px"
                 unoptimized={banner.image.includes('.gif')}
               />
             ) : (
@@ -203,6 +205,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
               <Link
                 href={banner.ctaLink || "/products"}
                 className="inline-block bg-red-600 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-md font-semibold text-sm sm:text-base hover:bg-red-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 mb-10 sm:mb-12"
+                title={banner.ctaText || "Shop Now"}
               >
                 {banner.ctaText || "Shop Now"}
               </Link>
@@ -227,6 +230,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
             className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 sm:p-3 transition-all opacity-0 hover:opacity-100 focus:opacity-100 group-hover:opacity-100"
             aria-label="Next slide"
             style={{ opacity: 0.7 }}
+            title="Next Slide"
           >
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </button>
@@ -248,6 +252,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
               )}
               aria-label={`Go to slide ${index + 1}`}
               aria-current={index === currentSlide ? "true" : "false"}
+              title="Go to Slide"
             />
           ))}
         </div>

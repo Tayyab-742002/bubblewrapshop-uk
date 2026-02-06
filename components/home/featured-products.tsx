@@ -22,7 +22,7 @@ export async function FeaturedProducts() {
           </div>
 
           <Button asChild variant="ghost" className="hidden sm:inline-flex items-center gap-2 text-foreground hover:text-primary hover:bg-transparent px-0 group">
-            <Link href="/products" className="text-sm font-medium border-b border-transparent hover:border-primary pb-0.5 transition-all">
+            <Link href="/products" className="text-sm font-medium border-b border-transparent hover:border-primary pb-0.5 transition-all" title="View All Products">
               View All
               <ArrowRight className="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
@@ -66,7 +66,7 @@ export async function FeaturedProducts() {
         {/* Mobile View All */}
         <div className="mt-8 text-center sm:hidden">
           <Button asChild variant="outline" className="w-full">
-            <Link href="/products">
+            <Link href="/products" title="View All Products">
               View All Products
             </Link>
           </Button>

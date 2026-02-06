@@ -197,6 +197,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
               <a
                 href="tel:+447728342335"
                 className="flex items-center gap-2 hover:text-emerald-400 transition-colors"
+                title="Call us now"
               >
                 <Phone className="h-3.5 w-3.5" />
                 <span>07728 342335</span>
@@ -211,18 +212,21 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
               <Link
                 href="/wholesale"
                 className="hover:text-emerald-400 transition-colors"
+                title="Learn about our Wholesale options"
               >
                 Wholesale
               </Link>
               <Link
                 href="/b2b-request"
                 className="hover:text-emerald-400 transition-colors"
+                title="Request a B2B account"
               >
                 B2B Enquiries
               </Link>
               <Link
                 href="/contact"
                 className="hover:text-emerald-400 transition-colors"
+                title="Contact Us"
               >
                 Contact Us
               </Link>
@@ -243,6 +247,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 width={120} // Intrinsic width
                 height={40} // Intrinsic height
                 priority
+                title="Bubble Wrap Shop Logo"
                 // Added: aspect-[120/40] so the browser knows the ratio immediately
                 className="h-9 lg:h-11 w-auto aspect-[120/40] object-contain transition-opacity duration-200 group-hover:opacity-80"
               />
@@ -268,6 +273,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                       }`}
                       aria-haspopup="true"
                       aria-expanded={isMegaMenuOpen}
+                      title="Shop our Products"
                     >
                       Shop
                       <ChevronDown
@@ -288,6 +294,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         ? "text-emerald-700 bg-emerald-50"
                         : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
                     }`}
+                    title="Browse our Packaging Categories"
                   >
                     Categories
                   </Link>
@@ -301,6 +308,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         ? "text-emerald-700 bg-emerald-50"
                         : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
                     }`}
+                    title="Browse our Buying Guides"
                   >
                     Guides
                   </Link>
@@ -314,6 +322,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         ? "text-emerald-700 bg-emerald-50"
                         : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
                     }`}
+                    title="Read our Blog"
                   >
                     Blog
                   </Link>
@@ -327,6 +336,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         ? "text-emerald-700 bg-emerald-50"
                         : "text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50"
                     }`}
+                    title="Learn more about Bubble Wrap Shop" 
                   >
                     About
                   </Link>
@@ -386,6 +396,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                           <Link
                             href="/admin"
                             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 transition-all font-medium mb-1"
+                            title="Go to Admin Dashboard"
                           >
                             <ShieldCheck className="h-4 w-4" />
                             Admin Dashboard
@@ -394,6 +405,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         <Link
                           href="/account"
                           className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                          title="Go to My Account"
                         >
                           <Settings className="h-4 w-4 text-neutral-400" />
                           My Account
@@ -401,6 +413,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         <Link
                           href="/account?tab=orders"
                           className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                          title="View your Orders"
                         >
                           <Package className="h-4 w-4 text-neutral-400" />
                           Orders
@@ -408,6 +421,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         <Link
                           href="/account?tab=addresses"
                           className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                          title="Manage your Addresses"
                         >
                           <MapPin className="h-4 w-4 text-neutral-400" />
                           Addresses
@@ -429,6 +443,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 <Link
                   href="/auth/login"
                   className="hidden lg:flex items-center gap-2 px-4 py-2 text-sm font-medium text-neutral-700 hover:text-emerald-700 hover:bg-neutral-50 rounded-lg transition-all duration-200"
+                  title="Sign in to your account"
                 >
                   <User className="h-4 w-4" strokeWidth={1.5} />
                   Sign In
@@ -488,6 +503,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                     href="/categories"
                     onClick={() => setIsMegaMenuOpen(false)}
                     className="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors flex items-center gap-1"
+                    title="Browse all Categories"
                   >
                     View All
                     <ChevronRight className="h-4 w-4" />
@@ -498,6 +514,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                     <Link
                       key={category.id}
                       href={`/categories/${category.slug}`}
+                      title={category.name}
                       onClick={() => setIsMegaMenuOpen(false)}
                       className="group flex items-center gap-3 p-3 rounded-xl border border-neutral-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-all duration-200"
                     >
@@ -506,6 +523,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                           <Image
                             src={category.image}
                             alt={category.name}
+                            title={category.name}
                             fill
                             className="object-cover group-hover:scale-110 transition-transform duration-300"
                             sizes="48px"
@@ -543,6 +561,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                       href="/products"
                       onClick={() => setIsMegaMenuOpen(false)}
                       className="flex items-center gap-3 p-2.5 rounded-lg text-neutral-700 hover:text-emerald-700 hover:bg-emerald-50/50 transition-all duration-200"
+                      title="Browse All Products"
                     >
                       <Package className="h-4 w-4 text-neutral-400" />
                       <span className="text-sm font-medium">All Products</span>
@@ -551,6 +570,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                       <Link
                         key={link.name}
                         href={link.href}
+                        title={link.name}
                         onClick={() => setIsMegaMenuOpen(false)}
                         className="flex items-center gap-3 p-2.5 rounded-lg text-neutral-700 hover:text-emerald-700 hover:bg-emerald-50/50 transition-all duration-200"
                       >
@@ -573,6 +593,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         href={link.href}
                         onClick={() => setIsMegaMenuOpen(false)}
                         className="flex items-center gap-3 p-2.5 rounded-lg text-neutral-700 hover:text-emerald-700 hover:bg-emerald-50/50 transition-all duration-200"
+                        title={link.name}
                       >
                         <link.icon className="h-4 w-4 text-neutral-400" />
                         <span className="text-sm font-medium">{link.name}</span>
@@ -603,6 +624,8 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                   href="/wholesale"
                   onClick={() => setIsMegaMenuOpen(false)}
                   className="px-5 py-2.5 bg-white text-emerald-700 font-semibold rounded-lg hover:bg-emerald-50 transition-colors text-sm"
+                  
+                  title="Get Wholesale Prices"
                 >
                   Get Wholesale Prices
                 </Link>
@@ -635,10 +658,11 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
           <div className="flex flex-col h-full">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-neutral-100">
-              <Link href="/" onClick={closeMobileMenu}>
+              <Link href="/" onClick={closeMobileMenu} title="Return to Homepage">
                 <Image
                   src="/logo.jpg"
                   alt="Bubble Wrap Shop"
+                  title="Bubble Wrap Shop Logo"
                   width={100}
                   height={32}
                   className="h-8 w-auto"
@@ -695,6 +719,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                   href="/auth/login"
                   onClick={closeMobileMenu}
                   className="flex items-center justify-center gap-2 w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-colors"
+                  title="Sign in to your account"
                 >
                   <User className="h-5 w-5" />
                   Sign In
@@ -715,6 +740,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                     href="/products"
                     onClick={closeMobileMenu}
                     className="flex items-center justify-between p-3 rounded-xl text-neutral-900 hover:bg-neutral-50 transition-colors"
+                    title="Shop all Products"
                   >
                     <span className="font-medium">Shop All Products</span>
                     <ChevronRight className="h-5 w-5 text-neutral-400" />
@@ -725,6 +751,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                     href="/categories"
                     onClick={closeMobileMenu}
                     className="flex items-center justify-between p-3 rounded-xl text-neutral-900 hover:bg-neutral-50 transition-colors"
+                    title="Browse all Categories"
                   >
                     <span className="font-medium">Categories</span>
                     <ChevronRight className="h-5 w-5 text-neutral-400" />
@@ -744,11 +771,13 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         href={`/categories/${category.slug}`}
                         onClick={closeMobileMenu}
                         className="flex items-center gap-2 p-3 rounded-xl border border-neutral-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-colors"
+                        title={`View products in the ${category.name} category`}
                       >
                         {category.image ? (
                           <Image
                             src={category.image}
                             alt={category.name}
+                            title={category.name}
                             width={32}
                             height={32}
                             className="rounded-lg object-cover"
@@ -778,6 +807,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                       href="/wholesale"
                       onClick={closeMobileMenu}
                       className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                      title="Explore our wholesale options"
                     >
                       <Building2 className="h-5 w-5 text-neutral-400" />
                       <span className="font-medium">Wholesale</span>
@@ -788,6 +818,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                       href="/b2b-request"
                       onClick={closeMobileMenu}
                       className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                      title="Submit a B2B enquiry"
                     >
                       <FileText className="h-5 w-5 text-neutral-400" />
                       <span className="font-medium">B2B Request</span>
@@ -808,6 +839,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         href={link.href}
                         onClick={closeMobileMenu}
                         className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                        title={`Go to ${link.name}`}
                       >
                         <link.icon className="h-5 w-5 text-neutral-400" />
                         <span className="font-medium">{link.name}</span>
@@ -828,6 +860,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                       href="/about"
                       onClick={closeMobileMenu}
                       className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                      title="Learn more about us"
                     >
                       <span className="font-medium">About Us</span>
                     </Link>
@@ -837,6 +870,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                       href="/sustainability"
                       onClick={closeMobileMenu}
                       className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                      title="Read about our sustainability efforts"
                     >
                       <span className="font-medium">Sustainability</span>
                     </Link>
@@ -846,6 +880,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                       href="/contact"
                       onClick={closeMobileMenu}
                       className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                      title="Get in touch with us"
                     >
                       <span className="font-medium">Contact</span>
                     </Link>
@@ -855,6 +890,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                       href="/faq"
                       onClick={closeMobileMenu}
                       className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                      title="Frequently Asked Questions"
                     >
                       <span className="font-medium">FAQ</span>
                     </Link>
@@ -875,6 +911,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                           href="/admin"
                           onClick={closeMobileMenu}
                           className="flex items-center gap-3 p-3 rounded-xl text-white bg-gradient-to-r from-violet-600 to-indigo-600 transition-colors"
+                          title="Go to Admin Dashboard"
                         >
                           <ShieldCheck className="h-5 w-5" />
                           <span className="font-semibold">Admin Dashboard</span>
@@ -886,6 +923,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         href="/account"
                         onClick={closeMobileMenu}
                         className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                        title="View your account details"
                       >
                         <Settings className="h-5 w-5 text-neutral-400" />
                         <span className="font-medium">My Account</span>
@@ -896,6 +934,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         href="/account?tab=orders"
                         onClick={closeMobileMenu}
                         className="flex items-center gap-3 p-3 rounded-xl text-neutral-700 hover:bg-neutral-50 transition-colors"
+                        title="View your orders"
                       >
                         <Package className="h-5 w-5 text-neutral-400" />
                         <span className="font-medium">Orders</span>

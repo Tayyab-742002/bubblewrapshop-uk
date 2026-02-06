@@ -13,6 +13,7 @@ import {
 } from "@/services/products/product.service";
 import { getProductSlugs } from "@/sanity/lib/api";
 import { notFound } from "next/navigation";
+import { getLowestPrice } from "@/lib/helpers/get-lowest-price";
 
 // PERFORMANCE: Code split ProductGallery (heavy image component)
 const ProductGallery = dynamic(
@@ -52,7 +53,8 @@ export async function generateMetadata({
     process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
   const productUrl = `${siteUrl}/products/${slug}`;
   const productImage = product.images?.[0] || product.image;
-  const productPrice = product.basePrice.toFixed(2);
+  // Use lowest available price across all variants and quantity options for SEO
+  const productPrice = getLowestPrice(product).toFixed(2);
 
   // 2026 SEO: Use LLM summary for AI Overviews, custom SEO fields, or generate optimized defaults
   const seoTitle =
@@ -68,15 +70,15 @@ export async function generateMetadata({
   const productKeywords = product.seoKeywords?.length
     ? product.seoKeywords
     : [
-        product.name,
-        `${product.name} UK`,
-        `buy ${product.name?.toLowerCase()} online`,
-        product.category || "packaging",
-        `${product.category || "packaging"} Blackburn`,
-        "packaging supplies UK",
-        "wholesale packaging",
-        "next day delivery packaging",
-      ];
+      product.name,
+      `${product.name} UK`,
+      `buy ${product.name?.toLowerCase()} online`,
+      product.category || "packaging",
+      `${product.category || "packaging"} Blackburn`,
+      "packaging supplies UK",
+      "wholesale packaging",
+      "next day delivery packaging",
+    ];
 
   return {
     title: seoTitle,
@@ -133,7 +135,8 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
   const siteUrl =
     process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
   const productUrl = `${siteUrl}/products/${slug}`;
-  const productPrice = product.basePrice.toFixed(2);
+  // Use lowest available price for schema markup
+  const productPrice = getLowestPrice(product).toFixed(2);
   const priceValidUntil = new Date(
     new Date().getTime() + 365 * 24 * 60 * 60 * 1000
   )
@@ -159,27 +162,27 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
       },
       ...(product.category && product.categorySlug
         ? [
-            {
-              "@type": "ListItem",
-              position: 3,
-              name: product.category,
-              item: `${siteUrl}/categories/${product.categorySlug}`,
-            },
-            {
-              "@type": "ListItem",
-              position: 4,
-              name: product.name,
-              item: productUrl,
-            },
-          ]
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: product.category,
+            item: `${siteUrl}/categories/${product.categorySlug}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 4,
+            name: product.name,
+            item: productUrl,
+          },
+        ]
         : [
-            {
-              "@type": "ListItem",
-              position: 3,
-              name: product.name,
-              item: productUrl,
-            },
-          ]),
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: product.name,
+            item: productUrl,
+          },
+        ]),
     ],
   };
 
@@ -213,24 +216,24 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
     ...(product.dimensions && {
       depth: product.dimensions.length
         ? {
-            "@type": "QuantitativeValue",
-            value: product.dimensions.length,
-            unitCode: "CMT",
-          }
+          "@type": "QuantitativeValue",
+          value: product.dimensions.length,
+          unitCode: "CMT",
+        }
         : undefined,
       width: product.dimensions.width
         ? {
-            "@type": "QuantitativeValue",
-            value: product.dimensions.width,
-            unitCode: "CMT",
-          }
+          "@type": "QuantitativeValue",
+          value: product.dimensions.width,
+          unitCode: "CMT",
+        }
         : undefined,
       height: product.dimensions.height
         ? {
-            "@type": "QuantitativeValue",
-            value: product.dimensions.height,
-            unitCode: "CMT",
-          }
+          "@type": "QuantitativeValue",
+          value: product.dimensions.height,
+          unitCode: "CMT",
+        }
         : undefined,
     }),
     // 2026: Material description for AI understanding ("squeeze test")
@@ -298,17 +301,17 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
   const faqStructuredData =
     product.faqs && product.faqs.length > 0
       ? {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: product.faqs.map((faq) => ({
-            "@type": "Question",
-            name: faq.question,
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: faq.answer,
-            },
-          })),
-        }
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: product.faqs.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faq.answer,
+          },
+        })),
+      }
       : null;
 
   // Breadcrumb items

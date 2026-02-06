@@ -29,6 +29,8 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
           <Link
             href="/categories"
             className="hidden md:inline-flex items-center gap-2 bg-white text-emerald-700 font-semibold px-4 py-2 rounded-full hover:bg-emerald-50 transition-colors shadow-md shrink-0"
+            aria-label="View All Categories"
+            title="View All Categories"
           >
             <Package className="w-4 h-4" />
             <span className="text-sm">View All Categories</span>
@@ -61,6 +63,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
                 <Link
                   key={`${category.id}-${index}`}
                   href={`/categories/${category.slug}`}
+                  title={`Browse ${category.name}`}
                   className="group flex items-center gap-2.5 bg-white/10 hover:bg-white text-white hover:text-teal-700 px-1.5 pl-1.5 pr-4 py-1.5 rounded-full transition-all duration-300 ease-out border border-white/10 hover:border-white hover:shadow-lg active:scale-95 shrink-0"
                 >
                   {/* Tiny Thumbnail */}
@@ -68,6 +71,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
                     {category.image ? (
                       <Image
                         src={category.image}
+                        title={`Category Image: ${category.name}`}
                         alt=""
                         fill
                         className="object-cover"
@@ -94,6 +98,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
             href="/categories"
             className="md:hidden inline-flex items-center justify-center bg-white text-emerald-700 p-2 rounded-full hover:bg-emerald-50 transition-colors shadow-md shrink-0"
             aria-label="View All Categories"
+            title="View All Categories"
           >
             <ArrowRight className="w-4 h-4" />
           </Link>

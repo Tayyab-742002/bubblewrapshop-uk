@@ -6,15 +6,15 @@ import { Breadcrumbs, ContentCarousel } from "@/components/common";
 import { Category } from "@/types/category";
 import { ChevronRight, Truck, BadgePercent, Package, MapPin } from "lucide-react";
 
-export const revalidate = false;
+export const revalidate = 3600;
 
 const siteUrl = "https://www.bubblewrapshop.co.uk";
 
 // 2026 SEO: Include Blackburn location, transactional intent, and trust signals
 export const metadata: Metadata = {
-  title: "Packaging Categories UK | Buy from Blackburn | Bubble Wrap Shop",
+  title: "Packaging Categories Blackburn: BubbleWrapShop",
   description:
-    "Browse all packaging supply categories from our Blackburn warehouse. Bubble wrap, mailing bags, boxes, tape & more. Wholesale pricing, next-day UK delivery. Family-run since 2015.",
+    "Browse all packaging supply categories from our Blackburn warehouse. Bubble wrap, mailing bags, boxes, tape & more. Wholesale pricing, next-day UK delivery.",
   keywords: [
     "packaging categories UK",
     "packaging supplies Blackburn",
@@ -107,6 +107,8 @@ export default async function CategoriesPage() {
     provider: {
       "@type": "LocalBusiness",
       name: "Bubble Wrap Shop",
+      image: `${siteUrl}/logo.jpg`,
+      priceRange: "£",
       url: siteUrl,
       telephone: "+44-7728-342335",
       address: {
@@ -188,11 +190,12 @@ export default async function CategoriesPage() {
         {/* Categories Grid */}
         {categories && categories.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {categories.map((category: Category) => (
+            {categories.map((category: Category, index: number) => (
               <Link
                 key={category.id}
                 href={`/categories/${category.slug}`}
                 className="group relative overflow-hidden rounded-2xl bg-card border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
+                title={`Browse ${category.name}`}
               >
                 {/* Category Image */}
                 <div className="aspect-[4/3] relative overflow-hidden bg-secondary/50">
@@ -201,6 +204,8 @@ export default async function CategoriesPage() {
                       src={category.image}
                       alt={category.imageAlt || category.name}
                       fill
+                      priority={index < 6}
+                      title={category.name}
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />

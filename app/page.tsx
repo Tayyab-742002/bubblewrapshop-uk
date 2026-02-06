@@ -16,7 +16,7 @@ import { getAllCategories, getAllBlogPosts, getAllGuides } from "@/sanity/lib";
 // Revalidation strategy: On-demand revalidation via Sanity webhooks
 // Pages will only revalidate when content changes in Sanity CMS
 // For development, use `npm run dev` which has hot reloading
-export const revalidate = false;
+export const revalidate = 3600;
 
 // Hardcoded to ensure consistency across all pages
 const siteUrl = "https://www.bubblewrapshop.co.uk";

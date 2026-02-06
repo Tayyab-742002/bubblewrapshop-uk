@@ -160,6 +160,13 @@ const PRODUCT_LISTING_QUERY = `
     sku,
     priceAdjustment,
     isActive,
+    quantityOptions[] {
+      label,
+      quantity,
+      unit,
+      pricePerUnit,
+      isActive
+    },
     pricingTiers[] {
       minQuantity,
       maxQuantity,

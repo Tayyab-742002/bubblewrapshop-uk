@@ -24,8 +24,8 @@ import {
   Tag,
 } from "lucide-react";
 import { CategoryPixelTracker } from "@/components/meta/CategoryPixelTracker";
+import { getLowestPrice } from "@/lib/helpers/get-lowest-price";
 
-export const revalidate = false;
 
 const siteUrl = "https://www.bubblewrapshop.co.uk";
 
@@ -153,7 +153,7 @@ export default async function CategoryPage({
         latitude: "53.7488",
         longitude: "-2.4883",
       },
-      priceRange: "££",
+      priceRange: "£",
     },
     mainEntity: {
       "@type": "ItemList",
@@ -170,7 +170,8 @@ export default async function CategoryPage({
             offers: {
               "@type": "Offer",
               priceCurrency: "GBP",
-              price: product.basePrice,
+              // Use lowest price across variants for accurate SEO
+              price: getLowestPrice(product as any),
               availability: "https://schema.org/InStock",
             },
           },
@@ -360,6 +361,7 @@ export default async function CategoryPage({
                       src={category.image}
                       alt={category.imageAlt || category.name}
                       fill
+                      title={category.name}
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 400px"
                       priority
@@ -402,6 +404,7 @@ export default async function CategoryPage({
           <Link
             href="/products"
             className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
+            title="View all products in our shop"
           >
             View All Products
             <ArrowRight className="w-4 h-4" />
@@ -419,6 +422,7 @@ export default async function CategoryPage({
             <Link
               href="/products"
               className="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700 font-medium"
+              title="Browse all products in our shop"
             >
               Browse all products
               <ChevronRight className="w-4 h-4" />
@@ -587,6 +591,7 @@ export default async function CategoryPage({
               <Link
                 href="/categories"
                 className="hidden md:inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700 font-medium transition-colors shrink-0"
+                title="View all product categories"
               >
                 View All Categories
                 <ArrowRight className="w-4 h-4" />
@@ -599,12 +604,14 @@ export default async function CategoryPage({
                   key={cat.id}
                   href={`/categories/${cat.slug}`}
                   className="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-secondary border border-border hover:border-emerald-300 transition-all hover:shadow-lg"
+                  title={`Browse ${cat.name} category`}
                 >
                   {cat.image ? (
                     <Image
                       src={cat.image}
                       alt={cat.imageAlt || cat.name}
                       fill
+                      title={cat.name}
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                       sizes="(max-width: 768px) 50vw, 25vw"
                     />
@@ -630,6 +637,7 @@ export default async function CategoryPage({
               <Link
                 href="/categories"
                 className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-all shadow-lg hover:shadow-xl text-sm sm:text-base"
+                title="View all product categories"
               >
                 <Package className="w-4 h-4 sm:w-5 sm:h-5" />
                 View All Categories
@@ -659,6 +667,7 @@ export default async function CategoryPage({
             <Link
               href="/b2b-request"
               className="inline-flex items-center justify-center gap-2 bg-white text-emerald-600 font-semibold px-8 py-3.5 rounded-xl hover:bg-emerald-50 transition-colors shadow-lg"
+              title="Request a trade quote for bulk orders"
             >
               Request Trade Quote
               <ArrowRight className="w-5 h-5" />
@@ -666,6 +675,7 @@ export default async function CategoryPage({
             <Link
               href="/contact"
               className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm text-white font-semibold px-8 py-3.5 rounded-xl hover:bg-white/20 transition-colors border border-white/20"
+              title="Contact our team for bulk order inquiries"
             >
               <Phone className="w-5 h-5" />
               Contact Us

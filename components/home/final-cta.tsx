@@ -23,11 +23,11 @@ export function FinalCTA() {
 
             <p className="text-sm md:text-base text-primary-foreground/50">
               Not sure where to start? Browse our{" "}
-              <Link href="/blog" className="underline underline-offset-4 hover:text-white transition-colors">
+              <Link href="/blog" className="underline underline-offset-4 hover:text-white transition-colors" title="Read our packaging buying guides">
                 buying guides
               </Link>{" "}
               and{" "}
-              <Link href="/guides" className="underline underline-offset-4 hover:text-white transition-colors">
+              <Link href="/guides" className="underline underline-offset-4 hover:text-white transition-colors" title="Browse our packaging resources">
                 packaging resources
               </Link>{" "}
               to find the perfect fit.
@@ -36,7 +36,7 @@ export function FinalCTA() {
 
           {/* Action Button */}
           <Button asChild size="lg" className="h-14 px-8 text-base rounded-full bg-background text-foreground hover:bg-background/90 hover:scale-105 transition-all duration-300">
-            <Link href="/products" className="flex items-center gap-2">
+            <Link href="/products" className="flex items-center gap-2" title="Explore our full product catalog">
               Explore Catalog
               <ArrowRight className="w-5 h-5 ml-1" />
             </Link>

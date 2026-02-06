@@ -200,32 +200,42 @@ export function QuantityPriceSelector({
         </div>
       )}
 
-      {/* Dynamic Price Display */}
-      <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-secondary/40 border border-border">
-        <div className="flex flex-col">
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-lg font-semibold text-foreground">
-              £{pricePerUnit.toFixed(2)}
-            </span>
-            <span className="text-xs text-muted-foreground">/unit</span>
+      {/* Dynamic Price Display - Minimalistic */}
+      <div className="flex flex-col gap-4 py-5 px-5 rounded-lg bg-white border border-border">
+        {/* Total Price */}
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Total</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-5xl font-bold text-foreground tracking-tight">
+                £{totalPrice.toFixed(2)}
+              </span>
+              {quantity > 1 && (
+                <span className="text-sm text-muted-foreground">
+                  {quantity} units
+                </span>
+              )}
+            </div>
           </div>
-          {quantity > 1 && (
-            <span className="text-xs text-muted-foreground">
-              Total: <span className="font-medium text-foreground">£{totalPrice.toFixed(2)}</span>
-            </span>
-          )}
+          <div className="flex flex-col items-end gap-1.5">
+            {activeTier?.label && (
+              <span className="text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded">
+                {activeTier.label}
+              </span>
+            )}
+            {savings > 0 && (
+              <span className="text-sm font-semibold text-primary">
+                -£{savings.toFixed(2)}
+              </span>
+            )}
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          {activeTier?.label && (
-            <span className="text-[10px] font-medium text-primary-foreground bg-primary px-2 py-1 rounded">
-              {activeTier.label}
-            </span>
-          )}
-          {savings > 0 && (
-            <span className="text-xs font-medium text-primary">
-              Save £{savings.toFixed(2)}
-            </span>
-          )}
+
+        {/* Per Unit Price */}
+        <div className="pt-3 border-t border-border">
+          <span className="text-base text-muted-foreground">
+            £{pricePerUnit.toFixed(2)} <span className="text-sm">/unit</span>
+          </span>
         </div>
       </div>
     </div>

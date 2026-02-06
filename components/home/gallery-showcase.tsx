@@ -99,6 +99,7 @@ export function GalleryShowcase() {
                                 <Image
                                     src={item.src}
                                     alt={item.alt}
+                                    title={item.title}
                                     fill
                                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                                     sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
@@ -153,6 +154,7 @@ export function GalleryShowcase() {
                                     <Image
                                         src={selectedItem.src}
                                         alt={selectedItem.alt}
+                                        title="Selected Gallery Item"
                                         width={1200}
                                         height={800}
                                         className="w-full h-auto rounded-lg object-contain"

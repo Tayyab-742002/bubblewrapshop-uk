@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { WebsiteLayoutWrapper } from "@/components/common/website-layout-wrapper";
@@ -20,8 +20,18 @@ const inter = Inter({
 const baseUrl =
   process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
 
+  export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#ffffff",
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
+  alternates:{
+    canonical: "./",
+  },
   title: {
     default: "Bubble Wrap Shop - Premium Packaging Supplies",
     template: "%s | Bubble Wrap Shop",
@@ -117,11 +127,9 @@ export default async function RootLayout({
             compiler options or eslint rules instead. */}
         <AuthProvider>
           <CartProvider>
+            <Suspense fallback={null}> <FacebookPixel /></Suspense>
             <WebsiteLayoutWrapper categories={categories || []}>
               {children}
-                 <Suspense fallback={null}> <FacebookPixel /></Suspense>
-             
-
             </WebsiteLayoutWrapper>
 
             {/* Cookie Consent Banner - GDPR Compliance */}
