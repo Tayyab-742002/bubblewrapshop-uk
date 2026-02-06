@@ -92,12 +92,12 @@ export async function generateMetadata({
   const seoKeywords = category?.seoKeywords?.length
     ? category.seoKeywords
     : [
-      `${categoryDisplayName.toLowerCase()} UK`,
-      `buy ${categoryDisplayName.toLowerCase()} online`,
-      categoryDisplayName.toLowerCase(),
-      "packaging supplies UK",
-      "wholesale packaging",
-    ];
+        `${categoryDisplayName.toLowerCase()} UK`,
+        `buy ${categoryDisplayName.toLowerCase()} online`,
+        categoryDisplayName.toLowerCase(),
+        "packaging supplies UK",
+        "wholesale packaging",
+      ];
 
   // Canonical should point to dedicated category page to avoid duplicate content
   const canonicalUrl = `${siteUrl}/categories/${categorySlug}`;
@@ -153,19 +153,20 @@ export default async function ProductsPage({
     (c: { slug: string; name: string }) => ({
       value: c.slug,
       label: c.name,
-    })
+    }),
   );
 
   const category = sp.category;
   const categoryDisplayName = category
     ? category
-      .split("-")
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ")
+        .split("-")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ")
     : null;
 
   const searchQuery = sp.search?.trim();
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
+  const siteUrl =
+    process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
   const pageUrl = `${siteUrl}/products`;
 
   // Trust signals for EEAT
@@ -226,6 +227,9 @@ export default async function ProductsPage({
     provider: {
       "@type": "LocalBusiness",
       name: "Bubble Wrap Shop",
+      image: [
+        `${siteUrl}/logo.jpg`,
+      ],
       url: siteUrl,
       telephone: "+44-7728-342335",
       address: {
@@ -271,11 +275,15 @@ export default async function ProductsPage({
       {/* Structured Data (JSON-LD) */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbStructuredData),
+        }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionStructuredData) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionStructuredData),
+        }}
       />
 
       {/* Breadcrumbs - Minimal */}
@@ -286,11 +294,11 @@ export default async function ProductsPage({
               { label: "Products", href: "/products" },
               ...(categoryDisplayName && category
                 ? [
-                  {
-                    label: categoryDisplayName,
-                    href: `/categories/${category}`,
-                  },
-                ]
+                    {
+                      label: categoryDisplayName,
+                      href: `/categories/${category}`,
+                    },
+                  ]
                 : []),
             ]}
           />
@@ -299,7 +307,6 @@ export default async function ProductsPage({
 
       {/* Main Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] py-8 md:py-12">
-
         {/* Header Section - 2026 SEO: Descriptive H1 with location context */}
         <div className="mb-8 md:mb-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
@@ -338,7 +345,8 @@ export default async function ProductsPage({
               {activeFilterCount > 0 && (
                 <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground bg-secondary px-3 py-1.5 rounded-full">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                  {activeFilterCount} filter{activeFilterCount > 1 ? 's' : ''} active
+                  {activeFilterCount} filter{activeFilterCount > 1 ? "s" : ""}{" "}
+                  active
                 </span>
               )}
               <ProductSort currentSort={sp.sort || "newest"} />
@@ -348,7 +356,6 @@ export default async function ProductsPage({
 
         {/* Filters and Grid Layout */}
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-
           {/* Sidebar Filters */}
           <div className="w-full lg:w-[260px] shrink-0">
             <ProductFilters categories={categoryOptions} />

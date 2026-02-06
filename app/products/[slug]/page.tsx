@@ -14,6 +14,7 @@ import {
 import { getProductSlugs } from "@/sanity/lib/api";
 import { notFound } from "next/navigation";
 import { getLowestPrice } from "@/lib/helpers/get-lowest-price";
+import { urlFor } from "@/sanity/lib/image";
 
 // PERFORMANCE: Code split ProductGallery (heavy image component)
 const ProductGallery = dynamic(
@@ -52,7 +53,8 @@ export async function generateMetadata({
   const siteUrl =
     process.env.NEXT_PUBLIC_APP_URL || "https://www.bubblewrapshop.co.uk";
   const productUrl = `${siteUrl}/products/${slug}`;
-  const productImage = product.images?.[0] || product.image;
+  const rawImage = product.images?.[0] || product.image;
+  const productImage = rawImage ? urlFor(rawImage).width(1200).height(630).url() : "";
   // Use lowest available price across all variants and quantity options for SEO
   const productPrice = getLowestPrice(product).toFixed(2);
 
@@ -185,7 +187,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
         ]),
     ],
   };
-
+const schemaImage = product.images ? urlFor(product.images[0]).width(1200).url() : "";
   // 2026 Enhanced Product Schema with GTIN, dimensions, LocalBusiness seller
   const productStructuredData = {
     "@context": "https://schema.org",
@@ -196,7 +198,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
       product.llmSummary ||
       product.description ||
       `${product.name} - Premium packaging supplies from Blackburn`,
-    image: product.images?.length ? product.images : [product.image],
+    image: schemaImage,
     sku: product.product_code,
     // Google Shopping identifiers
     ...(product.gtin && { gtin: product.gtin }),
