@@ -346,15 +346,6 @@ export default async function LocationPage({ params }: Props) {
       { "@type": "Country", name: "United Kingdom" },
     ],
     description: `Packaging supplier serving ${location.city} and ${location.region}. ${location.deliveryHook}. Wholesale bubble wrap, mailing bags, and boxes.`,
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: "Packaging Supplies",
-      itemListElement: [
-        { "@type": "Offer", itemOffered: { "@type": "Product", name: "Bubble Wrap Rolls" } },
-        { "@type": "Offer", itemOffered: { "@type": "Product", name: "Mailing Bags" } },
-        { "@type": "Offer", itemOffered: { "@type": "Product", name: "Cardboard Boxes" } },
-      ],
-    },
   };
 
   // FAQPage structured data for rich snippets

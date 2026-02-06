@@ -65,7 +65,7 @@ const locations = [
       "Morning delivery slots",
       "Business accounts"
     ],
-    image: "https://images.unsplash.com/photo-1515168985652-eb699d264ca7?w=800&q=80"
+    image: "https://images.unsplash.com/photo-1515586838455-8f8f940d6853?w=800&q=80"
   },
   {
     city: "London",
