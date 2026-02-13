@@ -12,6 +12,9 @@ import { Truck, ShieldCheck, RotateCcw } from "lucide-react";
 interface ProductPurchaseSectionProps {
   product: Product;
   initialVariantSku?: string; // SKU from URL param to pre-select variant
+  specialOfferId?: string; // ID of special offer if from an offer
+  specialOfferDeliveryCharge?: number; // Delivery charge for special offer
+  specialOfferVariantSkus?: string[]; // SKUs of variants targeted by special offers
 }
 
 // Helper function to get the first/lowest quantity option
@@ -59,6 +62,9 @@ function getMinimumQuantity(
 export function ProductPurchaseSection({
   product,
   initialVariantSku,
+  specialOfferId,
+  specialOfferDeliveryCharge,
+  specialOfferVariantSkus,
 }: ProductPurchaseSectionProps) {
   // Find variant by SKU from URL param, or fall back to first variant
   const getInitialVariant = () => {
@@ -207,6 +213,7 @@ export function ProductPurchaseSection({
           label="Size"
           initialVariantId={firstVariant?.id}
           onVariantChange={handleVariantChange}
+          specialOfferVariantSkus={specialOfferVariantSkus}
         />
       )}
 
@@ -297,12 +304,24 @@ export function ProductPurchaseSection({
         )}
       </div>
 
+      {/* Special Offer Delivery Notice */}
+      {specialOfferDeliveryCharge !== undefined && specialOfferDeliveryCharge > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+          <p className="text-sm text-amber-900 font-medium">
+            <span className="inline-block mr-1.5">🚚</span>
+            Delivery charge: £{specialOfferDeliveryCharge.toFixed(2)} applies to this special offer
+          </p>
+        </div>
+      )}
+
       {/* Add to Cart Button */}
       <AddToCartButton
         product={product}
         variant={selectedVariant}
         quantity={totalQuantity}
         quantityOptionPrice={calculatedPricePerUnit}
+        specialOfferId={specialOfferId}
+        specialOfferDeliveryCharge={specialOfferDeliveryCharge}
       />
 
       {/* Trust Badges */}

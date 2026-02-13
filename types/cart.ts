@@ -10,6 +10,8 @@ export interface CartItem {
   pricePerUnit: number;
   totalPrice: number;
   quantityOptionPrice?: number; // Store quantity option price if item was added with one
+  specialOfferId?: string; // ID of special offer if item is from an offer
+  specialOfferDeliveryCharge?: number; // Delivery charge for this special offer item
 }
 
 export interface Cart {

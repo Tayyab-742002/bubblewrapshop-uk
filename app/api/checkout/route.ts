@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
       billingAddress,
       shippingMethodId,
       shippingCost,
+      specialOfferDeliveryTotal,
       vatAmount,
       subtotal,
       total,
@@ -26,6 +27,7 @@ export async function POST(request: NextRequest) {
       billingAddress?: BillingAddress;
       shippingMethodId?: string;
       shippingCost?: number;
+      specialOfferDeliveryTotal?: number;
       vatAmount?: number;
       subtotal?: number;
       total?: number;
@@ -63,6 +65,7 @@ export async function POST(request: NextRequest) {
       billingAddress,
       shippingMethodId,
       shippingCost,
+      specialOfferDeliveryTotal,
       vatAmount,
       subtotal,
       total,

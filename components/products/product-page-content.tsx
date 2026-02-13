@@ -19,12 +19,18 @@ function ProductPageContent({
   specifications,
   delivery,
   initialVariantSku,
+  specialOfferId,
+  specialOfferDeliveryCharge,
+  specialOfferVariantSkus,
 }: {
   product: Product;
   description?: string;
   specifications?: Record<string, string>;
   delivery?: string;
   initialVariantSku?: string;
+  specialOfferId?: string;
+  specialOfferDeliveryCharge?: number;
+  specialOfferVariantSkus?: string[];
 }) {
   // Track ViewContent event for Meta Pixel
   useEffect(() => {
@@ -53,7 +59,13 @@ function ProductPageContent({
           showBackButton
           backUrl="/products"
         >
-          <ProductPurchaseSection product={product} initialVariantSku={initialVariantSku} />
+          <ProductPurchaseSection
+            product={product}
+            initialVariantSku={initialVariantSku}
+            specialOfferId={specialOfferId}
+            specialOfferDeliveryCharge={specialOfferDeliveryCharge}
+            specialOfferVariantSkus={specialOfferVariantSkus}
+          />
         </ErrorBoundary>
 
         {/* Product Info Accordion */}

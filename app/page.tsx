@@ -3,6 +3,7 @@ import {
   HeroSection,
   CategoryGrid,
   FeaturedProducts,
+  SpecialOffersSection,
   SustainabilityBlock,
   NewArrivals,
   FinalCTA,
@@ -230,6 +231,7 @@ export default async function Home() {
       <B2BBanner />
       <HeroSection />
       <TrustBar />
+      <SpecialOffersSection />
       <CategoryGrid categories={categories || []} />
       <FeaturedProducts />
       <GalleryShowcase />

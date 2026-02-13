@@ -33,6 +33,10 @@ import {
   GUIDES_BY_CATEGORY_QUERY,
   RELATED_GUIDES_QUERY,
   GUIDE_SLUGS_QUERY,
+  // Special Offer queries
+  ACTIVE_SPECIAL_OFFERS_QUERY,
+  SPECIAL_OFFER_BY_SLUG_QUERY,
+  SPECIAL_OFFER_BY_PRODUCT_QUERY,
 } from "./queries";
 import {
   transformSanityProduct,
@@ -43,6 +47,7 @@ import {
   transformSanityBlogPostListing,
   transformSanityGuide,
   transformSanityGuideListing,
+  transformSanitySpecialOffer,
   buildFilterString,
   buildOrderString,
   safeQuery,
@@ -52,6 +57,7 @@ import {
   SanityAnnouncement,
   SanityBlogPost,
   SanityGuide,
+  SanitySpecialOffer,
 } from "./helpers";
 
 /**
@@ -533,5 +539,63 @@ export async function getGuideSlugs() {
       GUIDE_SLUGS_QUERY
     );
     return data;
+  });
+}
+
+// ==========================================
+// SPECIAL OFFERS
+// ==========================================
+
+// Get all active special offers (for homepage)
+export async function getActiveSpecialOffers() {
+  return safeQuery(async () => {
+    const fetchData = unstable_cache(
+      async () => {
+        return await client.fetch<SanitySpecialOffer[]>(ACTIVE_SPECIAL_OFFERS_QUERY);
+      },
+      ['special-offers-active'],
+      {
+        tags: ['special-offers:active', 'homepage'],
+        revalidate: 3600, // Cache for 1 hour
+      }
+    );
+    const data = await fetchData();
+    return data.map(transformSanitySpecialOffer);
+  });
+}
+
+// Get special offer by slug
+export async function getSpecialOfferBySlug(slug: string) {
+  return safeQuery(async () => {
+    const fetchData = unstable_cache(
+      async () => {
+        return await client.fetch<SanitySpecialOffer | null>(SPECIAL_OFFER_BY_SLUG_QUERY, { slug });
+      },
+      [`special-offer-${slug}`],
+      {
+        tags: [`special-offer:${slug}`, 'special-offers:all'],
+        revalidate: 3600,
+      }
+    );
+    const offer = await fetchData();
+    return offer ? transformSanitySpecialOffer(offer) : null;
+  });
+}
+
+// Get special offer by product ID (check if product has active offer)
+export async function getSpecialOfferByProductId(productId: string) {
+  return safeQuery(async () => {
+    const fetchData = unstable_cache(
+      async () => {
+        return await client.fetch<SanitySpecialOffer | null>(SPECIAL_OFFER_BY_PRODUCT_QUERY, { productId });
+      },
+      [`special-offer-product-${productId}`],
+      {
+        tags: [`special-offer:product:${productId}`, 'special-offers:all'],
+        revalidate: 3600,
+      }
+    );
+    const offer = await fetchData();
+    return offer ? transformSanitySpecialOffer(offer) : null;
   });
 }

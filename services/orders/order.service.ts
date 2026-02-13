@@ -63,6 +63,7 @@ export async function createOrder(orderData: {
   subtotal: number;
   discount: number;
   shipping: number;
+  specialOfferDelivery?: number;
   shippingMethod?: string;
   shippingCost?: number;
   vatAmount?: number;
@@ -96,6 +97,7 @@ export async function createOrder(orderData: {
         subtotal: orderData.subtotal,
         discount: orderData.discount,
         shipping: orderData.shipping,
+        special_offer_delivery: orderData.specialOfferDelivery || 0,
         shipping_method: orderData.shippingMethod || null,
         shipping_cost: orderData.shippingCost || orderData.shipping || 0,
         vat_amount: orderData.vatAmount || 0,

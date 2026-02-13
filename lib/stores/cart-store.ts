@@ -27,7 +27,9 @@ interface CartStore {
     variant?: ProductVariant,
     quantity?: number,
     userId?: string,
-    quantityOptionPrice?: number // Price from selected quantity option
+    quantityOptionPrice?: number, // Price from selected quantity option
+    specialOfferId?: string, // ID of special offer if item is from an offer
+    specialOfferDeliveryCharge?: number // Delivery charge for this special offer
   ) => Promise<void>;
   removeItem: (itemId: string, userId?: string) => Promise<void>;
   updateQuantity: (
@@ -41,6 +43,9 @@ interface CartStore {
   getCartSummaryWithShipping: () => ShippingCalculation & {
     items: CartItem[];
     discount: number;
+    baseShipping: number;
+    specialOfferDelivery: number;
+    totalShipping: number;
   };
   getItemCount: () => number;
   initializeCart: (userId?: string) => Promise<void>;
@@ -203,7 +208,9 @@ export const useCartStore = create<CartStore>()((set, get) => ({
     variant,
     quantity = 1,
     userId,
-    quantityOptionPrice
+    quantityOptionPrice,
+    specialOfferId,
+    specialOfferDeliveryCharge
   ) => {
     // PERFORMANCE: Remove console.logs in production
     if (process.env.NODE_ENV === "development") {
@@ -213,6 +220,8 @@ export const useCartStore = create<CartStore>()((set, get) => ({
         quantity,
         userId,
         quantityOptionPrice,
+        specialOfferId,
+        specialOfferDeliveryCharge,
       });
     }
 
@@ -265,6 +274,9 @@ export const useCartStore = create<CartStore>()((set, get) => ({
           totalPrice: pricePerUnit * newQuantity,
           // Preserve quantityOptionPrice if it exists
           quantityOptionPrice: existingItem.quantityOptionPrice,
+          // Preserve special offer fields
+          specialOfferId: existingItem.specialOfferId,
+          specialOfferDeliveryCharge: existingItem.specialOfferDeliveryCharge,
         };
         updatedItems = items;
         return { items: updatedItems, isLoading: false };
@@ -297,6 +309,8 @@ export const useCartStore = create<CartStore>()((set, get) => ({
           pricePerUnit,
           totalPrice: pricePerUnit * quantity,
           quantityOptionPrice: quantityOptionPrice, // Store quantity option price for future updates
+          specialOfferId: specialOfferId, // Store special offer ID if from an offer
+          specialOfferDeliveryCharge: specialOfferDeliveryCharge, // Store delivery charge if special offer
         };
         updatedItems = [...state.items, newItem];
         return { items: updatedItems, isLoading: false };
@@ -543,18 +557,37 @@ export const useCartStore = create<CartStore>()((set, get) => ({
       return sum;
     }, 0);
 
-    // Get selected shipping cost
+    // Get selected shipping cost (base shipping)
     const selectedShippingId = get().selectedShippingId;
-    const shippingCost = getShippingPrice(selectedShippingId);
+    const baseShippingCost = getShippingPrice(selectedShippingId);
 
-    // Calculate total with VAT
-    const calculation = calculateOrderTotal(subtotal - discount, shippingCost);
+    // Calculate special offer delivery charges
+    // Group by specialOfferId to charge once per offer (not per item)
+    const specialOfferCharges = new Map<string, number>();
+    items.forEach((item) => {
+      if (item.specialOfferId && item.specialOfferDeliveryCharge) {
+        // Only add once per special offer ID
+        if (!specialOfferCharges.has(item.specialOfferId)) {
+          specialOfferCharges.set(item.specialOfferId, item.specialOfferDeliveryCharge);
+        }
+      }
+    });
+    const specialOfferDeliveryTotal = Array.from(specialOfferCharges.values()).reduce((sum, charge) => sum + charge, 0);
+
+    // Total shipping = base shipping + special offer delivery charges
+    const totalShippingCost = baseShippingCost + specialOfferDeliveryTotal;
+
+    // Calculate total with VAT (VAT applies to subtotal + total shipping)
+    const calculation = calculateOrderTotal(subtotal - discount, totalShippingCost);
     calculation.shippingMethod = selectedShippingId;
 
     return {
       ...calculation,
       items,
       discount,
+      baseShipping: baseShippingCost,
+      specialOfferDelivery: specialOfferDeliveryTotal,
+      totalShipping: totalShippingCost,
     };
   },
 

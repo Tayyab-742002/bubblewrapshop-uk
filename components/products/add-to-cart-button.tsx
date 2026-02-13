@@ -13,6 +13,8 @@ interface AddToCartButtonProps {
   variant?: ProductVariant;
   quantity: number;
   quantityOptionPrice?: number; // Price from selected quantity option
+  specialOfferId?: string; // ID of special offer if from an offer
+  specialOfferDeliveryCharge?: number; // Delivery charge for special offer
   disabled?: boolean;
 }
 
@@ -21,6 +23,8 @@ export function AddToCartButton({
   variant,
   quantity,
   quantityOptionPrice,
+  specialOfferId,
+  specialOfferDeliveryCharge,
   disabled = false,
 }: AddToCartButtonProps) {
   const [isAdded, setIsAdded] = useState(false);
@@ -37,7 +41,9 @@ export function AddToCartButton({
       variant,
       quantity,
       user?.id,
-      quantityOptionPrice
+      quantityOptionPrice,
+      specialOfferId,
+      specialOfferDeliveryCharge
     );
 
     // Track AddToCart event for Meta Pixel

@@ -5,7 +5,13 @@ import { getShippingOptionById } from "@/types/shipping"
 import type { ShippingCalculation } from "@/types/shipping"
 
 interface OrderSummaryWithVATProps {
-  summary: ShippingCalculation & { items: CartItem[]; discount: number }
+  summary: ShippingCalculation & {
+    items: CartItem[];
+    discount: number;
+    baseShipping?: number;
+    specialOfferDelivery?: number;
+    totalShipping?: number;
+  }
   showTitle?: boolean
 }
 
@@ -45,14 +51,39 @@ export function OrderSummaryWithVAT({
         <div className="space-y-2">
           <h4 className="font-medium text-gray-900">Shipping</h4>
           {shippingOption && (
-            <div className="flex justify-between text-gray-600">
-              <span>{shippingOption.name}</span>
-              <span className="font-medium text-gray-900">
-                {shippingOption.price === 0
-                  ? "Free"
-                  : `£${shippingOption.price.toFixed(2)}`}
-              </span>
-            </div>
+            <>
+              {/* Base Shipping */}
+              <div className="flex justify-between text-gray-600">
+                <span className="text-xs">Base Shipping ({shippingOption.name})</span>
+                <span className="font-medium text-gray-900 text-sm">
+                  {shippingOption.price === 0
+                    ? "Free"
+                    : `£${shippingOption.price.toFixed(2)}`}
+                </span>
+              </div>
+
+              {/* Special Offer Delivery */}
+              {summary.specialOfferDelivery && summary.specialOfferDelivery > 0 && (
+                <div className="flex justify-between text-gray-600">
+                  <span className="text-xs">Special Offer Delivery</span>
+                  <span className="font-medium text-gray-900 text-sm">
+                    £{summary.specialOfferDelivery.toFixed(2)}
+                  </span>
+                </div>
+              )}
+
+              {/* Total Shipping */}
+              {summary.totalShipping !== undefined && (
+                <div className="flex justify-between text-gray-900 font-medium pt-1 border-t border-gray-100">
+                  <span>Total Delivery</span>
+                  <span>
+                    {summary.totalShipping === 0
+                      ? "Free"
+                      : `£${summary.totalShipping.toFixed(2)}`}
+                  </span>
+                </div>
+              )}
+            </>
           )}
         </div>
 

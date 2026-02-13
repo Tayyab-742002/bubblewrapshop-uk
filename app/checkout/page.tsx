@@ -239,6 +239,7 @@ function CheckoutPageContent() {
           shippingAddress,
           shippingMethodId: selectedShippingId,
           shippingCost: summary.shippingCost,
+          specialOfferDeliveryTotal: summary.specialOfferDelivery || 0,
           vatAmount: summary.vatAmount,
           subtotal: summary.subtotal,
           total: summary.total,

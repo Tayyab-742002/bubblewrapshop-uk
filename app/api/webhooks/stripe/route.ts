@@ -306,6 +306,11 @@ async function handleCheckoutSessionCompleted(
         ? fullSession.total_details.amount_shipping / 100
         : 0;
 
+    // Extract special offer delivery from metadata
+    const specialOfferDelivery = fullSession.metadata?.special_offer_delivery
+      ? parseFloat(fullSession.metadata.special_offer_delivery)
+      : 0;
+
     // Extract VAT from metadata
     const vatAmount = fullSession.metadata?.vat_amount
       ? parseFloat(fullSession.metadata.vat_amount)
@@ -347,6 +352,7 @@ async function handleCheckoutSessionCompleted(
       subtotal,
       discount: discountAmount,
       shipping: shippingCost,
+      specialOfferDelivery: specialOfferDelivery,
       shippingMethod: shippingMethodId || undefined, // Added
       shippingCost: shippingCost, // Added (explicit)
       vatAmount: vatAmount, // Added

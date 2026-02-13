@@ -705,6 +705,47 @@ export function transformSanityGuideListing(sanityGuide: SanityGuide) {
   };
 }
 
+// ==========================================
+// SPECIAL OFFER TYPES & TRANSFORMERS
+// ==========================================
+
+export interface SanitySpecialOffer {
+  _id: string;
+  _type: "specialOffer";
+  title: string;
+  slug: string;
+  product: SanityProduct;
+  targetedVariants?: string[];
+  deliveryCharge: number;
+  badgeText?: string;
+  badgeColor: "red" | "orange" | "green" | "blue";
+  shortDescription?: string;
+  startDate?: string;
+  endDate?: string;
+  isActive: boolean;
+  isFeatured: boolean;
+  sortOrder: number;
+}
+
+export function transformSanitySpecialOffer(sanityOffer: SanitySpecialOffer) {
+  return {
+    id: sanityOffer._id,
+    title: sanityOffer.title,
+    slug: sanityOffer.slug,
+    product: transformSanityProduct(sanityOffer.product),
+    targetedVariants: sanityOffer.targetedVariants,
+    deliveryCharge: sanityOffer.deliveryCharge,
+    badgeText: sanityOffer.badgeText,
+    badgeColor: sanityOffer.badgeColor,
+    shortDescription: sanityOffer.shortDescription,
+    startDate: sanityOffer.startDate,
+    endDate: sanityOffer.endDate,
+    isActive: sanityOffer.isActive,
+    isFeatured: sanityOffer.isFeatured,
+    sortOrder: sanityOffer.sortOrder,
+  };
+}
+
 // Helper function to build filter string for GROQ
 export function buildFilterString(filters: {
   category?: string;

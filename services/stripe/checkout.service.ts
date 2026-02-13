@@ -114,6 +114,7 @@ export async function createCheckoutSession(params: {
   billingAddress?: BillingAddress;
   shippingMethodId?: string;
   shippingCost?: number;
+  specialOfferDeliveryTotal?: number;
   vatAmount?: number;
   subtotal?: number;
   total?: number;
@@ -127,6 +128,7 @@ export async function createCheckoutSession(params: {
       billingAddress,
       shippingMethodId,
       shippingCost,
+      specialOfferDeliveryTotal,
       vatAmount,
       subtotal,
       total,
@@ -162,6 +164,21 @@ export async function createCheckoutSession(params: {
       });
     }
 
+    // Add special offer delivery charges if present
+    if (specialOfferDeliveryTotal && specialOfferDeliveryTotal > 0) {
+      lineItems.push({
+        price_data: {
+          currency: "gbp",
+          product_data: {
+            name: "Special Offer Delivery",
+            description: "Delivery charge for special offer items",
+          },
+          unit_amount: convertToStripeAmount(specialOfferDeliveryTotal),
+        },
+        quantity: 1,
+      });
+    }
+
     // Add VAT as a line item if provided
     if (vatAmount && vatAmount > 0) {
       lineItems.push({
@@ -186,6 +203,7 @@ export async function createCheckoutSession(params: {
       item_count: items.length.toString(),
       subtotal: (subtotal || calculateTotalAmount(items)).toFixed(2),
       shipping_cost: (shippingCost || 0).toFixed(2),
+      special_offer_delivery: (specialOfferDeliveryTotal || 0).toFixed(2),
       vat_amount: (vatAmount || 0).toFixed(2),
     };
 

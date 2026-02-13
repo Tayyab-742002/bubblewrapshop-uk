@@ -12,6 +12,7 @@ import {
   getProductsByCategorySlug,
 } from "@/services/products/product.service";
 import { getProductSlugs } from "@/sanity/lib/api";
+import { getSpecialOfferBySlug, getSpecialOfferForProduct } from "@/services/specialOffers/specialOffer.service";
 import { notFound } from "next/navigation";
 import { getLowestPrice } from "@/lib/helpers/get-lowest-price";
 import { urlFor } from "@/sanity/lib/image";
@@ -30,7 +31,7 @@ const ProductGallery = dynamic(
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ variant?: string }>;
+  searchParams: Promise<{ variant?: string; offerId?: string }>;
 }
 
 /**
@@ -135,12 +136,25 @@ export async function generateMetadata({
 
 export default async function ProductPage({ params, searchParams }: ProductPageProps) {
   const { slug } = await params;
-  const { variant: initialVariantSku } = await searchParams;
+  const { variant: initialVariantSku, offerId } = await searchParams;
   const product = await getProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
+
+  // Fetch special offer - either from URL param or by looking up active offers for this product
+  const specialOffer = offerId
+    ? await getSpecialOfferBySlug(offerId)
+    : await getSpecialOfferForProduct(product.id);
+
+  // Get targeted variant SKUs for showing SALE badges in variant selector
+  // If offer exists but has no targeted variants, it applies to ALL variants
+  const specialOfferVariantSkus = specialOffer
+    ? specialOffer.targetedVariants && specialOffer.targetedVariants.length > 0
+      ? specialOffer.targetedVariants
+      : (product.variants?.map((v) => v.sku) ?? [])
+    : [];
 
   // Fetch related products from the same category
   const relatedProducts = product.categorySlug
@@ -416,6 +430,9 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
               specifications={product.specifications}
               delivery={product.delivery}
               initialVariantSku={initialVariantSku}
+              specialOfferId={specialOffer?.id}
+              specialOfferDeliveryCharge={specialOffer?.deliveryCharge}
+              specialOfferVariantSkus={specialOfferVariantSkus}
             />
 
             {/* 2026 EEAT: Expert Tip Section */}

@@ -1,6 +1,7 @@
 export { default as HeroSection } from "./hero-section";
 export { CategoryGrid } from "./category-grid";
 export { FeaturedProducts } from "./featured-products";
+export { SpecialOffersSection } from "./special-offers-section";
 export { SustainabilityBlock } from "./sustainability-block";
 export { NewArrivals } from "./new-arrivals";
 export { FinalCTA } from "./final-cta";

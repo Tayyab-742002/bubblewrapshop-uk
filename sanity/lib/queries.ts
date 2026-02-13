@@ -646,3 +646,43 @@ export const GUIDE_SLUGS_QUERY = `*[_type == "guide" && isPublished == true] {
   publishedAt,
   lastUpdated
 }`;
+
+// ==========================================
+// SPECIAL OFFER QUERIES
+// ==========================================
+
+// Base special offer query with full product data
+const SPECIAL_OFFER_QUERY = `
+  _id,
+  _type,
+  title,
+  "slug": slug.current,
+  product-> {
+    ${PRODUCT_LISTING_QUERY}
+  },
+  targetedVariants,
+  deliveryCharge,
+  badgeText,
+  badgeColor,
+  shortDescription,
+  startDate,
+  endDate,
+  isActive,
+  isFeatured,
+  sortOrder
+`;
+
+// Active special offers (for homepage)
+export const ACTIVE_SPECIAL_OFFERS_QUERY = `*[_type == "specialOffer" && isActive == true && isFeatured == true] | order(sortOrder asc, _createdAt desc) {
+  ${SPECIAL_OFFER_QUERY}
+}`;
+
+// Single special offer by slug
+export const SPECIAL_OFFER_BY_SLUG_QUERY = `*[_type == "specialOffer" && slug.current == $slug][0] {
+  ${SPECIAL_OFFER_QUERY}
+}`;
+
+// Special offer by product ID (check if product has active offer)
+export const SPECIAL_OFFER_BY_PRODUCT_QUERY = `*[_type == "specialOffer" && isActive == true && product._ref == $productId][0] {
+  ${SPECIAL_OFFER_QUERY}
+}`;

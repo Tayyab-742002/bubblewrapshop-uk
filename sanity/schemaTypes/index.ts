@@ -7,12 +7,14 @@ import { banner } from "./banner";
 import { announcement } from "./announcement";
 import { blogPost } from "./blog-post";
 import { guide } from "./guide";
+import { specialOffer } from "./specialOffer";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
     // Core content types
     category,
     product,
+    specialOffer,
     banner,
     announcement,
     blogPost,
