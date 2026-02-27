@@ -11,6 +11,7 @@ import {
   getProductBySlug,
   getProductsByCategorySlug,
 } from "@/services/products/product.service";
+import { VariantPricingTable } from "@/components/products/variant-pricing-table";
 import { getProductSlugs } from "@/sanity/lib/api";
 import { getSpecialOfferBySlug, getSpecialOfferForProduct } from "@/services/specialOffers/specialOffer.service";
 import { notFound } from "next/navigation";
@@ -473,6 +474,11 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
             )}
           </div>
         </div>
+
+        {/* Variant Pricing Table */}
+        {product.variants && product.variants.length > 0 && (
+          <VariantPricingTable product={product} />
+        )}
 
         {/* 2026 EEAT: Product FAQs Section (also generates rich snippets via schema) */}
         {product.faqs && product.faqs.length > 0 && (
