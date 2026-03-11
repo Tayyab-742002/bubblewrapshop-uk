@@ -185,7 +185,42 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             const { loadCartFromSupabase } = await import(
               "@/services/cart/cart.service"
             );
+
+            // Verify the session is still valid before reloading the cart.
+            // loadCartFromSupabase returns [] on session errors, which would
+            // falsely wipe the in-memory cart (e.g. when the checkout API
+            // triggers a Realtime event mid-request).
+            const { createClient: createSupabaseClient } = await import(
+              "@/lib/supabase/client"
+            );
+            const supabaseCheck = createSupabaseClient();
+            const {
+              data: { user: authUser },
+            } = await supabaseCheck.auth.getUser();
+
+            if (!authUser || authUser.id !== userId) {
+              if (process.env.NODE_ENV === "development") {
+                console.warn(
+                  "[Cart Provider] Realtime update skipped: session invalid or user mismatch"
+                );
+              }
+              return;
+            }
+
             const cartItems = await loadCartFromSupabase(userId);
+
+            // Only update if Realtime actually delivered a DELETE (empty cart is
+            // intentional) or if we received real items. Never overwrite a
+            // non-empty in-memory cart with an empty result from a failed load.
+            const currentItems = useCartStore.getState().items;
+            if (cartItems.length === 0 && currentItems.length > 0 && payload.eventType !== "DELETE") {
+              if (process.env.NODE_ENV === "development") {
+                console.warn(
+                  "[Cart Provider] Realtime returned empty cart but current cart has items and event is not DELETE — skipping update to avoid false wipe"
+                );
+              }
+              return;
+            }
 
             useCartStore.setState({
               items: cartItems,

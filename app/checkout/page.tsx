@@ -40,6 +40,8 @@ function CheckoutPageContent() {
     getCartSummaryWithShipping,
     selectedShippingId,
     setShippingMethod,
+    isInitialized: isCartInitialized,
+    isLoading: isCartLoading,
   } = useCartStore();
   const { user } = useAuth();
 
@@ -97,10 +99,14 @@ function CheckoutPageContent() {
   }, [items, summary.total]);
 
   useEffect(() => {
-    if (items.length === 0) {
+    // Only redirect once the cart is fully initialized and confirmed empty.
+    // Without this guard, transient auth/session events that temporarily set
+    // items=[] (e.g. profile fetch error, Realtime race) would kick the user
+    // back to /cart mid-checkout.
+    if (isCartInitialized && !isCartLoading && items.length === 0) {
       router.push("/cart");
     }
-  }, [items, router]);
+  }, [items, router, isCartInitialized, isCartLoading]);
 
   // REMOVED: No longer redirect guests to login
   // Guests can now checkout without an account
@@ -265,7 +271,7 @@ function CheckoutPageContent() {
     }
   }
 
-  if (items.length === 0) {
+  if (isCartInitialized && !isCartLoading && items.length === 0) {
     return null;
   }
 

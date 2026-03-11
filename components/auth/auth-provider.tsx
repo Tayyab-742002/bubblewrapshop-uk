@@ -94,7 +94,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .single();
 
       if (profileError || !profile) {
-        setUser(null);
+        // Profile fetch failed (network error, RLS, missing row) — use minimal
+        // auth user data rather than clearing the user state. Clearing user here
+        // causes CartProvider to treat it as a logout and wipe the cart.
+        setUser((prev) => {
+          if (prev && prev.id === authUser.id) return prev; // keep existing
+          return {
+            id: authUser.id,
+            email: authUser.email || "",
+            role: "customer",
+            createdAt: authUser.created_at,
+            updatedAt: new Date().toISOString(),
+          };
+        });
         return;
       }
 
