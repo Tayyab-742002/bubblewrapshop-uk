@@ -27,14 +27,14 @@ function CheckoutSuccessContent() {
 
   // Verify payment and fetch order with retry logic
   useEffect(() => {
-    // Add timeout to prevent infinite loading (30 seconds max)
+    // Add timeout to prevent infinite loading (45 seconds max)
     const timeoutId = setTimeout(() => {
       console.error("⏰ Payment verification timeout - forcing error state");
       setError(
         "Payment verification timed out. Please contact support if your payment was processed."
       );
       setLoading(false);
-    }, 30000); // 30 seconds timeout
+    }, 45000); // 45 seconds timeout
 
     async function verifyAndFetchOrder() {
       if (!sessionId) {
@@ -47,8 +47,8 @@ function CheckoutSuccessContent() {
         return;
       }
 
-      const MAX_RETRIES = 10; // Try up to 10 times
-      const RETRY_DELAY = 1500; // Wait 1.5 seconds between retries
+      const MAX_RETRIES = 15; // Try up to 15 times
+      const RETRY_DELAY = 2000; // Wait 2 seconds between retries
 
       try {
         // Verify payment status via server API
@@ -77,9 +77,13 @@ function CheckoutSuccessContent() {
 
         for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
           try {
-            const orderResponse = await fetch(
-              `/api/orders/by-session/${sessionId}`
-            );
+            // On the final retry, trigger server-side fallback order creation
+            const isFinalAttempt = attempt === MAX_RETRIES;
+            const url = isFinalAttempt
+              ? `/api/orders/by-session/${sessionId}?fallback=true`
+              : `/api/orders/by-session/${sessionId}`;
+
+            const orderResponse = await fetch(url);
 
             if (orderResponse.ok) {
               orderData = await orderResponse.json();

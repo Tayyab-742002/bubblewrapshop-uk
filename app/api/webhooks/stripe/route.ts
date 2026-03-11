@@ -481,6 +481,8 @@ export async function POST(request: NextRequest) {
     const headersList = await headers();
     const signature = headersList.get("stripe-signature");
 
+    console.error("🔔 Webhook received, signature present:", !!signature);
+
     if (!signature) {
       console.error("Missing stripe-signature header");
       return NextResponse.json(
@@ -493,16 +495,23 @@ export async function POST(request: NextRequest) {
     let event: Stripe.Event;
     try {
       event = await verifyWebhookSignature(body, signature);
+      console.error("✅ Webhook signature verified, event type:", event.type);
     } catch (error) {
-      console.error("Webhook signature verification failed:", error);
-      return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+      const errMsg = error instanceof Error ? error.message : String(error);
+      console.error("Webhook signature verification failed:", errMsg);
+      return NextResponse.json(
+        { error: "Invalid signature", details: errMsg },
+        { status: 400 }
+      );
     }
 
     // Handle different event types
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
+        console.error("🛒 Processing checkout.session.completed:", session.id);
         await handleCheckoutSessionCompleted(session);
+        console.error("✅ checkout.session.completed handled successfully");
         break;
       }
 
@@ -524,14 +533,18 @@ export async function POST(request: NextRequest) {
     // Return 200 to acknowledge receipt
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("❌ Webhook error:", error);
-    if (error instanceof Error) {
-      console.error("Error message:", error.message);
-      console.error("Error stack:", error.stack);
-    }
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error("❌ Webhook error:", errorMessage);
+    console.error("❌ Webhook stack:", errorStack);
     return NextResponse.json(
-      { error: "Webhook handler failed" },
+      {
+        error: "Webhook handler failed",
+        details: errorMessage,
+        stack: errorStack?.split("\n").slice(0, 5).join("\n"),
+      },
       { status: 500 }
     );
   }
 }
+
