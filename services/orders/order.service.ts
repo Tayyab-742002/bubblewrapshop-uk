@@ -97,12 +97,7 @@ export async function createOrder(orderData: {
         subtotal: orderData.subtotal,
         discount: orderData.discount,
         shipping: orderData.shipping,
-        special_offer_delivery: orderData.specialOfferDelivery || 0,
-        shipping_method: orderData.shippingMethod || null,
-        shipping_cost: orderData.shippingCost || orderData.shipping || 0,
-        vat_amount: orderData.vatAmount || 0,
-        vat_rate: orderData.vatRate || 0.2,
-        tax: orderData.tax || 0, // Tax amount from Stripe if enabled
+        tax: orderData.tax || 0,
         total_amount: orderData.total,
         currency: "GBP",
         stripe_session_id: orderData.stripeSessionId || null,
@@ -112,8 +107,14 @@ export async function createOrder(orderData: {
         items: orderData.items,
         customer_name: customerName,
         customer_phone: customerPhone,
-        payment_method: "card", // Stripe payment
-        notes: null,
+        payment_method: "card",
+        metadata: {
+          special_offer_delivery: orderData.specialOfferDelivery || 0,
+          shipping_method: orderData.shippingMethod || null,
+          shipping_cost: orderData.shippingCost || orderData.shipping || 0,
+          vat_amount: orderData.vatAmount || 0,
+          vat_rate: orderData.vatRate || 0.2,
+        },
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
@@ -160,7 +161,9 @@ export async function getOrderById(orderId: string): Promise<Order | null> {
       return null;
     }
 
-    // Convert Supabase data to Order type using new schema fields
+    // Convert Supabase data to Order type
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const meta = (data.metadata as any) || {};
     const subtotal = typeof data.subtotal === 'number' 
       ? data.subtotal 
       : parseFloat(String(data.subtotal || data.total_amount || 0));
@@ -169,17 +172,17 @@ export async function getOrderById(orderId: string): Promise<Order | null> {
       : parseFloat(String(data.discount || 0));
     const shipping = typeof data.shipping === 'number'
       ? data.shipping
-      : parseFloat(String(data.shipping || data.shipping_cost || 0));
-    const vatAmount = typeof data.vat_amount === 'number'
-      ? data.vat_amount
-      : parseFloat(String(data.vat_amount || 0));
+      : parseFloat(String(data.shipping || meta.shipping_cost || 0));
+    const vatAmount = meta.vat_amount != null
+      ? parseFloat(String(meta.vat_amount))
+      : 0;
     const total = typeof data.total_amount === 'number'
       ? data.total_amount
       : parseFloat(String(data.total_amount || 0));
     
     const order: Order = {
       id: data.id,
-      orderNumber: data.id.substring(0, 8).toUpperCase(), // Create readable order number
+      orderNumber: data.id.substring(0, 8).toUpperCase(),
       userId: data.user_id || undefined,
       items: data.items || [],
       shippingAddress: (data.shipping_address as ShippingAddress) || {
@@ -201,7 +204,7 @@ export async function getOrderById(orderId: string): Promise<Order | null> {
       subtotal,
       discount,
       shipping,
-      shippingMethod: data.shipping_method || null,
+      shippingMethod: meta.shipping_method || null,
       vatAmount,
       total,
       status: (data.status || "pending") as Order["status"],
@@ -242,7 +245,9 @@ export async function getUserOrders(userId: string): Promise<Order[]> {
     }
 
     // Convert Supabase data to Order array using new schema fields
-    const orders: Order[] = (data as SupabaseOrderData[]).map((orderData) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const orders: Order[] = (data as any[]).map((orderData) => {
+      const meta = (orderData.metadata as Record<string, unknown>) || {};
       const subtotal = typeof orderData.subtotal === 'number' 
         ? orderData.subtotal 
         : parseFloat(String(orderData.subtotal || orderData.total_amount || 0));
@@ -251,10 +256,10 @@ export async function getUserOrders(userId: string): Promise<Order[]> {
         : parseFloat(String(orderData.discount || 0));
       const shipping = typeof orderData.shipping === 'number'
         ? orderData.shipping
-        : parseFloat(String(orderData.shipping || orderData.shipping_cost || 0));
-      const vatAmount = typeof orderData.vat_amount === 'number'
-        ? orderData.vat_amount
-        : parseFloat(String(orderData.vat_amount || 0));
+        : parseFloat(String(orderData.shipping || meta.shipping_cost || 0));
+      const vatAmount = meta.vat_amount != null
+        ? parseFloat(String(meta.vat_amount))
+        : 0;
       const total = typeof orderData.total_amount === 'number'
         ? orderData.total_amount
         : parseFloat(String(orderData.total_amount || 0));
@@ -283,7 +288,7 @@ export async function getUserOrders(userId: string): Promise<Order[]> {
         subtotal,
         discount,
         shipping,
-        shippingMethod: orderData.shipping_method || null,
+        shippingMethod: (meta.shipping_method as string) || null,
         vatAmount,
         total,
         status: (orderData.status || "pending") as Order["status"],
@@ -332,7 +337,9 @@ export async function getOrderByStripeSessionId(
       return null;
     }
 
-    // Convert Supabase data to Order type using new schema fields
+    // Convert Supabase data to Order type
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const meta = (data.metadata as any) || {};
     const subtotal = typeof data.subtotal === 'number' 
       ? data.subtotal 
       : parseFloat(String(data.subtotal || data.total_amount || 0));
@@ -341,10 +348,10 @@ export async function getOrderByStripeSessionId(
       : parseFloat(String(data.discount || 0));
     const shipping = typeof data.shipping === 'number'
       ? data.shipping
-      : parseFloat(String(data.shipping || data.shipping_cost || 0));
-    const vatAmount = typeof data.vat_amount === 'number'
-      ? data.vat_amount
-      : parseFloat(String(data.vat_amount || 0));
+      : parseFloat(String(data.shipping || meta.shipping_cost || 0));
+    const vatAmount = meta.vat_amount != null
+      ? parseFloat(String(meta.vat_amount))
+      : 0;
     const total = typeof data.total_amount === 'number'
       ? data.total_amount
       : parseFloat(String(data.total_amount || 0));
@@ -373,7 +380,7 @@ export async function getOrderByStripeSessionId(
       subtotal,
       discount,
       shipping,
-      shippingMethod: data.shipping_method || null,
+      shippingMethod: meta.shipping_method || null,
       vatAmount,
       total,
       status: (data.status || "pending") as Order["status"],
