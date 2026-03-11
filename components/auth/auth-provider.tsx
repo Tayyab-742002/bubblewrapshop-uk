@@ -10,6 +10,7 @@ import React, {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   useCallback,
   useMemo,
@@ -71,6 +72,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [supabase] = useState(() => createClient());
+  // Keep a ref to the current user so the auth subscription callback can read
+  // the latest value without being listed as a dependency (which would cause
+  // the subscription to be torn down and recreated on every user state change).
+  const userRef = useRef<AuthUser | null>(null);
+  userRef.current = user;
 
   // Load user profile from database
   const loadUserProfile = useCallback(async (): Promise<void> => {
@@ -190,7 +196,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // This prevents the profile icon from disappearing when switching tabs
       // TOKEN_REFRESHED fires when tab regains focus - we don't need to reload
       if (event === "TOKEN_REFRESHED") {
-        if (user && user.id === session.user.id) {
+        if (userRef.current && userRef.current.id === session.user.id) {
           // User is already loaded and token refreshed - no action needed
           // This keeps the UI stable when switching tabs
           return;
@@ -214,7 +220,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (session?.user) {
         // Only set loading if user is not already loaded
         // This prevents UI flicker when user is already authenticated
-        if (!user) {
+        if (!userRef.current) {
           setLoading(true);
         }
         try {
@@ -234,7 +240,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [supabase, loadUserProfile, user]);
+  }, [supabase, loadUserProfile]);
 
   // Sign in method
   const handleSignIn = useCallback(

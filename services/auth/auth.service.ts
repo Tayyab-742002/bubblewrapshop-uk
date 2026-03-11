@@ -251,35 +251,38 @@ export async function signIn(data: SignInData): Promise<AuthResult> {
       };
     }
 
-    // Fetch user profile
-    const { data: profile, error: profileError } = await supabase
+    // Fetch user profile — fall back to auth data if profile row is missing or
+    // inaccessible (RLS error, network blip, profile not yet created by trigger).
+    // We must NEVER block a valid login because of a profile fetch failure.
+    const { data: profile } = await supabase
       .from("users")
       .select("*")
       .eq("id", authData.user.id)
       .single();
 
-    if (profileError) {
-      return {
-        success: false,
-        error: "Failed to fetch user profile",
-      };
-    }
-
-    const typedProfile = profile as UserProfile;
+    const typedProfile = profile as UserProfile | null;
 
     return {
       success: true,
-      user: {
-        id: typedProfile.id,
-        email: typedProfile.email,
-        fullName: typedProfile.full_name || undefined,
-        phone: typedProfile.phone || undefined,
-        company: typedProfile.company || undefined,
-        avatarUrl: typedProfile.avatar_url || undefined,
-        role: typedProfile.role || "customer",
-        createdAt: typedProfile.created_at,
-        updatedAt: typedProfile.updated_at,
-      },
+      user: typedProfile
+        ? {
+            id: typedProfile.id,
+            email: typedProfile.email,
+            fullName: typedProfile.full_name || undefined,
+            phone: typedProfile.phone || undefined,
+            company: typedProfile.company || undefined,
+            avatarUrl: typedProfile.avatar_url || undefined,
+            role: typedProfile.role || "customer",
+            createdAt: typedProfile.created_at,
+            updatedAt: typedProfile.updated_at,
+          }
+        : {
+            id: authData.user.id,
+            email: authData.user.email!,
+            role: "customer" as const,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
       message: "Signed in successfully",
     };
   } catch (error) {
